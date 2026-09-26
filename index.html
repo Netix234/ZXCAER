@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ZXCAER</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+</head>
+
+<body>
+    <div id="siteIntro">
+    <div id="siteIntroLogo">ZXCAER</div>
+</div>
+
+
+<div class="page-loader"></div>
+
+
+<!-- =========================================
+     CART OVERLAY
+========================================= -->
+
+<div
+    class="cart-overlay"
+    id="cartOverlay"
+></div>
+
+
+<!-- =========================================
+     PRODUCT MODAL OVERLAY
+========================================= -->
+
+<div
+    class="product-modal-overlay"
+    id="productModalOverlay"
+></div>
+
+
+<!-- =========================================
+     ORDER MODAL OVERLAY
+========================================= -->
+
+<div
+    class="order-modal-overlay"
+    id="orderModalOverlay"
+></div>
+
+
+<!-- =========================================
+     PRODUCT MODAL
+========================================= -->
+
+<div
+    class="product-modal"
+    id="productModal"
+>
+
+    <button
+        class="product-modal-close"
+        id="productModalClose"
+    >
+        ×
+    </button>
+
+
+    <div class="product-modal-content">
+
+
+        <div class="product-modal-image">
+
+            <img
+                id="modalProductImage"
+                src=""
+                alt=""
+            >
+
+        </div>
+
+
+        <div class="product-modal-info">
+
+
+            <div>
+
+                <div
+                    class="modal-product-name"
+                    id="modalProductName"
+                >
+                    ZXCAER - ZIP
+                </div>
+
+                <div
+                    class="modal-product-price"
+                    id="modalProductPrice"
+                >
+                    ₴2,300.00
+                </div>
+
+            </div>
+
+
+            <div class="modal-section">
+
+                <h3>
+                    Best quality / найкраща якість
+                </h3>
+
+                <ul>
+
+                    <li>
+                        преміум тканина 100% хлопок
+                    </li>
+
+                    <li>
+                        вишивка
+                    </li>
+
+                    <li>
+                        фірмова упаковка
+                    </li>
+
+                    <li>
+                        бірки
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="modal-section">
+
+                <h3>
+                    ПРАННЯ 30°C
+                </h3>
+
+                <ul>
+
+                    <li>
+                        ПРАТИ НАВИВОРІТ
+                    </li>
+
+                    <li>
+                        НЕ ВІДБІЛЮВАТИ
+                    </li>
+
+                    <li>
+                        ТЕМНІ КОЛЬОРИ ОКРЕМО
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <button
+                class="modal-add-button"
+                id="modalAddButton"
+            >
+                ADD TO CART
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     ORDER MODAL
+========================================= -->
+
+<div
+    class="order-modal"
+    id="orderModal"
+>
+
+    <button
+        class="order-modal-close"
+        id="orderModalClose"
+    >
+        ×
+    </button>
+
+
+    <div class="order-modal-inner">
+
+
+        <div class="order-modal-title">
+
+            <span>
+                CHECKOUT
+            </span>
+
+            <h2>
+                ОФОРМЛЕНИЕ ЗАКАЗА
+            </h2>
+
+        </div>
+
+
+        <form
+            id="orderForm"
+            autocomplete="on"
+        >
+
+
+            <!-- PERSONAL DATA -->
+
+            <div class="order-form-section">
+
+                <div class="order-section-title">
+                    КОНТАКТНЫЕ ДАННЫЕ
+                </div>
+
+
+                <label>
+
+                    <span>
+                        ИМЯ *
+                    </span>
+
+                    <input
+                        type="text"
+                        id="customerName"
+                        name="name"
+                        placeholder="Ваше имя"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        ТЕЛЕФОН *
+                    </span>
+
+                    <input
+                        type="tel"
+                        id="customerPhone"
+                        name="phone"
+                        placeholder="+380 XX XXX XX XX"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        TELEGRAM USERNAME *
+                    </span>
+
+                    <input
+                        type="text"
+                        id="customerTelegram"
+                        name="telegram"
+                        placeholder="@username"
+                        required
+                    >
+
+                    <small>
+                        Обязательно укажите ваш Telegram username
+                    </small>
+
+                </label>
+
+            </div>
+
+
+            <!-- DELIVERY -->
+
+            <div class="order-form-section">
+
+                <div class="order-section-title">
+                    ДОСТАВКА
+                </div>
+
+
+                <label>
+
+                    <span>
+                        ГОРОД *
+                    </span>
+
+                    <input
+                        type="text"
+                        id="customerCity"
+                        name="city"
+                        placeholder="Ваш город"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        СПОСОБ ДОСТАВКИ *
+                    </span>
+
+                    <select
+                        id="deliveryMethod"
+                        name="delivery"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
+                            Выберите доставку
+                        </option>
+
+                        <option value="Новая Почта">
+                            Новая Почта
+                        </option>
+
+                        <option value="Укрпочта">
+                            Укрпочта
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <!-- NOVA POSHTA -->
+
+                <div
+                    id="novaPoshtaField"
+                    class="conditional-field"
+                >
+
+                    <label>
+
+                        <span>
+                            НОМЕР ОТДЕЛЕНИЯ *
+                        </span>
+
+                        <input
+                            type="text"
+                            id="novaPoshtaNumber"
+                            name="novaPoshtaNumber"
+                            placeholder="Например: 15"
+                        >
+
+                    </label>
+
+                </div>
+
+
+                <!-- UKRPOSHTA -->
+
+                <div
+                    id="ukrPoshtaField"
+                    class="conditional-field"
+                >
+
+                    <label>
+
+                        <span>
+                            ПОЧТОВЫЙ ИНДЕКС *
+                        </span>
+
+                        <input
+                            type="text"
+                            id="ukrPoshtaIndex"
+                            name="ukrPoshtaIndex"
+                            placeholder="Например: 61001"
+                        >
+
+                    </label>
+
+                </div>
+
+
+                <label>
+
+                    <span>
+                        КОММЕНТАРИЙ
+                    </span>
+
+                    <textarea
+                        id="customerComment"
+                        name="comment"
+                        placeholder="Дополнительная информация к заказу"
+                        rows="3"
+                    ></textarea>
+
+                </label>
+
+            </div>
+
+
+            <!-- ORDER SUMMARY -->
+
+            <div class="order-summary">
+
+                <div class="order-summary-title">
+                    ВАШ ЗАКАЗ
+                </div>
+
+
+                <div
+                    class="order-summary-items"
+                    id="orderSummaryItems"
+                >
+                </div>
+
+
+                <div class="order-summary-total">
+
+                    <span>
+                        TOTAL
+                    </span>
+
+                    <strong id="orderSummaryTotal">
+                        ₴0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="submit-order-button"
+            >
+                ОФОРМИТЬ ЗАКАЗ
+            </button>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     CART
+========================================= -->
+
+<aside
+    class="cart-drawer"
+    id="cartDrawer"
+>
+
+    <div class="cart-header">
+
+        <div class="cart-title">
+            YOUR CART
+        </div>
+
+        <button
+            class="cart-close"
+            id="cartClose"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        class="cart-items"
+        id="cartItems"
+    >
+
+        <div class="empty-cart">
+            YOUR CART IS EMPTY
+        </div>
+
+    </div>
+
+
+    <div class="cart-bottom">
+
+        <div class="cart-total-row">
+
+            <span>
+                TOTAL
+            </span>
+
+            <strong id="cartTotal">
+                ₴0.00
+            </strong>
+
+        </div>
+
+
+        <button
+            class="buy-button"
+            id="buyButton"
+        >
+            BUY NOW
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
+
+<header class="header">
+
+
+    <nav class="nav-left">
+
+        <a href="#home">
+            Home
+        </a>
+
+        <a href="#catalog">
+            Catalog
+        </a>
+
+    </nav>
+
+
+    <a
+        href="#home"
+        class="logo"
+    >
+        ZXCAER
+    </a>
+
+
+    <div class="nav-right">
+
+        <button
+            class="icon cart"
+            id="cartButton"
+            aria-label="Shopping cart"
+        >
+
+            <svg
+                viewBox="0 0 24 24"
+            >
+
+                <path
+                    d="M4 8H20L18.8 20H5.2L4 8Z"
+                ></path>
+
+                <path
+                    d="M8 8C8 3 16 3 16 8"
+                ></path>
+
+            </svg>
+
+
+            <span
+                class="cart-count"
+                id="cartCount"
+            >
+                0
+            </span>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
+<main id="home">
+
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+        <img
+            src="images/hero-banner.jpg"
+            alt="ZXCAER New Drop"
+        >
+
+        <div class="hero-overlay"></div>
+
+        <div class="hero-text">
+
+            <h1>
+                NEW DROP OUT NOW
+            </h1>
+
+        </div>
+
+    </section>
+
+
+    <!-- CATALOG -->
+
+    <section
+        class="catalog"
+        id="catalog"
+    >
+
+        <div class="products">
+
+
+            <!-- PRODUCT 01 -->
+
+            <article
+                class="product reveal"
+                data-name="🩸 ZXCAER - ZIP"
+                data-price="2300"
+                data-image="images/hoodie-01-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <img
+                        class="front"
+                        src="images/hoodie-01-front.jpg"
+                        alt="🩸 ZXCAER - ZIP"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-01-back.jpg"
+                        alt="🩸 ZXCAER - ZIP Back"
+                    >
+
+                    <button class="add-to-cart">
+                        ADD TO CART
+                    </button>
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - ZIP
+                    </span>
+
+                    <strong>
+                        ₴2,300.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 02 -->
+
+            <article
+                class="product reveal"
+                data-name="🩸 ZXCAER - ZIP"
+                data-price="2300"
+                data-image="images/hoodie-02-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <img
+                        class="front"
+                        src="images/hoodie-02-front.jpg"
+                        alt="🩸 ZXCAER - ZIP"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-02-back.jpg"
+                        alt="🩸 ZXCAER - ZIP Back"
+                    >
+
+                    <button class="add-to-cart">
+                        ADD TO CART
+                    </button>
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - ZIP
+                    </span>
+
+                    <strong>
+                        ₴2,300.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 03 -->
+
+            <article
+                class="product reveal"
+                data-name="🩸 ZXCAER - HUDI"
+                data-price="2150"
+                data-image="images/hoodie-03-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <img
+                        class="front"
+                        src="images/hoodie-03-front.jpg"
+                        alt="🩸 ZXCAER - HUDI"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-03-back.jpg"
+                        alt="🩸 ZXCAER - HUDI Back"
+                    >
+
+                    <button class="add-to-cart">
+                        ADD TO CART
+                    </button>
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - HUDI
+                    </span>
+
+                    <strong>
+                        ₴2,150.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 04 -->
+
+            <article
+                class="product reveal"
+                data-name="🩸 ZXCAER - HUDI"
+                data-price="2150"
+                data-image="images/hoodie-04-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <img
+                        class="front"
+                        src="images/hoodie-04-front.jpg"
+                        alt="🩸 ZXCAER - HUDI"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-04-back.jpg"
+                        alt="🩸 ZXCAER - HUDI Back"
+                    >
+
+                    <button class="add-to-cart">
+                        ADD TO CART
+                    </button>
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - HUDI
+                    </span>
+
+                    <strong>
+                        ₴2,150.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 05 -->
+
+            <article
+                class="product reveal"
+                data-name="🩸 ZXCAER - Tishka"
+                data-price="1100"
+                data-image="images/hoodie-05-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <img
+                        class="front"
+                        src="images/hoodie-05-front.jpg"
+                        alt="🩸 ZXCAER - Tishka"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-05-back.jpg"
+                        alt="🩸 ZXCAER - Tishka Back"
+                    >
+
+                    <button class="add-to-cart">
+                        ADD TO CART
+                    </button>
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - Tishka
+                    </span>
+
+                    <strong>
+                        ₴1,100.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 06 -->
+
+            <article
+                class="product reveal"
+                data-name="ZXCAER - Tishka 06"
+                data-price="1100"
+                data-image="images/hoodie-06-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <img
+                        class="front"
+                        src="images/hoodie-06-front.jpg"
+                        alt="ZXCAER - Tishka 06"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-06-back.jpg"
+                        alt="ZXCAER - Tishka 06 Back"
+                    >
+
+                    <button class="add-to-cart">
+                        ADD TO CART
+                    </button>
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        ZXCAER - Tishka 06
+                    </span>
+
+                    <strong>
+                        ₴1,100.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+        </div>
+
+
+        <div class="view-all-container">
+
+            <a
+                href="#catalog"
+                class="view-all"
+            >
+
+                VIEW ALL
+
+                <span>
+                    &gt;&gt;&gt;
+                </span>
+
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+    <section
+        class="white-fade"
+        aria-hidden="true"
+    ></section>
+
+
+</main>
+
+
+<footer>
+
+    <span>
+        © 2026 ZXCAER
+    </span>
+
+    <span>
+        STREETWEAR / NEW DROP
+    </span>
+
+</footer>
+
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
