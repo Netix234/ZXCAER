@@ -954,8 +954,257 @@
 </footer>
 
 
-<script src="script.js"></script>
+<!-- ZXCAER: Supabase + dynamic products + site script -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<script>
+const ZXCAER_SUPABASE_URL = "https://gxkmnkphocqvlhnerkix.supabase.co";
+const ZXCAER_SUPABASE_KEY = "sb_publishable_B3hq0yrXvptyr4KT7dCczg_5VVVeup_";
+
+const zxcaerSupabase = window.supabase.createClient(
+    ZXCAER_SUPABASE_URL,
+    ZXCAER_SUPABASE_KEY
+);
+
+let zxcaerScriptStarted = false;
+let zxcaerProductsLoaded = false;
+
+function escapeZXCAER(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function getZXCAERImageUrl(path) {
+    if (!path) return "";
+
+    if (path.startsWith("https://") || path.startsWith("http://")) {
+        return path;
+    }
+
+    if (path.startsWith("images/")) {
+        return path;
+    }
+
+    return zxcaerSupabase.storage
+        .from("product-images")
+        .getPublicUrl(path).data.publicUrl;
+}
+
+/*
+ * script.js внутри ждёт DOMContentLoaded.
+ * Мы загружаем его после товаров и запускаем
+ * его обработчик вручную, не вызывая повторно
+ * наш Supabase-загрузчик.
+ */
+function loadOldZXCAERScript() {
+    if (zxcaerScriptStarted) return;
+
+    zxcaerScriptStarted = true;
+
+    const script = document.createElement("script");
+    script.src = "script.js";
+
+    script.onload = function () {
+        const intro = document.getElementById("siteIntro");
+
+        /*
+         * script.js добавляет обработчик DOMContentLoaded.
+         * На этот момент настоящий DOMContentLoaded уже прошёл,
+         * поэтому временно запускаем только обработчики,
+         * которые уже были зарегистрированы script.js.
+         */
+        const ownLoader = window.__zxcaerOwnDOMContentLoadedHandler;
+
+        if (ownLoader) {
+            document.removeEventListener("DOMContentLoaded", ownLoader);
+        }
+
+        document.dispatchEvent(new Event("DOMContentLoaded"));
+
+        if (ownLoader) {
+            document.addEventListener("DOMContentLoaded", ownLoader);
+        }
+
+        /*
+         * В script.js intro привязан к window.load.
+         * Настоящий load тоже уже мог произойти.
+         */
+        window.dispatchEvent(new Event("load"));
+
+        if (intro) {
+            setTimeout(() => {
+                document.body.classList.add("site-loaded");
+                intro.classList.add("hide");
+
+                setTimeout(() => {
+                    if (intro.parentNode) {
+                        intro.remove();
+                    }
+                }, 900);
+            }, 50);
+        }
+    };
+
+    script.onerror = function () {
+        console.error("ZXCAER: не удалось загрузить script.js");
+
+        document.body.classList.add("site-loaded");
+
+        const intro = document.getElementById("siteIntro");
+        if (intro) {
+            intro.classList.add("hide");
+            setTimeout(() => {
+                if (intro.parentNode) intro.remove();
+            }, 900);
+        }
+    };
+
+    document.body.appendChild(script);
+}
+
+async function loadZXCAERProducts() {
+    if (zxcaerProductsLoaded) return;
+
+    try {
+        const { data, error } = await zxcaerSupabase
+            .from("products")
+            .select("*")
+            .eq("is_visible", true)
+            .order("sort_order", { ascending: true });
+
+        if (error) {
+            console.error("ZXCAER products error:", error);
+            loadOldZXCAERScript();
+            return;
+        }
+
+        /*
+         * Если таблица пока пустая, оставляем
+         * встроенные товары как резерв.
+         */
+        if (!Array.isArray(data) || data.length === 0) {
+            loadOldZXCAERScript();
+            return;
+        }
+
+        /* Если уже включился резервный режим,
+           не заменяем карточки после запуска script.js. */
+        if (zxcaerScriptStarted) {
+            return;
+        }
+
+        const productsContainer = document.querySelector(".products");
+
+        if (!productsContainer) {
+            loadOldZXCAERScript();
+            return;
+        }
+
+        productsContainer.innerHTML = "";
+
+        data.forEach((product) => {
+            const frontImage = getZXCAERImageUrl(product.front_image);
+            const backImage = getZXCAERImageUrl(product.back_image);
+
+            const article = document.createElement("article");
+
+            article.className = "product reveal";
+            article.dataset.name = product.name || "";
+            article.dataset.price = product.price || 0;
+            article.dataset.image = frontImage;
+
+            article.innerHTML = `
+                <div class="product-image" data-product="true">
+                    <img
+                        class="front"
+                        src="${escapeZXCAER(frontImage)}"
+                        alt="${escapeZXCAER(product.name)}"
+                    >
+
+                    <img
+                        class="back"
+                        src="${escapeZXCAER(backImage)}"
+                        alt="${escapeZXCAER(product.name)} Back"
+                    >
+
+                    <button class="add-to-cart">
+                        ADD TO CART
+                    </button>
+                </div>
+
+                <div class="product-info">
+                    <span>
+                        ${escapeZXCAER(product.name)}
+                    </span>
+
+                    <strong>
+                        ₴${Number(product.price || 0).toLocaleString("uk-UA", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2
+                        })}
+                    </strong>
+                </div>
+            `;
+
+            productsContainer.appendChild(article);
+        });
+
+        zxcaerProductsLoaded = true;
+        loadOldZXCAERScript();
+
+    } catch (error) {
+        console.error("ZXCAER Supabase error:", error);
+        loadOldZXCAERScript();
+    }
+}
+
+/*
+ * Сохраняем ссылку на наш собственный обработчик,
+ * чтобы искусственный DOMContentLoaded не вызвал
+ * повторную загрузку Supabase.
+ */
+window.__zxcaerOwnDOMContentLoadedHandler = loadZXCAERProducts;
+
+/*
+ * Аварийный таймер:
+ * сайт не должен оставаться белым, даже если
+ * Supabase отвечает слишком долго.
+ */
+setTimeout(() => {
+    if (!zxcaerScriptStarted) {
+        loadOldZXCAERScript();
+    }
+
+    document.body.classList.add("site-loaded");
+
+    const intro = document.getElementById("siteIntro");
+
+    if (intro) {
+        intro.classList.add("hide");
+
+        setTimeout(() => {
+            if (intro.parentNode) intro.remove();
+        }, 900);
+    }
+}, 4000);
+
+/*
+ * Загружаем товары после того, как HTML готов.
+ */
+if (document.readyState === "loading") {
+    document.addEventListener(
+        "DOMContentLoaded",
+        loadZXCAERProducts,
+        { once: true }
+    );
+} else {
+    loadZXCAERProducts();
+}
+</script>
 
 </body>
 
