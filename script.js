@@ -1426,4 +1426,189 @@ document.addEventListener("DOMContentLoaded", () => {
 
     renderCart();
 
+
+    /* =========================
+       OPTIONAL ACCOUNT / AUTH
+       Supabase Auth — site users only
+    ========================= */
+
+    /* =========================
+       THEME
+    ========================= */
+
+    const themeToggle = document.getElementById("themeToggle");
+
+    function applyTheme(theme) {
+        const dark = theme === "dark";
+        document.body.classList.toggle("dark-theme", dark);
+        if (themeToggle) {
+            themeToggle.setAttribute("aria-label", dark ? "Switch to white theme" : "Switch to black theme");
+            themeToggle.setAttribute("title", dark ? "Белая тема" : "Чёрная тема");
+        }
+    }
+
+    const savedTheme = localStorage.getItem("zxcaer-theme") || "light";
+    applyTheme(savedTheme);
+
+    themeToggle?.addEventListener("click", () => {
+        const nextTheme = document.body.classList.contains("dark-theme") ? "light" : "dark";
+        localStorage.setItem("zxcaer-theme", nextTheme);
+        applyTheme(nextTheme);
+    });
+
+    const accountButton = document.getElementById("accountButton");
+    const accountModal = document.getElementById("accountModal");
+    const accountOverlay = document.getElementById("accountOverlay");
+    const accountModalClose = document.getElementById("accountModalClose");
+    const accountForm = document.getElementById("accountForm");
+    const accountEmail = document.getElementById("accountEmail");
+    const accountPassword = document.getElementById("accountPassword");
+    const accountSubmit = document.getElementById("accountSubmit");
+    const accountMessage = document.getElementById("accountMessage");
+    const accountLogged = document.getElementById("accountLogged");
+    const accountUserEmail = document.getElementById("accountUserEmail");
+    const accountLogout = document.getElementById("accountLogout");
+    const accountTabs = document.querySelectorAll("[data-account-tab]");
+
+    let accountMode = "login";
+    let accountClient = null;
+
+    function getAccountClient() {
+        if (accountClient) return accountClient;
+        if (!window.supabase) return null;
+        accountClient = window.supabase.createClient(
+            "https://gxkmnkphocqvlhnerkix.supabase.co",
+            "sb_publishable_B3hq0yrXvptyr4KT7dCczg_5VVVeup_"
+        );
+        return accountClient;
+    }
+
+    function setAccountMessage(text = "", type = "") {
+        if (!accountMessage) return;
+        accountMessage.textContent = text;
+        accountMessage.className = "account-message" + (type ? " " + type : "");
+    }
+
+    function setAccountMode(mode) {
+        accountMode = mode;
+        accountTabs.forEach(tab => {
+            tab.classList.toggle("active", tab.dataset.accountTab === mode);
+        });
+        if (accountSubmit) {
+            accountSubmit.textContent = mode === "login" ? "ВОЙТИ" : "СОЗДАТЬ АККАУНТ";
+        }
+        if (accountPassword) {
+            accountPassword.autocomplete = mode === "login" ? "current-password" : "new-password";
+        }
+        setAccountMessage("");
+    }
+
+    function openAccount() {
+        if (!accountModal) return;
+        accountModal.classList.add("open");
+        accountOverlay?.classList.add("open");
+        accountModal.setAttribute("aria-hidden", "false");
+        setAccountMessage("");
+    }
+
+    function closeAccount() {
+        accountModal?.classList.remove("open");
+        accountOverlay?.classList.remove("open");
+        accountModal?.setAttribute("aria-hidden", "true");
+    }
+
+    function renderAccount(user) {
+        if (!accountForm || !accountLogged) return;
+        const loggedIn = !!user;
+        accountForm.hidden = loggedIn;
+        accountLogged.hidden = !loggedIn;
+        if (accountUserEmail) accountUserEmail.textContent = user?.email || "";
+        if (!loggedIn) setAccountMode("login");
+    }
+
+    async function refreshAccount() {
+        const client = getAccountClient();
+        if (!client) return;
+        const { data } = await client.auth.getSession();
+        renderAccount(data?.session?.user || null);
+    }
+
+    accountButton?.addEventListener("click", openAccount);
+    accountModalClose?.addEventListener("click", closeAccount);
+    accountOverlay?.addEventListener("click", closeAccount);
+
+    accountTabs.forEach(tab => {
+        tab.addEventListener("click", () => setAccountMode(tab.dataset.accountTab));
+    });
+
+    accountForm?.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const client = getAccountClient();
+        if (!client) {
+            setAccountMessage("Не удалось подключить авторизацию.", "error");
+            return;
+        }
+
+        const email = accountEmail?.value.trim() || "";
+        const password = accountPassword?.value || "";
+
+        if (!email || password.length < 6) {
+            setAccountMessage("Введите email и пароль минимум из 6 символов.", "error");
+            return;
+        }
+
+        accountSubmit.disabled = true;
+        accountSubmit.textContent = accountMode === "login" ? "ВХОД..." : "СОЗДАНИЕ...";
+        setAccountMessage("");
+
+        try {
+            let result;
+
+            if (accountMode === "login") {
+                result = await client.auth.signInWithPassword({ email, password });
+            } else {
+                result = await client.auth.signUp({ email, password });
+            }
+
+            if (result.error) throw result.error;
+
+            if (accountMode === "login") {
+                setAccountMessage("Вы успешно вошли.", "success");
+                renderAccount(result.data.user);
+            } else if (result.data.session) {
+                setAccountMessage("Аккаунт создан. Вы вошли.", "success");
+                renderAccount(result.data.user);
+            } else {
+                setAccountMessage("Аккаунт создан. Проверьте email для подтверждения регистрации.", "success");
+            }
+        } catch (error) {
+            console.error("ZXCAER auth error:", error);
+            setAccountMessage(error?.message || "Ошибка авторизации. Попробуйте ещё раз.", "error");
+        } finally {
+            accountSubmit.disabled = false;
+            accountSubmit.textContent = accountMode === "login" ? "ВОЙТИ" : "СОЗДАТЬ АККАУНТ";
+        }
+    });
+
+    accountLogout?.addEventListener("click", async () => {
+        const client = getAccountClient();
+        if (!client) return;
+        const { error } = await client.auth.signOut();
+        if (error) {
+            setAccountMessage(error.message || "Не удалось выйти.", "error");
+            return;
+        }
+        renderAccount(null);
+        setAccountMessage("Вы вышли из аккаунта.", "success");
+    });
+
+    const initialAccountClient = getAccountClient();
+    if (initialAccountClient) {
+        initialAccountClient.auth.onAuthStateChange((_event, session) => {
+            renderAccount(session?.user || null);
+        });
+        refreshAccount();
+    }
+
 });
