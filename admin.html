@@ -1,14 +1,83 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <meta name="theme-color" content="#ffffff">
 
     <title>ZXCAER — Admin</title>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
+        /* =========================================================
+           THEME VARIABLES
+        ========================================================= */
+
+        :root {
+            color-scheme: light;
+
+            --bg: #f7f7f7;
+            --surface: #ffffff;
+            --surface-2: #fafafa;
+            --text: #111111;
+            --muted: #777777;
+            --muted-2: #999999;
+            --border: #e5e5e5;
+            --border-strong: #d5d5d5;
+            --input: #ffffff;
+            --button: #111111;
+            --button-text: #ffffff;
+            --danger: #d00000;
+            --success: #16803c;
+            --shadow: 0 15px 50px rgba(0,0,0,.08);
+        }
+
+        html[data-theme="dark"] {
+            color-scheme: dark;
+
+            --bg: #050505;
+            --surface: #0d0d0d;
+            --surface-2: #121212;
+            --text: #f5f5f5;
+            --muted: #9b9b9b;
+            --muted-2: #777777;
+            --border: #242424;
+            --border-strong: #333333;
+            --input: #111111;
+            --button: #ffffff;
+            --button-text: #050505;
+            --danger: #ff5a5a;
+            --success: #48c77b;
+            --shadow: 0 20px 60px rgba(0,0,0,.35);
+        }
+
+        html[data-theme="graphite"] {
+            color-scheme: dark;
+
+            --bg: #181a1c;
+            --surface: #222528;
+            --surface-2: #292c30;
+            --text: #f3f3f3;
+            --muted: #a5a8ac;
+            --muted-2: #777b80;
+            --border: #363a3f;
+            --border-strong: #474c52;
+            --input: #25282b;
+            --button: #f4f4f4;
+            --button-text: #181a1c;
+            --danger: #ff6868;
+            --success: #55cf86;
+            --shadow: 0 20px 60px rgba(0,0,0,.25);
+        }
+
+
+        /* =========================================================
+           BASE
+        ========================================================= */
+
         * {
             box-sizing: border-box;
         }
@@ -18,40 +87,91 @@
             margin: 0;
             padding: 0;
             min-height: 100%;
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f7f7f7;
-            color: #111;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+
+            background: var(--bg);
+            color: var(--text);
+
+            transition:
+                background-color .25s ease,
+                color .25s ease;
+        }
+
+        body {
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
         }
 
         button,
         input,
-        textarea {
+        textarea,
+        select {
             font: inherit;
         }
 
         button {
             cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* =========================
+        input,
+        textarea,
+        button {
+            color: var(--text);
+        }
+
+        ::selection {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+
+        /* =========================================================
            LOGIN
-        ========================= */
+        ========================================================= */
 
         #loginScreen {
             min-height: 100vh;
+            min-height: 100dvh;
+
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-            background: #fff;
+
+            padding:
+                max(20px, env(safe-area-inset-top))
+                max(20px, env(safe-area-inset-right))
+                max(20px, env(safe-area-inset-bottom))
+                max(20px, env(safe-area-inset-left));
+
+            background: var(--bg);
+
+            transition:
+                background-color .25s ease;
         }
 
         .login-box {
             width: 100%;
             max-width: 420px;
-            background: #fff;
-            border: 1px solid #e5e5e5;
+
+            background: var(--surface);
+            border: 1px solid var(--border);
+
             padding: 42px;
+
+            box-shadow: var(--shadow);
+
+            transition:
+                background-color .25s ease,
+                border-color .25s ease;
         }
 
         .login-logo {
@@ -64,7 +184,7 @@
 
         .login-subtitle {
             text-align: center;
-            color: #777;
+            color: var(--muted);
             font-size: 13px;
             margin-bottom: 35px;
         }
@@ -76,20 +196,34 @@
         .field label {
             display: block;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
             margin-bottom: 8px;
             text-transform: uppercase;
+            color: var(--text);
         }
 
         .field input,
         .field textarea {
             width: 100%;
-            border: 1px solid #ddd;
-            background: #fff;
+
+            border: 1px solid var(--border);
+            background: var(--input);
+            color: var(--text);
+
             padding: 13px 14px;
+
             outline: none;
             border-radius: 0;
-            transition: border-color .2s;
+
+            transition:
+                border-color .2s,
+                background-color .25s,
+                color .25s;
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder {
+            color: var(--muted-2);
         }
 
         .field textarea {
@@ -99,51 +233,72 @@
 
         .field input:focus,
         .field textarea:focus {
-            border-color: #111;
+            border-color: var(--text);
         }
 
         .main-button {
             width: 100%;
+
             border: 0;
-            background: #111;
-            color: #fff;
+
+            background: var(--button);
+            color: var(--button-text);
+
             padding: 15px;
-            font-weight: 600;
-            transition: opacity .2s;
+
+            font-weight: 500;
+
+            transition:
+                opacity .2s,
+                transform .15s;
         }
 
         .main-button:hover {
-            opacity: .82;
+            opacity: .84;
+        }
+
+        .main-button:active {
+            transform: scale(.99);
         }
 
         .error {
-            color: #d00000;
+            color: var(--danger);
             font-size: 13px;
             margin-top: 12px;
             line-height: 1.4;
             display: none;
         }
 
-        /* =========================
+
+        /* =========================================================
            ADMIN
-        ========================= */
+        ========================================================= */
 
         #adminScreen {
             display: none;
             min-height: 100vh;
+            min-height: 100dvh;
         }
 
         .admin-header {
             height: 72px;
-            background: #fff;
-            border-bottom: 1px solid #e5e5e5;
+
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             padding: 0 35px;
+
             position: sticky;
             top: 0;
             z-index: 20;
+
+            transition:
+                background-color .25s ease,
+                border-color .25s ease;
         }
 
         .admin-logo {
@@ -155,28 +310,86 @@
         .admin-header-right {
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 12px;
         }
 
         .admin-email {
-            color: #777;
+            color: var(--muted);
             font-size: 13px;
         }
 
         .logout-button {
-            border: 1px solid #ddd;
-            background: #fff;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+
             padding: 9px 14px;
             font-size: 12px;
+
+            transition:
+                border-color .2s,
+                background-color .25s;
         }
 
         .logout-button:hover {
-            border-color: #111;
+            border-color: var(--text);
         }
+
+
+        /* =========================================================
+           THEME SWITCHER
+        ========================================================= */
+
+        .theme-switcher {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+
+            padding: 4px;
+
+            border: 1px solid var(--border);
+            background: var(--surface-2);
+        }
+
+        .theme-button {
+            border: 0;
+            background: transparent;
+            color: var(--muted);
+
+            min-height: 32px;
+            padding: 6px 10px;
+
+            font-size: 11px;
+            font-weight: 500;
+
+            transition:
+                background-color .2s,
+                color .2s,
+                transform .15s;
+        }
+
+        .theme-button:hover {
+            color: var(--text);
+        }
+
+        .theme-button.active {
+            background: var(--button);
+            color: var(--button-text);
+        }
+
+        .theme-button:active {
+            transform: scale(.97);
+        }
+
+
+        /* =========================================================
+           CONTENT
+        ========================================================= */
 
         .admin-content {
             max-width: 1400px;
             margin: 0 auto;
+
             padding: 45px 30px 80px;
         }
 
@@ -184,37 +397,52 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             gap: 20px;
             margin-bottom: 30px;
         }
 
         .page-title {
             margin: 0;
+
             font-size: 30px;
             letter-spacing: -1px;
+            font-weight: 600;
         }
 
         .page-count {
-            color: #777;
+            color: var(--muted);
             font-size: 13px;
             margin-top: 7px;
         }
 
         .add-button {
             border: 0;
-            background: #111;
-            color: #fff;
+
+            background: var(--button);
+            color: var(--button-text);
+
             padding: 14px 22px;
-            font-weight: 600;
+
+            font-weight: 500;
+
+            transition:
+                opacity .2s,
+                transform .15s;
         }
 
         .add-button:hover {
             opacity: .82;
         }
 
-        /* =========================
+        .add-button:active {
+            transform: scale(.98);
+        }
+
+
+        /* =========================================================
            PRODUCTS
-        ========================= */
+        ========================================================= */
 
         .products-list {
             display: flex;
@@ -223,14 +451,35 @@
         }
 
         .product-row {
-            background: #fff;
-            border: 1px solid #e5e5e5;
+            background: var(--surface);
+            border: 1px solid var(--border);
+
             min-height: 120px;
+
             display: grid;
-            grid-template-columns: 65px 110px 1fr 130px 130px 190px;
+
+            grid-template-columns:
+                65px
+                110px
+                1fr
+                130px
+                130px
+                190px;
+
             align-items: center;
+
             gap: 20px;
+
             padding: 15px 18px;
+
+            transition:
+                background-color .25s ease,
+                border-color .25s ease,
+                transform .15s ease;
+        }
+
+        .product-row:hover {
+            border-color: var(--border-strong);
         }
 
         .product-order {
@@ -242,7 +491,7 @@
 
         .order-number {
             font-size: 12px;
-            color: #888;
+            color: var(--muted);
             margin-bottom: 3px;
         }
 
@@ -254,20 +503,31 @@
         .order-buttons button {
             width: 28px;
             height: 28px;
-            border: 1px solid #ddd;
-            background: #fff;
+
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+
             font-size: 14px;
+
+            transition:
+                border-color .2s,
+                background-color .2s;
         }
 
         .order-buttons button:hover {
-            border-color: #111;
+            border-color: var(--text);
         }
 
         .product-image {
             width: 90px;
             height: 90px;
+
             object-fit: cover;
-            background: #f4f4f4;
+
+            background: var(--surface-2);
+
+            border: 1px solid var(--border);
         }
 
         .product-info {
@@ -277,15 +537,21 @@
         .product-name {
             font-size: 16px;
             font-weight: 600;
+
             margin-bottom: 7px;
+
             word-break: break-word;
         }
 
         .product-description {
-            color: #777;
+            color: var(--muted);
+
             font-size: 12px;
             line-height: 1.5;
+
             max-width: 500px;
+
+            word-break: break-word;
         }
 
         .product-price {
@@ -295,65 +561,86 @@
 
         .product-status {
             font-size: 11px;
-            font-weight: 600;
+            font-weight: 500;
+
             text-transform: uppercase;
         }
 
         .visible {
-            color: #16803c;
+            color: var(--success);
         }
 
         .hidden {
-            color: #999;
+            color: var(--muted-2);
         }
 
         .product-actions {
             display: flex;
             justify-content: flex-end;
+
             gap: 6px;
             flex-wrap: wrap;
         }
 
         .action-button {
-            border: 1px solid #ddd;
-            background: #fff;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+
             padding: 9px 11px;
+
             font-size: 11px;
+
+            transition:
+                border-color .2s,
+                background-color .2s;
         }
 
         .action-button:hover {
-            border-color: #111;
+            border-color: var(--text);
         }
 
         .delete-button {
-            color: #d00000;
+            color: var(--danger);
         }
 
         .delete-button:hover {
-            border-color: #d00000;
+            border-color: var(--danger);
         }
 
         .empty {
             text-align: center;
-            background: #fff;
-            border: 1px solid #e5e5e5;
+
+            background: var(--surface);
+            border: 1px solid var(--border);
+
             padding: 70px 20px;
-            color: #777;
+
+            color: var(--muted);
         }
 
-        /* =========================
+
+        /* =========================================================
            MODAL
-        ========================= */
+        ========================================================= */
 
         .modal {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, .55);
+
+            background: rgba(0,0,0,.55);
+
             z-index: 100;
+
             display: none;
+
             align-items: center;
             justify-content: center;
+
             padding: 20px;
+
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
         }
 
         .modal.active {
@@ -361,102 +648,158 @@
         }
 
         .modal-box {
-            background: #fff;
+            background: var(--surface);
+
             width: 100%;
             max-width: 650px;
+
             max-height: 92vh;
+            max-height: 92dvh;
+
             overflow-y: auto;
+
             padding: 32px;
+
             position: relative;
+
+            border: 1px solid var(--border);
+
+            box-shadow: var(--shadow);
+
+            transition:
+                background-color .25s,
+                border-color .25s;
         }
 
         .modal-title {
             font-size: 24px;
+
             margin: 0 0 28px;
+
             letter-spacing: -.5px;
+            font-weight: 600;
         }
 
         .close-modal {
             position: absolute;
+
             top: 17px;
             right: 18px;
+
             border: 0;
             background: transparent;
+
+            color: var(--text);
+
             font-size: 26px;
             line-height: 1;
+
+            width: 36px;
+            height: 36px;
         }
 
         .form-grid {
             display: grid;
+
             grid-template-columns: 1fr 180px;
+
             gap: 15px;
         }
 
         .upload-area {
-            border: 1px dashed #ccc;
+            border: 1px dashed var(--border-strong);
+
             padding: 15px;
+
             margin-bottom: 18px;
+
+            background: var(--surface-2);
         }
 
         .upload-area label {
             display: block;
+
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
+
             margin-bottom: 10px;
         }
 
         .upload-area input {
             width: 100%;
+            color: var(--text);
         }
 
         .preview {
             display: grid;
+
             grid-template-columns: 1fr 1fr;
+
             gap: 10px;
+
             margin-top: 12px;
         }
 
         .preview-item {
             position: relative;
+
             aspect-ratio: 1 / 1;
-            background: #f4f4f4;
+
+            background: var(--surface-2);
+
             overflow: hidden;
+
+            border: 1px solid var(--border);
         }
 
         .preview-item img {
             width: 100%;
             height: 100%;
+
             object-fit: cover;
         }
 
         .preview-label {
             position: absolute;
+
             left: 7px;
             bottom: 7px;
+
             background: rgba(0,0,0,.7);
             color: #fff;
+
             font-size: 10px;
+
             padding: 5px 7px;
         }
 
         .modal-buttons {
             display: flex;
+
             gap: 10px;
+
             margin-top: 25px;
         }
 
         .save-button {
             flex: 1;
+
             border: 0;
-            background: #111;
-            color: #fff;
+
+            background: var(--button);
+            color: var(--button-text);
+
             padding: 14px;
-            font-weight: 600;
+
+            font-weight: 500;
         }
 
         .cancel-button {
-            border: 1px solid #ddd;
-            background: #fff;
+            border: 1px solid var(--border);
+
+            background: var(--surface);
+            color: var(--text);
+
             padding: 14px 20px;
         }
 
@@ -467,42 +810,61 @@
 
         .modal-error {
             display: none;
+
             margin-top: 12px;
-            color: #d00000;
+
+            color: var(--danger);
+
             font-size: 13px;
             line-height: 1.4;
         }
 
-        /* =========================
+
+        /* =========================================================
            LOADING
-        ========================= */
+        ========================================================= */
 
         .loading {
             text-align: center;
+
             padding: 70px 20px;
-            color: #777;
-            background: #fff;
-            border: 1px solid #e5e5e5;
+
+            color: var(--muted);
+
+            background: var(--surface);
+            border: 1px solid var(--border);
         }
 
-        /* =========================
+
+        /* =========================================================
            TOAST
-        ========================= */
+        ========================================================= */
 
         .toast {
             position: fixed;
+
             right: 25px;
             bottom: 25px;
-            background: #111;
-            color: #fff;
+
+            background: var(--button);
+            color: var(--button-text);
+
             padding: 14px 18px;
+
             font-size: 13px;
+
             z-index: 300;
+
             transform: translateY(100px);
             opacity: 0;
+
             transition: .3s ease;
+
             pointer-events: none;
+
             max-width: 350px;
+
+            box-shadow: var(--shadow);
         }
 
         .toast.show {
@@ -510,41 +872,22 @@
             opacity: 1;
         }
 
-        /* =========================
-           MOBILE
-        ========================= */
 
-        @media (max-width: 900px) {
+        /* =========================================================
+           TABLET
+        ========================================================= */
 
-            .admin-header {
-                padding: 0 18px;
-            }
-
-            .admin-email {
-                display: none;
-            }
-
-            .admin-content {
-                padding: 30px 15px 60px;
-            }
+        @media (max-width: 1100px) {
 
             .product-row {
-                grid-template-columns: 55px 80px 1fr;
-                gap: 12px;
-                padding: 12px;
-            }
+                grid-template-columns:
+                    55px
+                    90px
+                    1fr
+                    110px
+                    110px;
 
-            .product-image {
-                width: 75px;
-                height: 75px;
-            }
-
-            .product-price {
-                margin-top: 10px;
-            }
-
-            .product-status {
-                margin-top: 8px;
+                gap: 14px;
             }
 
             .product-actions {
@@ -553,56 +896,523 @@
             }
         }
 
-        @media (max-width: 600px) {
+
+        /* =========================================================
+           MOBILE APP STYLE
+        ========================================================= */
+
+        @media (max-width: 700px) {
+
+            html,
+            body {
+                width: 100%;
+                min-width: 0;
+            }
+
+            body {
+                background: var(--bg);
+            }
+
+            #loginScreen {
+                align-items: flex-start;
+
+                padding:
+                    max(24px, env(safe-area-inset-top))
+                    18px
+                    max(24px, env(safe-area-inset-bottom))
+                    18px;
+            }
+
+            .login-box {
+                margin-top: 12vh;
+
+                padding: 30px 22px;
+
+                border-radius: 18px;
+
+                box-shadow:
+                    0 20px 60px rgba(0,0,0,.08);
+            }
+
+            html[data-theme="dark"] .login-box,
+            html[data-theme="graphite"] .login-box {
+                box-shadow:
+                    0 20px 60px rgba(0,0,0,.3);
+            }
+
+            .login-logo {
+                font-size: 27px;
+            }
+
+            .login-subtitle {
+                margin-bottom: 28px;
+            }
+
+            .field input,
+            .field textarea {
+                min-height: 48px;
+
+                padding: 13px 14px;
+
+                border-radius: 10px;
+            }
+
+            .field textarea {
+                min-height: 110px;
+            }
+
+            .main-button {
+                min-height: 50px;
+                border-radius: 10px;
+            }
+
+
+            /* HEADER */
 
             .admin-header {
-                height: 62px;
+                height: auto;
+                min-height: 64px;
+
+                padding:
+                    max(10px, env(safe-area-inset-top))
+                    14px
+                    10px
+                    14px;
+
+                gap: 10px;
+
+                position: sticky;
             }
 
             .admin-logo {
                 font-size: 18px;
             }
 
+            .admin-header-right {
+                gap: 6px;
+            }
+
+            .admin-email {
+                display: none;
+            }
+
+            .logout-button {
+                min-height: 40px;
+
+                padding: 8px 11px;
+
+                border-radius: 9px;
+
+                font-size: 10px;
+            }
+
+
+            /* THEME */
+
+            .theme-switcher {
+                border-radius: 10px;
+
+                padding: 3px;
+            }
+
+            .theme-button {
+                min-height: 34px;
+
+                padding: 6px 8px;
+
+                border-radius: 7px;
+
+                font-size: 9px;
+            }
+
+
+            /* CONTENT */
+
+            .admin-content {
+                width: 100%;
+
+                padding:
+                    24px 12px
+                    calc(50px + env(safe-area-inset-bottom));
+            }
+
             .page-top {
-                align-items: flex-start;
+                align-items: stretch;
+
                 flex-direction: column;
+
+                gap: 14px;
+
+                margin-bottom: 20px;
             }
 
             .page-title {
-                font-size: 25px;
+                font-size: 26px;
+
+                letter-spacing: -.7px;
+            }
+
+            .page-count {
+                font-size: 12px;
             }
 
             .add-button {
                 width: 100%;
+
+                min-height: 48px;
+
+                border-radius: 11px;
+
+                font-size: 12px;
             }
+
+
+            /* PRODUCTS AS APP CARDS */
+
+            .products-list {
+                gap: 12px;
+            }
+
+            .product-row {
+                display: grid;
+
+                grid-template-columns: 78px 1fr;
+
+                grid-template-rows: auto auto auto;
+
+                gap: 12px;
+
+                min-height: 0;
+
+                padding: 13px;
+
+                border-radius: 15px;
+
+                box-shadow:
+                    0 5px 20px rgba(0,0,0,.035);
+            }
+
+            html[data-theme="dark"] .product-row,
+            html[data-theme="graphite"] .product-row {
+                box-shadow:
+                    0 8px 25px rgba(0,0,0,.15);
+            }
+
+            .product-order {
+                grid-column: 1;
+                grid-row: 1;
+
+                align-items: flex-start;
+
+                width: 78px;
+            }
+
+            .order-number {
+                display: none;
+            }
+
+            .order-buttons {
+                position: absolute;
+
+                margin-top: 2px;
+
+                margin-left: 0;
+
+                z-index: 2;
+            }
+
+            .order-buttons button {
+                width: 28px;
+                height: 28px;
+
+                border-radius: 7px;
+
+                background: var(--surface);
+            }
+
+            .product-row > div:nth-child(2) {
+                grid-column: 1;
+                grid-row: 1;
+
+                width: 78px;
+                height: 78px;
+            }
+
+            .product-image {
+                width: 78px;
+                height: 78px;
+
+                border-radius: 11px;
+            }
+
+            .product-info {
+                grid-column: 2;
+                grid-row: 1;
+
+                padding-top: 1px;
+            }
+
+            .product-name {
+                font-size: 14px;
+
+                line-height: 1.25;
+
+                margin-bottom: 5px;
+            }
+
+            .product-description {
+                font-size: 11px;
+
+                line-height: 1.4;
+
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+
+                overflow: hidden;
+            }
+
+            .product-price {
+                grid-column: 2;
+                grid-row: 2;
+
+                font-size: 14px;
+
+                margin-top: -3px;
+            }
+
+            .product-status {
+                grid-column: 1 / -1;
+                grid-row: 2;
+
+                align-self: center;
+
+                justify-self: end;
+
+                margin-top: 0;
+
+                font-size: 9px;
+            }
+
+            .product-actions {
+                grid-column: 1 / -1;
+                grid-row: 3;
+
+                width: 100%;
+
+                display: grid;
+
+                grid-template-columns:
+                    1fr
+                    1fr
+                    1fr;
+
+                gap: 6px;
+
+                padding-top: 2px;
+            }
+
+            .action-button {
+                width: 100%;
+
+                min-height: 39px;
+
+                padding: 7px 4px;
+
+                border-radius: 9px;
+
+                font-size: 9px;
+
+                white-space: nowrap;
+            }
+
+
+            /* EMPTY */
+
+            .empty,
+            .loading {
+                border-radius: 14px;
+
+                padding: 55px 18px;
+
+                font-size: 13px;
+            }
+
+
+            /* MODAL */
 
             .modal {
                 padding: 0;
+
                 align-items: flex-end;
+
+                background: rgba(0,0,0,.55);
             }
 
             .modal-box {
-                max-height: 95vh;
-                padding: 25px 18px;
+                width: 100%;
+
+                max-width: none;
+
+                max-height: 94vh;
+                max-height: 94dvh;
+
+                padding:
+                    25px 16px
+                    calc(20px + env(safe-area-inset-bottom));
+
+                border-radius: 20px 20px 0 0;
+
+                border: 1px solid var(--border);
+                border-bottom: 0;
+            }
+
+            .modal-title {
+                font-size: 21px;
+
+                margin-bottom: 22px;
+
+                padding-right: 40px;
+            }
+
+            .close-modal {
+                top: 14px;
+                right: 12px;
+
+                width: 42px;
+                height: 42px;
+
+                font-size: 28px;
+
+                border-radius: 50%;
+
+                background: var(--surface-2);
             }
 
             .form-grid {
                 grid-template-columns: 1fr;
+
+                gap: 0;
+            }
+
+            .upload-area {
+                padding: 13px;
+
+                border-radius: 12px;
+            }
+
+            .preview {
+                gap: 8px;
             }
 
             .modal-buttons {
                 flex-direction: column;
+
+                gap: 8px;
+
+                margin-top: 20px;
             }
 
+            .save-button,
             .cancel-button {
                 width: 100%;
+
+                min-height: 48px;
+
+                border-radius: 10px;
             }
 
+
+            /* TOAST */
+
             .toast {
-                left: 15px;
-                right: 15px;
-                bottom: 15px;
+                left: 12px;
+                right: 12px;
+
+                bottom:
+                    calc(12px + env(safe-area-inset-bottom));
+
                 max-width: none;
+
+                border-radius: 12px;
+
+                padding: 14px 16px;
+            }
+        }
+
+
+        /* =========================================================
+           SMALL PHONES
+        ========================================================= */
+
+        @media (max-width: 390px) {
+
+            .admin-header {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .admin-logo {
+                font-size: 16px;
+            }
+
+            .theme-button {
+                padding-left: 6px;
+                padding-right: 6px;
+
+                font-size: 8px;
+            }
+
+            .logout-button {
+                padding-left: 8px;
+                padding-right: 8px;
+
+                font-size: 9px;
+            }
+
+            .admin-content {
+                padding-left: 9px;
+                padding-right: 9px;
+            }
+
+            .product-row {
+                grid-template-columns: 70px 1fr;
+
+                padding: 11px;
+
+                gap: 10px;
+            }
+
+            .product-row > div:nth-child(2),
+            .product-image,
+            .product-order {
+                width: 70px;
+            }
+
+            .product-row > div:nth-child(2),
+            .product-image {
+                height: 70px;
+            }
+
+            .action-button {
+                font-size: 8px;
+            }
+        }
+
+
+        /* =========================================================
+           REDUCED MOTION
+        ========================================================= */
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                transition-duration: .01ms !important;
+                animation-duration: .01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
             }
         }
     </style>
@@ -685,6 +1495,41 @@
         </div>
 
         <div class="admin-header-right">
+
+            <!-- THEME SWITCHER -->
+
+            <div
+                class="theme-switcher"
+                id="themeSwitcher"
+                aria-label="Выбор темы"
+            >
+
+                <button
+                    type="button"
+                    class="theme-button"
+                    data-theme-value="light"
+                >
+                    БЕЛАЯ
+                </button>
+
+                <button
+                    type="button"
+                    class="theme-button"
+                    data-theme-value="dark"
+                >
+                    ЧЁРНАЯ
+                </button>
+
+                <button
+                    type="button"
+                    class="theme-button"
+                    data-theme-value="graphite"
+                >
+                    ГРАФИТ
+                </button>
+
+            </div>
+
 
             <div
                 class="admin-email"
@@ -957,6 +1802,98 @@ const supabaseClient =
 
 
 /* ============================================================
+   THEME
+============================================================ */
+
+const THEME_STORAGE_KEY =
+    "zxcaer-admin-theme";
+
+const themeButtons =
+    document.querySelectorAll(".theme-button");
+
+function applyTheme(theme) {
+
+    const allowedThemes = [
+        "light",
+        "dark",
+        "graphite"
+    ];
+
+    if (!allowedThemes.includes(theme)) {
+        theme = "light";
+    }
+
+    document.documentElement
+        .setAttribute(
+            "data-theme",
+            theme
+        );
+
+    localStorage.setItem(
+        THEME_STORAGE_KEY,
+        theme
+    );
+
+    themeButtons.forEach(button => {
+
+        button.classList.toggle(
+            "active",
+            button.dataset.themeValue === theme
+        );
+
+    });
+
+    const themeColors = {
+        light: "#ffffff",
+        dark: "#050505",
+        graphite: "#181a1c"
+    };
+
+    const themeColor =
+        document.querySelector(
+            'meta[name="theme-color"]'
+        );
+
+    if (themeColor) {
+        themeColor.setAttribute(
+            "content",
+            themeColors[theme]
+        );
+    }
+}
+
+
+function loadSavedTheme() {
+
+    const savedTheme =
+        localStorage.getItem(
+            THEME_STORAGE_KEY
+        ) || "light";
+
+    applyTheme(savedTheme);
+}
+
+
+themeButtons.forEach(button => {
+
+    button.addEventListener(
+        "click",
+        function() {
+
+            applyTheme(
+                button.dataset.themeValue
+            );
+
+        }
+    );
+
+});
+
+
+loadSavedTheme();
+
+
+/* ============================================================
    ELEMENTS
 ============================================================ */
 
@@ -1105,14 +2042,6 @@ function getImageUrl(path) {
         return "";
     }
 
-    /*
-       Старые фотографии находятся в папке images
-       самого сайта.
-
-       Новые фотографии будут храниться
-       в Supabase Storage.
-    */
-
     if (
         path.startsWith("http://") ||
         path.startsWith("https://")
@@ -1163,6 +2092,7 @@ async function checkSession() {
     } else {
 
         showLogin();
+
     }
 }
 
@@ -1234,6 +2164,7 @@ loginForm.addEventListener(
         }
 
         showAdmin(data.user);
+
     }
 );
 
@@ -1251,6 +2182,7 @@ logoutButton.addEventListener(
         products = [];
 
         showLogin();
+
     }
 );
 
@@ -1481,6 +2413,7 @@ addProductButton.addEventListener(
         clearModalError();
 
         productModal.classList.add("active");
+
     }
 );
 
@@ -1570,6 +2503,7 @@ productModal.addEventListener(
         if (event.target === productModal) {
             closeProductModal();
         }
+
     }
 );
 
@@ -1584,6 +2518,7 @@ document.addEventListener(
         ) {
             closeProductModal();
         }
+
     }
 );
 
@@ -1605,6 +2540,7 @@ frontFile.addEventListener(
 
         frontPreview.src =
             URL.createObjectURL(file);
+
     }
 );
 
@@ -1622,6 +2558,7 @@ backFile.addEventListener(
 
         backPreview.src =
             URL.createObjectURL(file);
+
     }
 );
 
@@ -1734,11 +2671,6 @@ productForm.addEventListener(
             let backImage = null;
 
 
-            /*
-                Если пользователь выбрал новое фото —
-                загружаем его.
-            */
-
             if (frontFile.files[0]) {
 
                 frontImage =
@@ -1757,19 +2689,9 @@ productForm.addEventListener(
             }
 
 
-            /* =========================
-               EDIT
-            ========================= */
+            /* EDIT */
 
             if (editingProductId) {
-
-                const currentProduct =
-                    products.find(
-                        item =>
-                            String(item.id) ===
-                            String(editingProductId)
-                    );
-
 
                 const updateData = {
 
@@ -1783,14 +2705,18 @@ productForm.addEventListener(
 
 
                 if (frontImage) {
+
                     updateData.front_image =
                         frontImage;
+
                 }
 
 
                 if (backImage) {
+
                     updateData.back_image =
                         backImage;
+
                 }
 
 
@@ -1817,15 +2743,9 @@ productForm.addEventListener(
             }
 
 
-            /* =========================
-               ADD
-            ========================= */
+            /* ADD */
 
             else {
-
-                /*
-                   Новый товар ставим в конец.
-                */
 
                 const maxOrder =
                     products.length
@@ -1876,6 +2796,7 @@ productForm.addEventListener(
                 showToast(
                     "Товар успешно добавлен."
                 );
+
             }
 
 
@@ -1884,6 +2805,7 @@ productForm.addEventListener(
             await loadProducts();
 
         }
+
 
         catch (error) {
 
@@ -1896,12 +2818,14 @@ productForm.addEventListener(
 
         }
 
+
         finally {
 
             saveProductButton.disabled = false;
 
             saveProductButton.textContent =
                 "СОХРАНИТЬ";
+
         }
 
     }
@@ -1960,6 +2884,7 @@ window.toggleVisibility =
 
 
         await loadProducts();
+
     };
 
 
@@ -2021,6 +2946,7 @@ window.deleteProduct =
 
 
         await loadProducts();
+
     };
 
 
@@ -2069,10 +2995,6 @@ window.moveProduct =
         const targetOrder =
             target.sort_order;
 
-
-        /*
-           Меняем sort_order местами.
-        */
 
         const firstUpdate =
             await supabaseClient
@@ -2124,9 +3046,11 @@ window.moveProduct =
 
         await loadProducts();
 
+
         showToast(
             "Порядок товаров изменён."
         );
+
     };
 
 
@@ -2140,7 +3064,9 @@ supabaseClient.auth.onAuthStateChange(
         if (
             event === "SIGNED_OUT"
         ) {
+
             showLogin();
+
         }
 
     }
@@ -2157,3 +3083,4 @@ checkSession();
 
 </body>
 </html>
+```
