@@ -233,17 +233,17 @@
 
                 <label>
 
-                    <span>
-                        ИМЯ *
-                    </span>
+                    <span>ІМ’Я *</span>
+                    <input type="text" id="customerName" name="firstName"
+                           placeholder="Ваше ім’я" autocomplete="given-name" required>
 
-                    <input
-                        type="text"
-                        id="customerName"
-                        name="name"
-                        placeholder="Ваше имя"
-                        required
-                    >
+                </label>
+
+                <label>
+
+                    <span>ПРІЗВИЩЕ *</span>
+                    <input type="text" id="customerSurname" name="surname"
+                           placeholder="Ваше прізвище" autocomplete="family-name" required>
 
                 </label>
 
@@ -349,26 +349,41 @@
 
                 <!-- NOVA POSHTA -->
 
-                <div
-                    id="novaPoshtaField"
-                    class="conditional-field"
-                >
-
+                <div id="novaPoshtaField" class="conditional-field">
                     <label>
-
-                        <span>
-                            НОМЕР ОТДЕЛЕНИЯ *
-                        </span>
-
-                        <input
-                            type="text"
-                            id="novaPoshtaNumber"
-                            name="novaPoshtaNumber"
-                            placeholder="Например: 15"
-                        >
-
+                        <span>ТИП ДОСТАВКИ *</span>
+                        <select id="novaPoshtaType" name="novaPoshtaType">
+                            <option value="" selected disabled>Оберіть поштомат або відділення</option>
+                            <option value="Поштомат">Поштомат</option>
+                            <option value="Відділення">Відділення</option>
+                        </select>
                     </label>
 
+                    <div id="novaPoshtaLockerField" class="conditional-field">
+                        <label>
+                            <span>НОМЕР ПОШТОМАТА *</span>
+                            <input type="text" id="novaPoshtaLockerNumber" name="novaPoshtaLockerNumber"
+                                   placeholder="Наприклад: 12345">
+                        </label>
+                        <label>
+                            <span>АДРЕСА ПОШТОМАТА *</span>
+                            <input type="text" id="novaPoshtaLockerAddress" name="novaPoshtaLockerAddress"
+                                   placeholder="Адреса поштомата">
+                        </label>
+                    </div>
+
+                    <div id="novaPoshtaBranchField" class="conditional-field">
+                        <label>
+                            <span>НОМЕР ВІДДІЛЕННЯ *</span>
+                            <input type="text" id="novaPoshtaBranchNumber" name="novaPoshtaBranchNumber"
+                                   placeholder="Наприклад: 15">
+                        </label>
+                        <label>
+                            <span>АДРЕСА ВІДДІЛЕННЯ *</span>
+                            <input type="text" id="novaPoshtaBranchAddress" name="novaPoshtaBranchAddress"
+                                   placeholder="Адреса відділення">
+                        </label>
+                    </div>
                 </div>
 
 
