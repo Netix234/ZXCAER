@@ -820,6 +820,27 @@
         }
 
 
+
+        /* STATUS + GALLERY */
+        .status-select { width:100%; border:1px solid var(--border); background:var(--input); color:var(--text); padding:13px 14px; outline:none; border-radius:0; }
+        .status-select:focus { border-color:var(--text); }
+        .gallery-files { width:100%; }
+        .gallery-preview { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:12px; }
+        .gallery-preview:empty { display:none; }
+        .gallery-preview-item { position:relative; aspect-ratio:1/1; overflow:hidden; border:1px solid var(--border); background:var(--surface-2); }
+        .gallery-preview-item img { width:100%; height:100%; object-fit:cover; display:block; }
+        .gallery-remove { position:absolute; top:5px; right:5px; width:26px; height:26px; border:0; border-radius:50%; background:#111; color:#fff; font-size:16px; line-height:26px; padding:0; z-index:2; }
+        .gallery-label { position:absolute; left:5px; bottom:5px; padding:4px 6px; background:rgba(0,0,0,.72); color:#fff; font-size:9px; text-transform:uppercase; }
+        .gallery-note { margin-top:8px; color:var(--muted); font-size:11px; line-height:1.4; }
+        .product-size-checks { display:flex; flex-wrap:wrap; gap:8px; }
+        .product-size-check { display:inline-flex; align-items:center; gap:7px; border:1px solid var(--border); background:var(--surface); padding:9px 11px; cursor:pointer; }
+        .product-size-check input { margin:0; accent-color:var(--text); }
+        .product-size-check span { font-size:12px; }
+        .product-custom-sizes { margin-top:10px; width:100%; border:1px solid var(--border); background:var(--input); color:var(--text); padding:13px 14px; outline:none; border-radius:0; }
+        .product-custom-sizes:focus { border-color:var(--text); }
+        .product-sizes-note { margin-top:7px; color:var(--muted); font-size:11px; line-height:1.4; }
+
+
         /* =========================================================
            LOADING
         ========================================================= */
@@ -1663,6 +1684,45 @@
             <div class="field">
 
                 <label>
+                    Статус товара
+                </label>
+
+                <select id="productStatus" class="status-select">
+                    <option value="available">В НАЛИЧИИ</option>
+                    <option value="sold_out">РАСПРОДАНО</option>
+                    <option value="preorder">ПРЕДЗАКАЗ</option>
+                    <option value="coming_soon">СКОРО</option>
+                </select>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
+                    РАЗМЕРЫ ТОВАРА
+                </label>
+
+                <div class="product-size-checks" id="productSizeChecks">
+                    <label class="product-size-check"><input type="checkbox" value="XS"><span>XS</span></label>
+                    <label class="product-size-check"><input type="checkbox" value="S"><span>S</span></label>
+                    <label class="product-size-check"><input type="checkbox" value="M"><span>M</span></label>
+                    <label class="product-size-check"><input type="checkbox" value="L"><span>L</span></label>
+                    <label class="product-size-check"><input type="checkbox" value="XL"><span>XL</span></label>
+                    <label class="product-size-check"><input type="checkbox" value="XXL"><span>XXL</span></label>
+                    <label class="product-size-check"><input type="checkbox" value="XXXL"><span>XXXL</span></label>
+                    <label class="product-size-check"><input type="checkbox" value="ONE SIZE"><span>ONE SIZE</span></label>
+                </div>
+
+                <input id="productCustomSizes" class="product-custom-sizes" type="text" placeholder="Другие размеры через запятую: 40, 41, 42">
+                <div class="product-sizes-note">Можно выбрать несколько размеров и при необходимости добавить свои через запятую.</div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label>
                     Описание
                 </label>
 
@@ -1740,6 +1800,21 @@
                     </div>
 
                 </div>
+
+            </div>
+
+
+            <!-- GALLERY -->
+
+            <div class="upload-area">
+
+                <label>ГАЛЕРЕЯ ТОВАРА</label>
+
+                <input id="galleryFiles" class="gallery-files" type="file" accept="image/jpeg,image/png,image/webp,image/jpg" multiple>
+
+                <div class="gallery-note">Можно выбрать сразу несколько фотографий.</div>
+
+                <div class="gallery-preview" id="galleryPreview"></div>
 
             </div>
 
@@ -1957,6 +2032,21 @@ const productPrice =
 const productDescription =
     document.getElementById("productDescription");
 
+const productStatus =
+    document.getElementById("productStatus");
+
+const productSizeChecks =
+    document.getElementById("productSizeChecks");
+
+const productCustomSizes =
+    document.getElementById("productCustomSizes");
+
+const galleryFiles =
+    document.getElementById("galleryFiles");
+
+const galleryPreview =
+    document.getElementById("galleryPreview");
+
 const frontFile =
     document.getElementById("frontFile");
 
@@ -1987,6 +2077,10 @@ let products = [];
 
 let editingProductId = null;
 
+let editingGalleryImages = [];
+
+let newGalleryFiles = [];
+
 
 /* ============================================================
    HELPERS
@@ -2000,6 +2094,44 @@ function escapeHtml(value) {
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#039;");
+}
+
+
+function normalizeProductSizes(value) {
+
+    if (Array.isArray(value)) {
+        return value.map(item => String(item ?? "").trim()).filter(Boolean);
+    }
+
+    if (typeof value === "string") {
+        try {
+            const parsed = JSON.parse(value);
+            if (Array.isArray(parsed)) {
+                return parsed.map(item => String(item ?? "").trim()).filter(Boolean);
+            }
+        } catch (e) {}
+
+        return value.split(",").map(item => item.trim()).filter(Boolean);
+    }
+
+    return [];
+}
+
+function getSelectedProductSizes() {
+    const selected = Array.from(productSizeChecks?.querySelectorAll('input[type="checkbox"]:checked') || []).map(input => input.value.trim());
+    const custom = (productCustomSizes?.value || "").split(",").map(item => item.trim()).filter(Boolean);
+    return [...new Set([...selected, ...custom])];
+}
+
+function setProductSizes(value) {
+    const sizes = new Set(normalizeProductSizes(value));
+    productSizeChecks?.querySelectorAll('input[type="checkbox"]').forEach(input => {
+        input.checked = sizes.has(input.value);
+    });
+    if (productCustomSizes) {
+        const preset = new Set(Array.from(productSizeChecks?.querySelectorAll('input[type="checkbox"]') || []).map(input => input.value));
+        productCustomSizes.value = [...sizes].filter(size => !preset.has(size)).join(", ");
+    }
 }
 
 
@@ -2061,6 +2193,22 @@ function formatPrice(price) {
     return Number(price || 0)
         .toLocaleString("uk-UA") + " ₴";
 }
+
+
+function normalizeGallery(product) {
+    if (Array.isArray(product?.gallery_images)) return product.gallery_images.filter(Boolean);
+    if (typeof product?.gallery_images === "string") { try { const x=JSON.parse(product.gallery_images); if(Array.isArray(x)) return x.filter(Boolean); } catch(e) {} }
+    return [];
+}
+
+function renderGalleryPreview() {
+    const existing=editingGalleryImages.map((url,i)=>`<div class="gallery-preview-item"><img src="${escapeHtml(getImageUrl(url))}" alt=""><button type="button" class="gallery-remove" onclick="removeExistingGalleryImage(${i})">×</button><div class="gallery-label">галерея</div></div>`);
+    const fresh=newGalleryFiles.map((file,i)=>`<div class="gallery-preview-item"><img src="${URL.createObjectURL(file)}" alt=""><button type="button" class="gallery-remove" onclick="removeNewGalleryFile(${i})">×</button><div class="gallery-label">новое фото</div></div>`);
+    galleryPreview.innerHTML=[...existing,...fresh].join("");
+}
+
+window.removeExistingGalleryImage=function(i){editingGalleryImages.splice(i,1);renderGalleryPreview();};
+window.removeNewGalleryFile=function(i){newGalleryFiles.splice(i,1);renderGalleryPreview();};
 
 
 /* ============================================================
@@ -2258,15 +2406,9 @@ function renderProducts() {
                     product.front_image
                 );
 
-            const statusClass =
-                product.is_visible
-                    ? "visible"
-                    : "hidden";
-
-            const statusText =
-                product.is_visible
-                    ? "Опубликован"
-                    : "Скрыт";
+            const statusNames = { available:"В НАЛИЧИИ", sold_out:"РАСПРОДАНО", preorder:"ПРЕДЗАКАЗ", coming_soon:"СКОРО" };
+            const statusText = statusNames[product.status] || "В НАЛИЧИИ";
+            const statusClass = product.status === "sold_out" ? "hidden" : "visible";
 
 
             return `
@@ -2405,6 +2547,11 @@ addProductButton.addEventListener(
             "Добавить товар";
 
         productForm.reset();
+        productStatus.value = "available";
+        setProductSizes([]);
+        editingGalleryImages = [];
+        newGalleryFiles = [];
+        galleryPreview.innerHTML = "";
 
         frontPreview.src = "";
 
@@ -2448,6 +2595,13 @@ window.editProduct = function(id) {
     productDescription.value =
         product.description || "";
 
+    productStatus.value = product.status || "available";
+    setProductSizes(product.sizes || []);
+    editingGalleryImages = normalizeGallery(product);
+    newGalleryFiles = [];
+    galleryFiles.value = "";
+    renderGalleryPreview();
+
     frontFile.value = "";
 
     backFile.value = "";
@@ -2475,6 +2629,11 @@ function closeProductModal() {
     editingProductId = null;
 
     productForm.reset();
+    productStatus.value = "available";
+    setProductSizes([]);
+    editingGalleryImages = [];
+    newGalleryFiles = [];
+    galleryPreview.innerHTML = "";
 
     frontPreview.src = "";
 
@@ -2563,6 +2722,13 @@ backFile.addEventListener(
 );
 
 
+galleryFiles.addEventListener("change",function(){
+    newGalleryFiles=[...newGalleryFiles,...Array.from(galleryFiles.files||[])];
+    renderGalleryPreview();
+    galleryFiles.value="";
+});
+
+
 /* ============================================================
    UPLOAD IMAGE
 ============================================================ */
@@ -2638,6 +2804,9 @@ productForm.addEventListener(
         const description =
             productDescription.value.trim();
 
+        const status = productStatus.value || "available";
+        const sizes = getSelectedProductSizes();
+
 
         if (!name) {
 
@@ -2669,6 +2838,7 @@ productForm.addEventListener(
 
             let frontImage = null;
             let backImage = null;
+            const uploadedGalleryImages = [];
 
 
             if (frontFile.files[0]) {
@@ -2688,6 +2858,11 @@ productForm.addEventListener(
                     );
             }
 
+            for (const file of newGalleryFiles) {
+                const uploaded = await uploadImage(file);
+                if (uploaded) uploadedGalleryImages.push(uploaded);
+            }
+
 
             /* EDIT */
 
@@ -2699,7 +2874,16 @@ productForm.addEventListener(
 
                     price,
 
-                    description
+                    description,
+
+                    status,
+
+                    sizes,
+
+                    gallery_images: [
+                        ...editingGalleryImages,
+                        ...uploadedGalleryImages
+                    ]
 
                 };
 
@@ -2736,6 +2920,25 @@ productForm.addEventListener(
                 }
 
 
+                /* Сразу обновляем товар в памяти и снаружи модального окна.
+                   Это гарантирует, что статус на карточке меняется
+                   одновременно со статусом внутри редактирования. */
+                const editedProduct =
+                    products.find(
+                        item =>
+                            String(item.id) ===
+                            String(editingProductId)
+                    );
+
+                if (editedProduct) {
+                    Object.assign(
+                        editedProduct,
+                        updateData
+                    );
+                }
+
+                renderProducts();
+
                 showToast(
                     "Товар успешно изменён."
                 );
@@ -2771,6 +2974,13 @@ productForm.addEventListener(
 
                     back_image:
                         backImage || "",
+
+                    gallery_images:
+                        uploadedGalleryImages,
+
+                    status,
+
+                    sizes,
 
                     sort_order:
                         maxOrder + 1,
@@ -3083,4 +3293,3 @@ checkSession();
 
 </body>
 </html>
-```
