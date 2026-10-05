@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================
@@ -63,7 +62,76 @@ document.addEventListener("DOMContentLoaded", () => {
        CART DATA
     ========================= */
 
-    let cart = [];
+    const CART_KEY = "zxcaerCart";
+
+
+    function loadCart() {
+        try {
+            const saved = localStorage.getItem(CART_KEY);
+
+            if (!saved) {
+                return [];
+            }
+
+            const parsed = JSON.parse(saved);
+
+            if (!Array.isArray(parsed)) {
+                return [];
+            }
+
+            return parsed.map(item => ({
+                productId:
+                    item.productId !== undefined &&
+                    item.productId !== null
+                        ? String(item.productId)
+                        : null,
+
+                name:
+                    item.name || "",
+
+                price:
+                    Number(item.price || 0),
+
+                image:
+                    item.image || "",
+
+                size:
+                    item.size || null,
+
+                quantity:
+                    Number(item.quantity || 0)
+            })).filter(
+                item => item.quantity > 0
+            );
+
+        } catch (error) {
+            console.error(
+                "Не вдалося завантажити кошик:",
+                error
+            );
+
+            return [];
+        }
+    }
+
+
+    function saveCart() {
+        try {
+            localStorage.setItem(
+                CART_KEY,
+                JSON.stringify(cart)
+            );
+
+        } catch (error) {
+            console.error(
+                "Не вдалося зберегти кошик:",
+                error
+            );
+        }
+    }
+
+
+    let cart = loadCart();
     let currentProduct = null;
 
 
@@ -142,24 +210,93 @@ document.addEventListener("DOMContentLoaded", () => {
     ========================= */
 
     function addToCart(product) {
-        const existingProduct = cart.find(
-            item => item.image === product.image
-        );
+        const productId =
+            product.productId ??
+            product.id ??
+            null;
+
+        const productSize =
+            product.size || null;
+
+        const existingProduct =
+            cart.find(item => {
+                const sameProduct =
+                    productId !== null &&
+                    item.productId !== null &&
+                    String(item.productId) === String(productId);
+
+                const sameSize =
+                    (item.size || null) === productSize;
+
+                if (sameProduct) {
+                    return sameSize;
+                }
+
+                if (
+                    productId === null &&
+                    item.productId === null
+                ) {
+                    return (
+                        item.image === product.image &&
+                        sameSize
+                    );
+                }
+
+                return false;
+            });
 
         if (existingProduct) {
             existingProduct.quantity += 1;
         } else {
             cart.push({
-                name: product.name,
-                price: Number(product.price),
-                image: product.image,
-                quantity: 1
+                productId:
+                    productId !== null
+                        ? String(productId)
+                        : null,
+
+                name:
+                    product.name || "",
+
+                price:
+                    Number(product.price || 0),
+
+                image:
+                    product.image || "",
+
+                size:
+                    productSize,
+
+                quantity:
+                    1
             });
         }
 
+        saveCart();
         renderCart();
         openCart();
     }
+
+    window.zxcaerAddToCart = addToCart;
+
+
+    /* =========================
+       CART SYNC
+    ========================= */
+
+    window.addEventListener("pageshow", () => {
+        cart = loadCart();
+        renderCart();
+    });
+
+
+    window.addEventListener("storage", event => {
+        if (event.key !== CART_KEY) {
+            return;
+        }
+
+        cart = loadCart();
+        renderCart();
+    });
 
 
     /* =========================
@@ -167,29 +304,19 @@ document.addEventListener("DOMContentLoaded", () => {
     ========================= */
 
     document.querySelectorAll(".product").forEach(product => {
-        const addButton = product.querySelector(".add-to-cart");
         const productImage = product.querySelector(".product-image");
-
-        /* ADD BUTTON */
-
-        if (addButton) {
-            addButton.addEventListener("click", function(event) {
-                event.preventDefault();
-                event.stopPropagation();
-
-                addToCart({
-                    name: product.dataset.name,
-                    price: product.dataset.price,
-                    image: product.dataset.image
-                });
-            });
-        }
-
-        /* PRODUCT IMAGE */
 
         if (productImage) {
             productImage.addEventListener("click", function(event) {
-                if (event.target.closest(".add-to-cart")) {
+                if (event.target.closest(".product-status-badge")) {
+                    event.preventDefault();
+                }
+
+                const productId = product.dataset.id;
+
+                if (productId) {
+                    window.location.href =
+                        `product.html?id=${encodeURIComponent(productId)}`;
                     return;
                 }
 
@@ -324,6 +451,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     cart.splice(index, 1);
                 }
 
+                saveCart();
                 renderCart();
             });
         });
@@ -342,6 +470,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 cart[index].quantity += 1;
+
+                saveCart();
                 renderCart();
             });
         });
@@ -360,6 +490,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 cart.splice(index, 1);
+
+                saveCart();
                 renderCart();
             });
         });
@@ -435,9 +567,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             addToCart({
+                productId: currentProduct.dataset.id,
                 name: currentProduct.dataset.name,
                 price: currentProduct.dataset.price,
-                image: currentProduct.dataset.image
+                image: currentProduct.dataset.image,
+                size: null
             });
 
             closeProductModal();
@@ -465,6 +599,8 @@ document.addEventListener("DOMContentLoaded", () => {
             orderModalOverlay.classList.add("active");
         }
     }
+
+    window.zxcaerOpenOrderModal = openOrderModal;
 
 
     /* =========================
@@ -853,6 +989,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 /* CLEAR CART */
 
                 cart = [];
+                saveCart();
                 renderCart();
 
                 /* CLOSE WINDOWS */
@@ -956,46 +1093,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ========================= */
 
     renderCart();
-
-
-    /* =========================
-       THEME
-    ========================= */
-
-    const themeToggle = document.getElementById("themeToggle");
-
-    function applyTheme(theme) {
-        const dark = theme === "dark";
-
-        document.body.classList.toggle("dark-theme", dark);
-
-        if (themeToggle) {
-            themeToggle.setAttribute(
-                "aria-label",
-                dark ? "Switch to white theme" : "Switch to black theme"
-            );
-
-            themeToggle.setAttribute(
-                "title",
-                dark ? "Белая тема" : "Чёрная тема"
-            );
-        }
-    }
-
-    const savedTheme = localStorage.getItem("zxcaer-theme") || "light";
-    applyTheme(savedTheme);
-
-    if (themeToggle) {
-        themeToggle.addEventListener("click", () => {
-            const nextTheme =
-                document.body.classList.contains("dark-theme")
-                    ? "light"
-                    : "dark";
-
-            localStorage.setItem("zxcaer-theme", nextTheme);
-            applyTheme(nextTheme);
-        });
-    }
 
 
     /* =========================
@@ -1179,19 +1276,19 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             if (accountMode === "login") {
-                setAccountMessage("Вы успешно вошли.", "success");
+                setAccountMessage("Ви успішно увійшли.", "success");
                 renderAccount(result.data.user);
 
             } else if (result.data.session) {
                 setAccountMessage(
-                    "Аккаунт создан. Вы вошли.",
+                    "Акаунт успішно створено. Ви увійшли.",
                     "success"
                 );
                 renderAccount(result.data.user);
 
             } else {
                 setAccountMessage(
-                    "Аккаунт создан. Проверьте email для подтверждения регистрации.",
+                    "Акаунт успішно створено. Реєстрацію завершено.",
                     "success"
                 );
             }
