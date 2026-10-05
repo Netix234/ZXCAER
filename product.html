@@ -1,0 +1,3184 @@
+<!DOCTYPE html>
+
+<html lang="uk">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ZXCAER — Товар</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scrollbar-gutter: stable;
+        }
+
+        body {
+            background: #f5f5f5;
+            color: #111;
+            font-family: Arial, Helvetica, sans-serif;
+            overflow-x: hidden;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font-family: inherit;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            height: 68px;
+            width: 100%;
+            display: grid;
+            grid-template-columns:
+                1fr
+                auto
+                1fr;
+            align-items: center;
+            padding: 0 34px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #000;
+            border-bottom: 1px solid #111;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        .nav-left a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            transition: opacity .25s ease;
+        }
+
+        .nav-left a:hover {
+            opacity: .55;
+        }
+
+
+        /* =====================================================
+           LOGO
+        ===================================================== */
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-logo {
+            width: auto;
+            height: 38px;
+            display: block;
+            max-width: 170px;
+            object-fit: contain;
+        }
+
+
+        /* =====================================================
+           RIGHT HEADER
+        ===================================================== */
+
+        .nav-right {
+            justify-self: end;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .icon {
+            width: 43px;
+            height: 43px;
+            border: 0;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition:
+                background .2s ease;
+        }
+
+        .icon:hover {
+            background: rgba(255,255,255,.1);
+        }
+
+        .icon svg {
+            width: 21px;
+            height: 21px;
+            fill: none;
+            stroke: #fff;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: 2px;
+            right: 1px;
+            min-width: 17px;
+            height: 17px;
+            padding: 0 4px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: #000;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .cart-count.active {
+            display: flex;
+        }
+
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .product-page {
+            width: min(
+                1260px,
+                calc(100% - 70px)
+            );
+            margin: 0 auto;
+            padding:
+                24px
+                0
+                90px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 22px;
+            padding: 9px 14px;
+            color: #222;
+            background: rgba(255,255,255,.82);
+            border: 1px solid #dcdcdc;
+            border-radius: 999px;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: .08em;
+            box-shadow: 0 2px 10px rgba(0,0,0,.04);
+            transition: all .2s ease;
+        }
+
+        .back-link:hover {
+            color: #000;
+            border-color: #bdbdbd;
+            background: #fff;
+            transform: translateX(-2px);
+            box-shadow: 0 4px 14px rgba(0,0,0,.08);
+        }
+
+        .back-link:active {
+            transform: translateX(-1px) scale(.98);
+        }
+
+
+        /* =====================================================
+           PRODUCT
+        ===================================================== */
+
+        .product-layout {
+            display: grid;
+            grid-template-columns:
+                minmax(0, 0.95fr)
+                minmax(360px, 0.65fr);
+            gap: 60px;
+            align-items: start;
+        }
+
+
+        /* =====================================================
+           GALLERY
+        ===================================================== */
+
+        .product-gallery {
+            min-width: 0;
+        }
+
+        .main-image-wrap {
+            position: relative;
+            width: 100%;
+            max-width: 650px;
+            aspect-ratio: 1 / .86;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .main-image {
+            width: 88%;
+            height: 88%;
+            object-fit: contain;
+            display: block;
+            background: transparent;
+            transition:
+                opacity .25s ease,
+                transform .4s ease;
+        }
+
+
+        /* =====================================================
+           GALLERY ARROWS
+        ===================================================== */
+
+        .gallery-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 6;
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(0,0,0,.14);
+            border-radius: 50%;
+            background: rgba(255,255,255,.86);
+            color: #111;
+            font-size: 25px;
+            font-weight: 300;
+            line-height: 1;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition:
+                opacity .2s ease,
+                background .2s ease;
+        }
+
+        .main-image-wrap:hover .gallery-arrow {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .gallery-arrow:hover {
+            background: #fff;
+        }
+
+        .gallery-arrow-prev {
+            left: 12px;
+        }
+
+        .gallery-arrow-next {
+            right: 12px;
+        }
+
+        .gallery-arrow:disabled {
+            opacity: .25 !important;
+            cursor: default;
+        }
+
+        .main-image:hover {
+            transform:
+                scale(1.015);
+        }
+
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        .image-status {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            z-index: 5;
+            min-height: 28px;
+            padding:
+                0 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            border-radius: 999px;
+            background:
+                rgba(255,255,255,.92);
+            backdrop-filter:
+                blur(10px);
+            border:
+                1px solid rgba(0,0,0,.08);
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: .05em;
+        }
+
+        .status-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .image-status.available {
+            color: #16803c;
+        }
+
+        .image-status.available .status-dot {
+            background: #16a34a;
+            box-shadow:
+                0 0 10px
+                rgba(22,163,74,.8);
+        }
+
+        .image-status.sold-out {
+            color: #d12d2d;
+        }
+
+        .image-status.sold-out .status-dot {
+            background: #ef4444;
+            box-shadow:
+                0 0 10px
+                rgba(239,68,68,.8);
+        }
+
+        .image-status.sale {
+            color: #c66a00;
+        }
+
+        .image-status.sale .status-dot {
+            background: #f59e0b;
+            box-shadow:
+                0 0 10px
+                rgba(245,158,11,.8);
+        }
+
+        .image-status.coming-soon {
+            color: #2866bd;
+        }
+
+        .image-status.coming-soon .status-dot {
+            background: #3b82f6;
+            box-shadow:
+                0 0 10px
+                rgba(59,130,246,.8);
+        }
+
+
+        /* =====================================================
+           THUMBNAILS
+        ===================================================== */
+
+        .thumbnails {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .thumbnails::-webkit-scrollbar {
+            display: none;
+        }
+
+        .thumbnail {
+            width: 78px;
+            height: 78px;
+            flex: 0 0 78px;
+            padding: 0;
+            border:
+                1px solid transparent;
+            background: transparent;
+            overflow: hidden;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .thumbnail.active {
+            border-color: #111;
+        }
+
+
+        /* =====================================================
+           INFO
+        ===================================================== */
+
+        .product-info {
+            padding-top: 5px;
+            min-width: 0;
+        }
+
+        .product-name {
+            font-size:
+                clamp(
+                    29px,
+                    3vw,
+                    39px
+                );
+            line-height: 1.08;
+            font-weight: 400;
+            letter-spacing: -.035em;
+            margin-bottom: 19px;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 7px;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        .price-status {
+            display: none !important;
+        }
+
+        .mini-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .price-status.available {
+            color: #16803c;
+        }
+
+        .price-status.sold-out {
+            color: #d12d2d;
+        }
+
+        .price-status.sale {
+            color: #c66a00;
+        }
+
+        .price-status.coming-soon {
+            color: #2866bd;
+        }
+
+
+        /* =====================================================
+           SIZE
+        ===================================================== */
+
+        .size-block {
+            margin-top: 24px;
+            margin-bottom: 20px;
+        }
+
+        .size-title {
+            margin-bottom: 9px;
+            color: #666;
+            font-size: 9px;
+            font-weight: 600;
+            letter-spacing: .09em;
+        }
+
+        .sizes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .size-button {
+            min-width: 48px;
+            height: 38px;
+            padding:
+                0 12px;
+            background: transparent;
+            border:
+                1px solid #ccc;
+            color: #111;
+            font-size: 10px;
+        }
+
+        .size-button:hover {
+            border-color: #111;
+        }
+
+        .size-button.active {
+            color: #fff;
+            background: #111;
+            border-color: #111;
+        }
+
+
+        /* =====================================================
+           QUANTITY
+        ===================================================== */
+
+        .quantity-label {
+            margin-bottom: 7px;
+            color: #666;
+            font-size: 9px;
+            letter-spacing: .08em;
+        }
+
+        .quantity {
+            width: 116px;
+            height: 40px;
+            display: grid;
+            grid-template-columns:
+                1fr
+                1fr
+                1fr;
+            border:
+                1px solid #999;
+            margin-bottom: 18px;
+        }
+
+        .quantity button,
+        .quantity span {
+            border: 0;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .quantity button:hover {
+            background: #e9e9e9;
+        }
+
+        .quantity button:disabled {
+            color: #aaa;
+            cursor: not-allowed;
+        }
+
+
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
+
+        .actions {
+            width: 100%;
+            max-width: 380px;
+            display: grid;
+            gap: 7px;
+        }
+
+        .action-button {
+            width: 100%;
+            min-height: 43px;
+            border-radius: 0;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: .03em;
+            transition:
+                opacity .2s ease,
+                transform .2s ease;
+        }
+
+        .action-button:hover:not(:disabled) {
+            transform:
+                translateY(-1px);
+        }
+
+        .add-button {
+            background: transparent;
+            color: #111;
+            border:
+                1px solid #999;
+        }
+
+        .add-button:hover:not(:disabled) {
+            border-color: #111;
+        }
+
+        .buy-button {
+            background: #111;
+            color: #fff;
+            border:
+                1px solid #111;
+        }
+
+        .action-button:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+
+        /* =====================================================
+           DESCRIPTION
+        ===================================================== */
+
+        .description {
+            max-width: 500px;
+            margin-top: 39px;
+            color: #666;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .description ul {
+            padding-left: 18px;
+        }
+
+        .description li {
+            margin-bottom: 2px;
+        }
+
+
+
+        /* Product information popup is not used on the product page.
+           Hide the whole popup so its fallback content can never appear
+           in the bottom-left corner. */
+        .product-modal {
+            display: none !important;
+        }
+
+        .product-modal-overlay {
+            display: none !important;
+        }
+
+        .product-modal .modal-add-button {
+            display: none !important;
+        }
+
+        /* =====================================================
+           CART OVERLAY
+           SAME STYLE / ANIMATION AS INDEX
+        ===================================================== */
+
+        .cart-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.38);
+            opacity: 0;
+            visibility: hidden;
+            transition:
+                opacity .3s ease,
+                visibility .3s ease;
+            z-index: 400;
+        }
+
+        .cart-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+
+        /* =====================================================
+           CART DRAWER
+           SAME STYLE / ANIMATION AS INDEX
+        ===================================================== */
+
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width:
+                min(
+                    420px,
+                    92vw
+                );
+            height: 100vh;
+            z-index: 500;
+            background: #fff;
+            display: flex;
+            flex-direction: column;
+
+            transform:
+                translateX(100%);
+
+            transition:
+                transform .35s
+                cubic-bezier(.77,0,.18,1);
+
+            box-shadow:
+                -10px 0 40px
+                rgba(0,0,0,.12);
+        }
+
+        .cart-drawer.open {
+            transform:
+                translateX(0);
+        }
+
+        .cart-header {
+            height: 72px;
+            padding:
+                0 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom:
+                1px solid #eee;
+        }
+
+        .cart-title {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: .1em;
+        }
+
+        .cart-close {
+            width: 38px;
+            height: 38px;
+            border: 0;
+            background: transparent;
+            font-size: 25px;
+            font-weight: 300;
+        }
+
+        .cart-close:hover {
+            background: #f3f3f3;
+        }
+
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px;
+        }
+
+        .empty-cart {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-size: 10px;
+            letter-spacing: .08em;
+        }
+
+        .cart-item {
+            display: grid;
+            grid-template-columns:
+                82px
+                1fr;
+            gap: 13px;
+            padding-bottom: 16px;
+            margin-bottom: 16px;
+            border-bottom:
+                1px solid #eee;
+        }
+
+        .cart-item-image {
+            width: 82px;
+            height: 82px;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .cart-item-info {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .cart-item-name {
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .cart-item-price {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .cart-item-bottom {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .cart-quantity {
+            height: 32px;
+            display: grid;
+            grid-template-columns:
+                30px
+                30px
+                30px;
+            border:
+                1px solid #ccc;
+        }
+
+        .cart-quantity button,
+        .cart-quantity span {
+            border: 0;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+        }
+
+        .cart-quantity button:hover {
+            background: #eee;
+        }
+
+        .remove-item {
+            border: 0;
+            background: transparent;
+            color: #999;
+            font-size: 8px;
+            letter-spacing: .06em;
+        }
+
+        .remove-item:hover {
+            color: #111;
+        }
+
+        .cart-bottom {
+            padding:
+                18px;
+            border-top:
+                1px solid #eee;
+        }
+
+        .cart-total-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 13px;
+            font-size: 11px;
+        }
+
+        .cart-total-row strong {
+            font-size: 14px;
+        }
+
+        /*
+           ВАЖНО:
+           Используем .buy-button как на index,
+           но ID оставляем cartCheckoutButton,
+           чтобы product.js продолжал работать.
+        */
+
+        .cart-bottom .buy-button {
+            width: 100%;
+            height: 45px;
+            background: #111;
+            color: #fff;
+            border: 0;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: .04em;
+            transition:
+                opacity .2s ease,
+                background .2s ease;
+        }
+
+        .cart-bottom .buy-button:hover:not(:disabled) {
+            background: #222;
+        }
+
+        .cart-bottom .buy-button:disabled {
+            opacity: .35;
+            cursor: not-allowed;
+        }
+
+
+        /* =====================================================
+           TOAST
+        ===================================================== */
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 25px;
+            z-index: 800;
+            transform:
+                translate(-50%,20px);
+            padding:
+                13px 18px;
+            background: #111;
+            color: #fff;
+            font-size: 10px;
+            opacity: 0;
+            pointer-events: none;
+            transition:
+                opacity .25s ease,
+                transform .25s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform:
+                translate(-50%,0);
+        }
+
+
+        /* =====================================================
+           LOADING
+        ===================================================== */
+
+        .loading {
+            min-height: 450px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 10px;
+            letter-spacing: .1em;
+        }
+
+        .error {
+            display: none;
+            text-align: center;
+            padding: 70px 20px;
+            color: #777;
+            font-size: 12px;
+        }
+
+        .error.show {
+            display: block;
+        }
+
+
+        /* =====================================================
+           TABLET
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            .product-layout {
+                grid-template-columns: 1fr;
+                gap: 35px;
+            }
+
+            .main-image-wrap {
+                max-width: 590px;
+                aspect-ratio: 1 / .82;
+            }
+
+            .product-info {
+                padding-top: 0;
+            }
+
+            .actions {
+                max-width: 100%;
+            }
+        }
+
+
+        /* =====================================================
+           PHONE
+        ===================================================== */
+
+        @media (max-width: 600px) {
+
+            .header {
+                height: 58px;
+                padding:
+                    0 10px;
+            }
+
+            .nav-left {
+                gap: 12px;
+            }
+
+            .nav-left a {
+                font-size: 9px;
+            }
+
+            .brand-logo {
+                width: auto;
+                height: 32px;
+                max-width: 140px;
+                max-height: 32px;
+            }
+
+            .icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .icon svg {
+                width: 19px;
+                height: 19px;
+            }
+
+            .product-page {
+                width:
+                    calc(100% - 20px);
+                padding:
+                    14px
+                    0
+                    55px;
+            }
+
+            .back-link {
+                margin-bottom: 8px;
+                font-size: 8px;
+            }
+
+            .main-image-wrap {
+                max-width: 100%;
+                aspect-ratio: 1 / .92;
+            }
+
+            .main-image {
+                width: 83%;
+                height: 83%;
+            }
+
+            .image-status {
+                top: 7px;
+                left: 7px;
+                min-height: 24px;
+                padding:
+                    0 9px;
+                font-size: 8px;
+            }
+
+            .thumbnail {
+                width: 67px;
+                height: 67px;
+                flex-basis: 67px;
+            }
+
+            .product-name {
+                font-size: 28px;
+            }
+
+            .product-price {
+                font-size: 15px;
+            }
+
+            .description {
+                margin-top: 30px;
+                font-size: 12px;
+            }
+
+            .cart-drawer {
+                width: 94vw;
+            }
+
+            .checkout-modal {
+                width:
+                    calc(100% - 16px);
+                max-height:
+                    calc(100vh - 16px);
+            }
+
+            .checkout-header {
+                padding:
+                    18px;
+            }
+
+            .checkout-body {
+                padding:
+                    18px;
+            }
+
+            .checkout-title {
+                font-size: 20px;
+            }
+        }
+
+    
+
+        /* =====================================================
+           SYNCHRONIZED ORDER MODAL — SAME AS INDEX.HTML
+        ===================================================== */
+
+/* =========================================
+           ORDER MODAL
+        ========================================= */
+        
+        .order-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: 0.35s ease;
+            z-index: 9000;
+        }
+        
+        .order-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        
+        
+        .order-modal {
+            position: fixed;
+        
+            top: 50%;
+            left: 50%;
+        
+            width: min(560px, calc(100vw - 32px));
+            max-height: min(86vh, 760px);
+        
+            background: #ffffff;
+        
+            transform: translate(-50%, -47%) scale(0.97);
+        
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        
+            overflow-y: auto;
+        
+            z-index: 9001;
+        
+            transition:
+                opacity 0.35s ease,
+                transform 0.35s ease,
+                visibility 0.35s ease;
+        
+            box-shadow:
+                0 30px 100px rgba(0, 0, 0, 0.25);
+        }
+        
+        .order-modal.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        
+            transform: translate(-50%, -50%) scale(1);
+        }
+        
+        
+        .order-modal-inner {
+            padding: 30px;
+        }
+        
+        
+        .order-modal-close {
+            position: absolute;
+        
+            top: 16px;
+            right: 18px;
+        
+            width: 38px;
+            height: 38px;
+        
+            border: 0;
+            background: transparent;
+        
+            font-size: 32px;
+            font-weight: 300;
+        
+            cursor: pointer;
+        
+            z-index: 2;
+        
+            line-height: 1;
+        }
+        
+        
+        .order-modal-title {
+            margin-bottom: 34px;
+        }
+        
+        
+        .order-modal-title span {
+            display: block;
+        
+            font-size: 10px;
+            letter-spacing: 0.2em;
+        
+            opacity: 0.5;
+        
+            margin-bottom: 8px;
+        }
+        
+        
+        .order-modal-title h2 {
+            margin: 0;
+        
+            font-size: 25px;
+            font-weight: 500;
+            letter-spacing: -0.03em;
+        }
+        
+        
+        .order-form-section {
+            margin-bottom: 30px;
+        }
+        
+        
+        .order-section-title {
+            font-size: 10px;
+            letter-spacing: 0.16em;
+        
+            margin-bottom: 18px;
+        
+            padding-bottom: 10px;
+        
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        
+        .order-form-section label {
+            display: block;
+        
+            margin-bottom: 17px;
+        }
+        
+        
+        .order-form-section label > span {
+            display: block;
+        
+            font-size: 10px;
+            letter-spacing: 0.08em;
+        
+            margin-bottom: 7px;
+        }
+        
+        
+        .order-form-section input,
+        .order-form-section select,
+        .order-form-section textarea {
+            width: 100%;
+        
+            box-sizing: border-box;
+        
+            border: 1px solid #dcdcdc;
+        
+            background: #ffffff;
+        
+            border-radius: 0;
+        
+            padding: 13px 14px;
+        
+            font-family: inherit;
+            font-size: 13px;
+        
+            outline: none;
+        
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        
+            color: #111;
+        }
+        
+        
+        .order-form-section input:focus,
+        .order-form-section select:focus,
+        .order-form-section textarea:focus {
+            border-color: #111;
+        
+            box-shadow:
+                0 0 0 1px #111;
+        }
+        
+        
+        .order-form-section textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+        
+        
+        .order-form-section small {
+            display: block;
+        
+            margin-top: 6px;
+        
+            font-size: 10px;
+        
+            color: #888;
+        }
+        
+        
+        .conditional-field {
+            display: none;
+        }
+        
+        
+        .conditional-field.active {
+            display: block;
+        }
+        
+        
+        .order-summary {
+            border-top: 1px solid #111;
+            border-bottom: 1px solid #111;
+        
+            padding: 20px 0;
+        
+            margin-bottom: 22px;
+        }
+        
+        
+        .order-summary-title {
+            font-size: 10px;
+            letter-spacing: 0.15em;
+        
+            margin-bottom: 17px;
+        }
+        
+        
+        .order-summary-item {
+            display: flex;
+        
+            justify-content: space-between;
+            align-items: center;
+        
+            gap: 20px;
+        
+            padding: 8px 0;
+        
+            font-size: 12px;
+        }
+        
+        
+        .order-summary-item-name {
+            flex: 1;
+        }
+        
+        
+        .order-summary-item-price {
+            white-space: nowrap;
+        }
+        
+        
+        .order-summary-total {
+            display: flex;
+        
+            justify-content: space-between;
+            align-items: center;
+        
+            margin-top: 14px;
+            padding-top: 14px;
+        
+            border-top: 1px solid #e5e5e5;
+        }
+        
+        
+        .order-summary-total span {
+            font-size: 11px;
+            letter-spacing: 0.12em;
+        }
+        
+        
+        .order-summary-total strong {
+            font-size: 17px;
+        }
+        
+        
+        .submit-order-button {
+            width: 100%;
+        
+            border: 1px solid #111;
+        
+            background: #111;
+            color: #fff;
+        
+            padding: 17px 20px;
+        
+            font-family: inherit;
+        
+            font-size: 11px;
+            letter-spacing: 0.15em;
+        
+            cursor: pointer;
+        
+            transition:
+                background 0.2s ease,
+                color 0.2s ease;
+        }
+        
+        
+        .submit-order-button:hover {
+            background: #fff;
+            color: #111;
+        }
+        
+        
+        
+
+        /* =========================
+               ORDER MODAL
+            ========================= */
+        
+            .order-modal {
+        
+                width:
+                    calc(100vw - 18px);
+        
+                max-width:
+                    560px;
+        
+                max-height:
+                    calc(100svh - 18px);
+        
+                overflow-y:
+                    auto;
+        
+                border-radius:
+                    0;
+            }
+        
+        
+            .order-modal-inner {
+        
+                padding:
+                    30px 18px
+                    calc(
+                        22px +
+                        env(safe-area-inset-bottom)
+                    );
+            }
+        
+        
+            .order-modal-title {
+        
+                margin-bottom:
+                    23px;
+            }
+        
+        
+            .order-modal-title span {
+        
+                font-size:
+                    9px;
+            }
+        
+        
+            .order-modal-title h2 {
+        
+                margin-top:
+                    7px;
+        
+                font-size:
+                    20px;
+        
+                line-height:
+                    1.1;
+        
+                letter-spacing:
+                    -.5px;
+            }
+        
+        
+            .order-modal-close {
+        
+                top:
+                    7px;
+        
+                right:
+                    8px;
+        
+                width:
+                    34px;
+        
+                height:
+                    34px;
+        
+                font-size:
+                    27px;
+            }
+        
+        
+            /* =========================
+               ORDER FORM
+            ========================= */
+        
+            .order-form-section {
+        
+                margin-bottom:
+                    21px;
+            }
+        
+        
+            .order-form-section input,
+            .order-form-section select,
+            .order-form-section textarea {
+        
+                width:
+                    100%;
+        
+                min-height:
+                    47px;
+        
+                padding:
+                    13px;
+        
+                font-size:
+                    13px;
+        
+                border-radius:
+                    0;
+            }
+        
+        
+            .order-form-section textarea {
+        
+                min-height:
+                    85px;
+            }
+        
+        
+            .order-form-section label {
+        
+                font-size:
+                    9px;
+            }
+        
+        
+            .order-form-section small {
+        
+                font-size:
+                    9px;
+            }
+        
+        
+            /* =========================
+               ORDER SUMMARY
+            ========================= */
+        
+            .order-summary {
+        
+                padding:
+                    16px 0;
+        
+                margin-bottom:
+                    18px;
+            }
+        
+        
+            .order-summary-title {
+        
+                font-size:
+                    9px;
+        
+                margin-bottom:
+                    12px;
+            }
+        
+        
+            .order-summary-item {
+        
+                gap:
+                    10px;
+        
+                padding:
+                    7px 0;
+        
+                font-size:
+                    10px;
+        
+                line-height:
+                    1.35;
+            }
+        
+        
+            .order-summary-total {
+        
+                margin-top:
+                    11px;
+        
+                padding-top:
+                    11px;
+            }
+        
+        
+            .order-summary-total span {
+        
+                font-size:
+                    9px;
+            }
+        
+        
+            .order-summary-total strong {
+        
+                font-size:
+                    15px;
+            }
+        
+        
+            .submit-order-button {
+        
+                height:
+                    52px;
+        
+                padding:
+                    14px;
+        
+                font-size:
+                    9px;
+        
+                letter-spacing:
+                    .12em;
+            }
+        
+        }
+        
+        
+        
+    </style>
+
+
+<style id="zxcaer-product-footer-style">
+footer.zxcaer-footer {
+    width: 100% !important;
+    min-height: 205px !important;
+    height: 205px !important;
+    margin: 0 !important;
+    padding: 0 24px 36px !important;
+    background: #fff !important;
+    color: #111 !important;
+    border-top: 1px solid #dedede !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+}
+.zxcaer-footer-socials {
+    width: 100%;
+    padding-top: 20px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px !important;
+}
+.zxcaer-footer-social {
+    width: 24px !important;
+    height: 24px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #111 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    transition: transform .2s ease, opacity .2s ease !important;
+}
+.zxcaer-footer-social svg {
+    width: 20px !important;
+    height: 20px !important;
+    display: block !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+}
+.zxcaer-footer-social:hover {
+    transform: translateY(-2px) !important;
+    opacity: .65 !important;
+}
+.zxcaer-footer-bottom {
+    width: 100%;
+    max-width: 1100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px !important;
+    color: #777 !important;
+    font-size: 10px !important;
+    line-height: 1.5;
+    letter-spacing: .02em;
+    text-align: center;
+}
+.zxcaer-footer-bottom span { white-space: nowrap; }
+.zxcaer-footer-policy {
+    color: #777 !important;
+    text-decoration: none !important;
+    transition: color .2s ease !important;
+}
+.zxcaer-footer-policy:hover { color: #111 !important; }
+@media (max-width: 700px) {
+    footer.zxcaer-footer {
+        height: auto !important;
+        min-height: 185px !important;
+        padding: 0 16px 25px !important;
+    }
+    .zxcaer-footer-socials {
+        padding-top: 18px !important;
+        gap: 20px !important;
+    }
+    .zxcaer-footer-bottom {
+        max-width: 360px;
+        line-height: 1.9 !important;
+    }
+}
+</style>
+
+
+<style id="zxcaer-policy-modal-style">
+.zxcaer-policy-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(0,0,0,.58);
+    backdrop-filter: blur(5px);
+}
+.zxcaer-policy-modal.is-open { display: flex; }
+.zxcaer-policy-box {
+    position: relative;
+    width: min(760px, 100%);
+    max-height: min(78vh, 760px);
+    overflow-y: auto;
+    background: #fff;
+    color: #111;
+    border: 1px solid #ddd;
+    border-radius: 14px;
+    padding: 34px 34px 30px;
+    box-shadow: 0 22px 70px rgba(0,0,0,.22);
+}
+.zxcaer-policy-close {
+    position: sticky;
+    float: right;
+    top: 0;
+    width: 34px;
+    height: 34px;
+    margin: -6px -6px 12px 12px;
+    border: 1px solid #ddd;
+    border-radius: 50%;
+    background: #fff;
+    color: #111;
+    font-size: 22px;
+    line-height: 30px;
+    cursor: pointer;
+}
+.zxcaer-policy-close:hover { background:#111; color:#fff; border-color:#111; }
+.zxcaer-policy-title {
+    margin: 0 0 22px;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: .02em;
+}
+.zxcaer-policy-content { font-size: 13px; line-height: 1.75; color:#444; }
+.zxcaer-policy-content h4 { margin: 22px 0 7px; color:#111; font-size:14px; font-weight:600; }
+.zxcaer-policy-content p { margin: 0 0 10px; }
+.zxcaer-policy-content ul { margin: 0 0 12px 18px; padding: 0; }
+.zxcaer-policy-content a { color:#111; }
+body.zxcaer-policy-lock { overflow: hidden !important; }
+@media (max-width:600px) {
+    .zxcaer-policy-modal { padding: 10px; }
+    .zxcaer-policy-box { max-height: 88vh; padding: 25px 20px 22px; border-radius: 12px; }
+    .zxcaer-policy-title { font-size: 18px; }
+    .zxcaer-policy-content { font-size: 12px; line-height: 1.7; }
+}
+</style>
+
+
+<style id="zxcaer-mobile-product-style">
+/* =========================================================
+   ZXCAER — MOBILE PRODUCT PAGE
+   Только телефон. Desktop-версия не изменяется.
+========================================================= */
+
+@media (max-width: 600px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    body {
+        background: #f5f5f5;
+    }
+
+    /* ---------- HEADER ---------- */
+
+    .header {
+        height: 58px;
+        padding: 0 10px;
+        position: sticky;
+        top: 0;
+        z-index: 500;
+    }
+
+    .nav-left {
+        gap: 10px;
+    }
+
+    .nav-left a {
+        font-size: 9px;
+        letter-spacing: .03em;
+    }
+
+    .brand-logo {
+        height: 30px;
+        width: auto;
+        max-width: 115px;
+        max-height: 30px;
+    }
+
+    .icon {
+        width: 35px;
+        height: 35px;
+    }
+
+    .icon svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .nav-right {
+        gap: 2px;
+    }
+
+    /* ---------- PAGE ---------- */
+
+    .product-page {
+        width: calc(100% - 18px);
+        padding: 12px 0 70px;
+        margin: 0 auto;
+    }
+
+    .back-link {
+        min-height: 34px;
+        margin-bottom: 10px;
+        padding: 8px 13px;
+        border-radius: 999px;
+        font-size: 8px;
+        letter-spacing: .07em;
+        background: #fff;
+        box-shadow: 0 3px 12px rgba(0,0,0,.045);
+    }
+
+    /* ---------- PRODUCT LAYOUT ---------- */
+
+    .product-layout {
+        display: flex !important;
+        flex-direction: column;
+        gap: 0;
+        width: 100%;
+    }
+
+    /* ---------- PHOTO ---------- */
+
+    .product-gallery {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .main-image-wrap {
+        width: 100%;
+        max-width: none;
+        height: auto;
+        aspect-ratio: 1 / 1.02;
+        margin: 0;
+        border-radius: 18px;
+        background: #ededed;
+        box-shadow: 0 5px 22px rgba(0,0,0,.055);
+    }
+
+    .main-image {
+        width: 90%;
+        height: 90%;
+        object-fit: contain;
+    }
+
+    .image-status {
+        top: 10px;
+        left: 10px;
+        min-height: 26px;
+        padding: 0 10px;
+        gap: 6px;
+        font-size: 8px;
+        border-radius: 999px;
+    }
+
+    .status-dot {
+        width: 6px;
+        height: 6px;
+    }
+
+    /* На телефоне стрелки всегда доступны */
+
+    .gallery-arrow {
+        width: 33px;
+        height: 33px;
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        font-size: 21px;
+        background: rgba(255,255,255,.92);
+        box-shadow: 0 3px 12px rgba(0,0,0,.08);
+    }
+
+    .gallery-arrow-prev {
+        left: 9px;
+    }
+
+    .gallery-arrow-next {
+        right: 9px;
+    }
+
+    /* ---------- THUMBNAILS ---------- */
+
+    .thumbnails {
+        width: 100%;
+        gap: 7px;
+        margin-top: 9px;
+        padding-bottom: 1px;
+        overflow-x: auto;
+        scrollbar-width: none;
+    }
+
+    .thumbnails::-webkit-scrollbar {
+        display: none;
+    }
+
+    .thumbnail {
+        width: 62px;
+        height: 62px;
+        flex: 0 0 62px;
+        border: 1px solid #dedede;
+        border-radius: 10px;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .thumbnail.active {
+        border-color: #111;
+    }
+
+    /* ---------- INFO CARD ---------- */
+
+    .product-info {
+        width: 100%;
+        min-width: 0;
+        margin-top: 12px;
+        padding: 18px 15px 17px;
+        background: #fff;
+        border: 1px solid #e8e8e8;
+        border-radius: 18px;
+        box-shadow: 0 5px 22px rgba(0,0,0,.045);
+    }
+
+    .product-name {
+        margin-bottom: 7px;
+        font-size: 25px;
+        line-height: 1.08;
+        font-weight: 400;
+        letter-spacing: -.035em;
+    }
+
+    .price-row {
+        margin-bottom: 0;
+        gap: 8px;
+    }
+
+    .product-price {
+        font-size: 17px;
+        font-weight: 500;
+    }
+
+    /* ---------- DESCRIPTION ---------- */
+
+    .description {
+        margin-top: 19px;
+        padding-top: 15px;
+        border-top: 1px solid #ededed;
+        font-size: 11px;
+        line-height: 1.65;
+        color: #666;
+    }
+
+    /* ---------- SIZE ---------- */
+
+    .size-block {
+        margin-top: 20px;
+    }
+
+    .size-title {
+        margin-bottom: 8px;
+        color: #888;
+        font-size: 8px;
+        letter-spacing: .12em;
+    }
+
+    .sizes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        width: 100%;
+    }
+
+    .sizes button {
+        min-width: 45px;
+        height: 38px;
+        padding: 0 9px;
+        border: 1px solid #d7d7d7;
+        border-radius: 9px;
+        background: #fff;
+        color: #111;
+        font-size: 9px;
+        transition: .18s ease;
+    }
+
+    .sizes button.active {
+        background: #111;
+        border-color: #111;
+        color: #fff;
+    }
+
+    /* ---------- QUANTITY ---------- */
+
+    .quantity-label {
+        margin-top: 18px;
+        margin-bottom: 7px;
+        color: #888;
+        font-size: 8px;
+        letter-spacing: .12em;
+    }
+
+    .quantity {
+        width: 118px;
+        height: 40px;
+        border: 1px solid #d5d5d5;
+        border-radius: 10px;
+        background: #fafafa;
+        overflow: hidden;
+    }
+
+    .quantity button,
+    .quantity span {
+        font-size: 12px;
+    }
+
+    .quantity button:active {
+        background: #e9e9e9;
+    }
+
+    /* ---------- ACTIONS ---------- */
+
+    .actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+        margin-top: 18px;
+    }
+
+    .action-button {
+        width: 100%;
+        min-height: 48px;
+        border-radius: 11px;
+        font-size: 9px;
+        font-weight: 600;
+        letter-spacing: .05em;
+        transition: transform .15s ease, opacity .15s ease;
+    }
+
+    .action-button:active {
+        transform: scale(.985);
+    }
+
+    .add-button {
+        background: #fff;
+        color: #111;
+        border: 1px solid #cfcfcf;
+    }
+
+    .buy-button {
+        background: #111;
+        color: #fff;
+        border: 1px solid #111;
+        box-shadow: 0 5px 15px rgba(0,0,0,.10);
+    }
+
+    /* ---------- FOOTER ---------- */
+
+    .zxcaer-footer {
+        margin-top: 35px;
+    }
+
+    /* ---------- SMALL PHONES ---------- */
+
+    @media (max-width: 390px) {
+
+        .product-page {
+            width: calc(100% - 14px);
+            padding-top: 10px;
+        }
+
+        .product-info {
+            padding: 16px 13px;
+        }
+
+        .product-name {
+            font-size: 23px;
+        }
+
+        .product-price {
+            font-size: 16px;
+        }
+
+        .thumbnail {
+            width: 58px;
+            height: 58px;
+            flex-basis: 58px;
+        }
+
+        .sizes button {
+            min-width: 43px;
+            height: 37px;
+            padding: 0 8px;
+        }
+
+        .action-button {
+            min-height: 47px;
+        }
+    }
+}
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <nav class="nav-left">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="index.html#catalog">
+            Catalog
+        </a>
+
+    </nav>
+
+
+    <a
+        href="index.html"
+        class="logo"
+    >
+
+        <img
+            class="brand-logo"
+            src="images/logo.png"
+            alt="ZXCAER"
+        >
+
+    </a>
+
+
+    <div class="nav-right">
+
+
+        <button
+            class="icon"
+            type="button"
+            aria-label="Account"
+        >
+
+            <svg viewBox="0 0 24 24">
+
+                <circle
+                    cx="12"
+                    cy="8"
+                    r="3.5"
+                ></circle>
+
+                <path
+                    d="M5 20c.8-4 3.1-6 7-6s6.2 2 7 6"
+                ></path>
+
+            </svg>
+
+        </button>
+
+
+        <!-- CART -->
+
+        <button
+            class="icon cart"
+            id="cartButton"
+            type="button"
+            aria-label="Shopping cart"
+        >
+
+            <svg viewBox="0 0 24 24">
+
+                <path
+                    d="M4 8H20L18.8 20H5.2L4 8Z"
+                ></path>
+
+                <path
+                    d="M8 8C8 3 16 3 16 8"
+                ></path>
+
+            </svg>
+
+
+            <span
+                class="cart-count"
+                id="cartCount"
+            >
+                0
+            </span>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="product-page">
+
+
+    <a
+        href="javascript:history.back()"
+        class="back-link"
+    >
+        ← НАЗАД
+    </a>
+
+
+    <div
+        id="loading"
+        class="loading"
+    >
+        ЗАВАНТАЖЕННЯ ТОВАРУ
+    </div>
+
+
+    <div
+        id="productError"
+        class="error"
+    >
+        Товар не знайдено.
+    </div>
+
+
+    <section
+        id="productContent"
+        class="product-layout"
+        style="display:none;"
+    >
+
+
+        <!-- =================================================
+             IMAGE
+        ================================================== -->
+
+        <div class="product-gallery">
+
+
+            <div class="main-image-wrap">
+
+
+                <div
+                    id="imageStatus"
+                    class="image-status"
+                >
+
+                    <span class="status-dot"></span>
+
+                    <span id="imageStatusText">
+                        В НАЯВНОСТІ
+                    </span>
+
+                </div>
+
+
+                <button
+                    id="galleryPrev"
+                    class="gallery-arrow gallery-arrow-prev"
+                    type="button"
+                    aria-label="Попереднє фото"
+                >
+                    ‹
+                </button>
+
+
+                <button
+                    id="galleryNext"
+                    class="gallery-arrow gallery-arrow-next"
+                    type="button"
+                    aria-label="Наступне фото"
+                >
+                    ›
+                </button>
+
+
+                <img
+                    id="mainProductImage"
+                    class="main-image"
+                    src=""
+                    alt=""
+                >
+
+            </div>
+
+
+            <div
+                id="thumbnails"
+                class="thumbnails"
+            ></div>
+
+
+        </div>
+
+
+
+        <!-- =================================================
+             INFO
+        ================================================== -->
+
+        <div class="product-info">
+
+
+            <h1
+                id="productName"
+                class="product-name"
+            >
+                Товар
+            </h1>
+
+
+            <div class="price-row">
+
+                <div
+                    id="productPrice"
+                    class="product-price"
+                >
+                    ₴0.00
+                </div>
+
+            </div>
+
+
+
+            <!-- SIZE -->
+
+            <div
+                id="sizeBlock"
+                class="size-block"
+                style="display:none;"
+            >
+
+                <div class="size-title">
+                    РОЗМІР
+                </div>
+
+
+                <div
+                    id="sizes"
+                    class="sizes"
+                ></div>
+
+            </div>
+
+
+
+            <!-- QUANTITY -->
+
+            <div class="quantity-label">
+                КІЛЬКІСТЬ
+            </div>
+
+
+            <div class="quantity">
+
+                <button
+                    id="minusButton"
+                    type="button"
+                >
+                    −
+                </button>
+
+
+                <span id="quantity">
+                    1
+                </span>
+
+
+                <button
+                    id="plusButton"
+                    type="button"
+                >
+                    +
+                </button>
+
+            </div>
+
+
+
+            <!-- ACTIONS -->
+
+            <div class="actions">
+
+                <button
+                    id="addButton"
+                    class="action-button add-button"
+                    type="button"
+                >
+                    ДОДАТИ ДО КОШИКА
+                </button>
+
+
+                <button
+                    id="buyButton"
+                    class="action-button buy-button"
+                    type="button"
+                >
+                    КУПИТИ ЗАРАЗ
+                </button>
+
+            </div>
+
+
+            <div
+                id="description"
+                class="description"
+            ></div>
+
+
+        </div>
+
+    </section>
+
+</main>
+
+
+
+<!-- =========================================================
+     CART OVERLAY
+========================================================= -->
+
+<div
+    class="cart-overlay"
+    id="cartOverlay"
+></div>
+
+
+
+<!-- =========================================================
+     CART
+     ОДНА ЄДИНА КОРЗИНА
+========================================================= -->
+
+<aside
+    class="cart-drawer"
+    id="cartDrawer"
+>
+
+    <div class="cart-header">
+
+        <div class="cart-title">
+            YOUR CART
+        </div>
+
+
+        <button
+            class="cart-close"
+            id="cartClose"
+            type="button"
+            aria-label="Close cart"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        class="cart-items"
+        id="cartItems"
+    >
+
+        <div class="empty-cart">
+            YOUR CART IS EMPTY
+        </div>
+
+    </div>
+
+
+    <div class="cart-bottom">
+
+        <div class="cart-total-row">
+
+            <span>
+                TOTAL
+            </span>
+
+            <strong id="cartTotal">
+                ₴0.00
+            </strong>
+
+        </div>
+
+
+        <!--
+            ID НЕ МЕНЯЕМ:
+            product.js использует cartCheckoutButton
+        -->
+
+        <button
+            id="cartCheckoutButton"
+            class="buy-button"
+            type="button"
+        >
+            BUY NOW
+        </button>
+
+    </div>
+
+</aside>
+
+
+
+<!-- =========================================
+     ORDER MODAL OVERLAY
+========================================= -->
+
+<div
+    class="order-modal-overlay"
+    id="orderModalOverlay"
+></div>
+
+
+<!-- =========================================
+     PRODUCT MODAL
+========================================= -->
+
+<div
+    class="product-modal"
+    id="productModal"
+>
+
+    <button
+        class="product-modal-close"
+        id="productModalClose"
+    >
+        ×
+    </button>
+
+
+    <div class="product-modal-content">
+
+
+        <div class="product-modal-image">
+
+            <img
+                id="modalProductImage"
+                src=""
+                alt=""
+            >
+
+        </div>
+
+
+        <div class="product-modal-info">
+
+
+            <div>
+
+                <div
+                    class="modal-product-name"
+                    id="modalProductName"
+                >
+                    ZXCAER - ZIP
+                </div>
+
+                <div
+                    class="modal-product-price"
+                    id="modalProductPrice"
+                >
+                    ₴2,300.00
+                </div>
+
+            </div>
+
+
+            <div class="modal-section">
+
+                <h3>
+                    Best quality / найкраща якість
+                </h3>
+
+                <ul>
+
+                    <li>
+                        преміум тканина 100% хлопок
+                    </li>
+
+                    <li>
+                        вишивка
+                    </li>
+
+                    <li>
+                        фірмова упаковка
+                    </li>
+
+                    <li>
+                        бірки
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="modal-section">
+
+                <h3>
+                    ПРАННЯ 30°C
+                </h3>
+
+                <ul>
+
+                    <li>
+                        ПРАТИ НАВИВОРІТ
+                    </li>
+
+                    <li>
+                        НЕ ВІДБІЛЮВАТИ
+                    </li>
+
+                    <li>
+                        ТЕМНІ КОЛЬОРИ ОКРЕМО
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <button
+                class="modal-add-button"
+                id="modalAddButton"
+            >
+                ADD TO CART
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     ORDER MODAL
+========================================= -->
+
+<div
+    class="order-modal"
+    id="orderModal"
+>
+
+    <button
+        class="order-modal-close"
+        id="orderModalClose"
+    >
+        ×
+    </button>
+
+
+    <div class="order-modal-inner">
+
+
+        <div class="order-modal-title">
+
+            <span>
+                CHECKOUT
+            </span>
+
+            <h2>
+                ОФОРМЛЕНИЕ ЗАКАЗА
+            </h2>
+
+        </div>
+
+
+        <form
+            id="orderForm"
+            autocomplete="on"
+        >
+
+
+            <!-- PERSONAL DATA -->
+
+            <div class="order-form-section">
+
+                <div class="order-section-title">
+                    КОНТАКТНЫЕ ДАННЫЕ
+                </div>
+
+
+                <label>
+
+                    <span>ІМ’Я *</span>
+                    <input type="text" id="customerName" name="firstName"
+                           placeholder="Ваше ім’я" autocomplete="given-name" required>
+
+                </label>
+
+                <label>
+
+                    <span>ПРІЗВИЩЕ *</span>
+                    <input type="text" id="customerSurname" name="surname"
+                           placeholder="Ваше прізвище" autocomplete="family-name" required>
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        ТЕЛЕФОН *
+                    </span>
+
+                    <input
+                        type="tel"
+                        id="customerPhone"
+                        name="phone"
+                        placeholder="+380 XX XXX XX XX"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        TELEGRAM USERNAME *
+                    </span>
+
+                    <input
+                        type="text"
+                        id="customerTelegram"
+                        name="telegram"
+                        placeholder="@username"
+                        required
+                    >
+
+                    <small>
+                        Обязательно укажите ваш Telegram username
+                    </small>
+
+                </label>
+
+            </div>
+
+
+            <!-- DELIVERY -->
+
+            <div class="order-form-section">
+
+                <div class="order-section-title">
+                    ДОСТАВКА
+                </div>
+
+
+                <label>
+
+                    <span>
+                        ГОРОД *
+                    </span>
+
+                    <input
+                        type="text"
+                        id="customerCity"
+                        name="city"
+                        placeholder="Ваш город"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        СПОСОБ ДОСТАВКИ *
+                    </span>
+
+                    <select
+                        id="deliveryMethod"
+                        name="delivery"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
+                            Выберите доставку
+                        </option>
+
+                        <option value="Новая Почта">
+                            Новая Почта
+                        </option>
+
+                        <option value="Укрпочта">
+                            Укрпочта
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <!-- NOVA POSHTA -->
+
+                <div id="novaPoshtaField" class="conditional-field">
+                    <label>
+                        <span>ТИП ДОСТАВКИ *</span>
+                        <select id="novaPoshtaType" name="novaPoshtaType">
+                            <option value="" selected disabled>Оберіть поштомат або відділення</option>
+                            <option value="Поштомат">Поштомат</option>
+                            <option value="Відділення">Відділення</option>
+                        </select>
+                    </label>
+
+                    <div id="novaPoshtaLockerField" class="conditional-field">
+                        <label>
+                            <span>НОМЕР ПОШТОМАТА *</span>
+                            <input type="text" id="novaPoshtaLockerNumber" name="novaPoshtaLockerNumber"
+                                   placeholder="Наприклад: 12345">
+                        </label>
+                        <label>
+                            <span>АДРЕСА ПОШТОМАТА *</span>
+                            <input type="text" id="novaPoshtaLockerAddress" name="novaPoshtaLockerAddress"
+                                   placeholder="Адреса поштомата">
+                        </label>
+                    </div>
+
+                    <div id="novaPoshtaBranchField" class="conditional-field">
+                        <label>
+                            <span>НОМЕР ВІДДІЛЕННЯ *</span>
+                            <input type="text" id="novaPoshtaBranchNumber" name="novaPoshtaBranchNumber"
+                                   placeholder="Наприклад: 15">
+                        </label>
+                        <label>
+                            <span>АДРЕСА ВІДДІЛЕННЯ *</span>
+                            <input type="text" id="novaPoshtaBranchAddress" name="novaPoshtaBranchAddress"
+                                   placeholder="Адреса відділення">
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- UKRPOSHTA -->
+
+                <div
+                    id="ukrPoshtaField"
+                    class="conditional-field"
+                >
+
+                    <label>
+
+                        <span>
+                            ПОЧТОВЫЙ ИНДЕКС *
+                        </span>
+
+                        <input
+                            type="text"
+                            id="ukrPoshtaIndex"
+                            name="ukrPoshtaIndex"
+                            placeholder="Например: 61001"
+                        >
+
+                    </label>
+
+                </div>
+
+
+                <label>
+
+                    <span>
+                        КОММЕНТАРИЙ
+                    </span>
+
+                    <textarea
+                        id="customerComment"
+                        name="comment"
+                        placeholder="Дополнительная информация к заказу"
+                        rows="3"
+                    ></textarea>
+
+                </label>
+
+            </div>
+
+
+            <!-- ORDER SUMMARY -->
+
+            <div class="order-summary">
+
+                <div class="order-summary-title">
+                    ВАШ ЗАКАЗ
+                </div>
+
+
+                <div
+                    class="order-summary-items"
+                    id="orderSummaryItems"
+                >
+                </div>
+
+
+                <div class="order-summary-total">
+
+                    <span>
+                        TOTAL
+                    </span>
+
+                    <strong id="orderSummaryTotal">
+                        ₴0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="submit-order-button"
+            >
+                ОФОРМИТЬ ЗАКАЗ
+            </button>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+<div
+    id="toast"
+    class="toast"
+>
+    Товар додано до кошика
+</div>
+
+
+<footer class="zxcaer-footer">
+    <div class="zxcaer-footer-socials">
+        <a class="zxcaer-footer-social" href="https://www.instagram.com/zxcaer.ua?stkn=enQ3MDU5NDIzczBt&utm_source=qr" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="17.35" cy="6.65" r="1.2" fill="currentColor"/>
+            </svg>
+        </a>
+        <a class="zxcaer-footer-social" href="https://t.me/zxcaerua" target="_blank" rel="noopener noreferrer" aria-label="Telegram">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21.4 4.6 18.2 20c-.24 1.09-.89 1.36-1.8.85l-5-3.69-2.41 2.32c-.27.27-.5.5-1.02.5l.36-5.1 9.28-8.38c.4-.36-.09-.56-.62-.2L5.52 13.56.57 12.01c-1.08-.34-1.1-1.08.23-1.57L20.14 2.9c.9-.34 1.69.2 1.26 1.7Z" fill="currentColor"/>
+            </svg>
+        </a>
+    </div>
+    <div class="zxcaer-footer-bottom">
+        <span>© 2026, ZXCAER</span>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy" data-policy="privacy">Политика конфиденциальности</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy" data-policy="refund">Политика возврата средств</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy" data-policy="terms">Условия предоставления услуги</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy" data-policy="contacts">Контактная информация</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy" data-policy="delivery">Политика доставки</a>
+    </div>
+</footer>
+
+
+<div class="zxcaer-policy-modal" id="zxcaerPolicyModal" aria-hidden="true">
+    <div class="zxcaer-policy-box" role="dialog" aria-modal="true" aria-labelledby="zxcaerPolicyTitle">
+        <button class="zxcaer-policy-close" id="zxcaerPolicyClose" type="button" aria-label="Закрыть">×</button>
+        <h2 class="zxcaer-policy-title" id="zxcaerPolicyTitle"></h2>
+        <div class="zxcaer-policy-content" id="zxcaerPolicyContent"></div>
+    </div>
+</div>
+
+<script>
+(function () {
+    const modal = document.getElementById('zxcaerPolicyModal');
+    const title = document.getElementById('zxcaerPolicyTitle');
+    const content = document.getElementById('zxcaerPolicyContent');
+    const close = document.getElementById('zxcaerPolicyClose');
+    if (!modal || !title || !content || !close) return;
+
+    const docs = {
+        privacy: {
+            title: 'Политика конфиденциальности',
+            html: `
+                <p>ZXCAER уважает конфиденциальность покупателей и использует предоставленные данные только для оформления, обработки и сопровождения заказов.</p>
+                <h4>Какие данные мы можем получать</h4>
+                <p>Имя и фамилия, номер телефона, Telegram username, город, данные для доставки и информация, которую покупатель добровольно указывает при оформлении заказа.</p>
+                <h4>Для чего используются данные</h4>
+                <p>Данные используются для связи с покупателем, подтверждения заказа, передачи информации службе доставки и решения вопросов, связанных с покупкой.</p>
+                <h4>Хранение и защита</h4>
+                <p>Мы принимаем разумные меры для защиты информации от несанкционированного доступа. Данные не продаются и не передаются третьим лицам, кроме случаев, необходимых для выполнения заказа или предусмотренных законом.</p>
+                <h4>Связь</h4>
+                <p>По вопросам обработки персональных данных можно обратиться через Telegram: <a href="https://t.me/zxcaerua" target="_blank" rel="noopener noreferrer">@zxcaerua</a>.</p>
+            `
+        },
+        refund: {
+            title: 'Политика возврата средств',
+            html: `
+                <p>Если с заказом возникла проблема, пожалуйста, свяжитесь с ZXCAER до или после получения товара, чтобы мы могли рассмотреть ситуацию.</p>
+                <h4>Когда можно обратиться</h4>
+                <p>Обратитесь к нам, если товар имеет производственный дефект, повреждён при доставке или был отправлен не тот товар.</p>
+                <h4>Что нужно предоставить</h4>
+                <p>Номер или данные заказа, описание проблемы и, при необходимости, фотографии товара и упаковки.</p>
+                <h4>Возврат средств</h4>
+                <p>Решение о возврате или замене принимается после рассмотрения ситуации и с учётом действующего законодательства Украины и условий конкретного заказа.</p>
+                <p>Для обращения напишите нам в Telegram: <a href="https://t.me/zxcaerua" target="_blank" rel="noopener noreferrer">@zxcaerua</a>.</p>
+            `
+        },
+        terms: {
+            title: 'Условия предоставления услуги',
+            html: `
+                <h4>Оформление заказа</h4>
+                <p>Оформляя заказ на сайте ZXCAER, покупатель подтверждает правильность указанных контактных и доставочных данных.</p>
+                <h4>Подтверждение</h4>
+                <p>После получения заказа с покупателем может быть дополнительно согласована информация о товаре, размере, количестве и доставке.</p>
+                <h4>Цена и наличие</h4>
+                <p>Цена и наличие товара отображаются на сайте на момент оформления заказа. Если необходимая информация изменилась, мы связываемся с покупателем до отправки.</p>
+                <h4>Ответственность покупателя</h4>
+                <p>Покупатель отвечает за достоверность имени, телефона, Telegram username и данных для доставки, указанных при оформлении.</p>
+                <h4>Изменения</h4>
+                <p>ZXCAER может обновлять условия сайта. Актуальная версия размещается на этой странице.</p>
+            `
+        },
+        contacts: {
+            title: 'Контактная информация',
+            html: `
+                <h4>ZXCAER</h4>
+                <p>Интернет-магазин одежды и аксессуаров.</p>
+                <h4>Telegram</h4>
+                <p><a href="https://t.me/zxcaerua" target="_blank" rel="noopener noreferrer">@zxcaerua</a></p>
+                <h4>Instagram</h4>
+                <p><a href="https://www.instagram.com/zxcaer.ua" target="_blank" rel="noopener noreferrer">@zxcaer.ua</a></p>
+                <p>По вопросам заказа, доставки, возврата или сотрудничества напишите нам в Telegram или Instagram.</p>
+            `
+        },
+        delivery: {
+            title: 'Политика доставки',
+            html: `
+                <h4>Способы доставки</h4>
+                <p>На сайте доступны варианты доставки, указанные в форме оформления заказа. В зависимости от города и выбранного способа может использоваться Новая Почта или Укрпочта.</p>
+                <h4>Данные получателя</h4>
+                <p>Для отправки необходимо внимательно указать город, тип доставки и номер или адрес отделения/поштомата, если это требуется выбранным способом.</p>
+                <h4>Сроки</h4>
+                <p>Срок отправки и доставки может зависеть от наличия товара, выбранного способа доставки и работы перевозчика.</p>
+                <h4>Проверка заказа</h4>
+                <p>Перед отправкой рекомендуется проверить правильность контактных и доставочных данных. За задержки, вызванные неверно указанными данными или работой перевозчика, ZXCAER не несёт ответственности в пределах, допускаемых законодательством.</p>
+            `
+        }
+    };
+
+    function openPolicy(key) {
+        const doc = docs[key];
+        if (!doc) return;
+        title.textContent = doc.title;
+        content.innerHTML = doc.html;
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('zxcaer-policy-lock');
+    }
+
+    function closePolicy() {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('zxcaer-policy-lock');
+    }
+
+    document.querySelectorAll('.zxcaer-footer-policy[data-policy]').forEach(link => {
+        link.addEventListener('click', function (event) {
+            event.preventDefault();
+            openPolicy(this.dataset.policy);
+        });
+    });
+
+    close.addEventListener('click', closePolicy);
+    modal.addEventListener('click', event => {
+        if (event.target === modal) closePolicy();
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape' && modal.classList.contains('is-open')) closePolicy();
+    });
+})();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script src="product.js"></script>
+
+
+</body>
+
+</html>
