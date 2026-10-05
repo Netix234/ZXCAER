@@ -17,6 +17,238 @@
         href="style.css"
     >
 
+
+<style id="zxcaer-footer-social-style">
+/* Footer — компактные соцсети как на референсе */
+footer.zxcaer-footer {
+    width: 100% !important;
+    min-height: 180px !important;
+    height: 180px !important;
+    margin: 0 !important;
+    padding: 0 24px 28px !important;
+    background: #fff !important;
+    color: #111 !important;
+    border-top: 1px solid #dedede !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+}
+
+.zxcaer-footer-socials {
+    width: 100%;
+    padding-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+}
+
+.zxcaer-footer-social {
+    width: 22px !important;
+    height: 22px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #111 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    transition: transform .2s ease, opacity .2s ease !important;
+}
+
+.zxcaer-footer-social svg {
+    width: 18px !important;
+    height: 18px !important;
+    display: block !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+}
+
+.zxcaer-footer-social:hover {
+    transform: translateY(-2px) !important;
+    opacity: .65 !important;
+}
+
+.zxcaer-footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    color: #777;
+    font-size: 10px;
+    line-height: 1.5;
+    letter-spacing: .02em;
+    text-align: center;
+}
+
+.zxcaer-footer-bottom span {
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    footer.zxcaer-footer {
+        min-height: 150px !important;
+        height: 150px !important;
+        padding-bottom: 20px !important;
+    }
+
+    .zxcaer-footer-socials {
+        gap: 18px;
+        padding-top: 14px;
+    }
+
+    .zxcaer-footer-bottom {
+        font-size: 9px;
+        gap: 6px;
+    }
+}
+</style>
+
+
+<style id="zxcaer-footer-v2-style">
+footer.zxcaer-footer {
+    min-height: 205px !important;
+    height: 205px !important;
+    padding: 0 24px 36px !important;
+    justify-content: space-between !important;
+}
+
+.zxcaer-footer-socials {
+    padding-top: 20px !important;
+    gap: 24px !important;
+}
+
+.zxcaer-footer-social {
+    width: 24px !important;
+    height: 24px !important;
+    color: #111 !important;
+}
+
+.zxcaer-footer-social svg {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.zxcaer-footer-bottom {
+    width: 100%;
+    max-width: 1100px;
+    gap: 8px !important;
+    color: #777 !important;
+    font-size: 10px !important;
+}
+
+.zxcaer-footer-policy {
+    color: #777 !important;
+    text-decoration: none !important;
+    transition: color .2s ease !important;
+}
+
+.zxcaer-footer-policy:hover {
+    color: #111 !important;
+}
+
+@media (max-width: 700px) {
+    footer.zxcaer-footer {
+        height: auto !important;
+        min-height: 185px !important;
+        padding: 0 16px 25px !important;
+    }
+
+    .zxcaer-footer-socials {
+        padding-top: 18px !important;
+        gap: 20px !important;
+    }
+
+    .zxcaer-footer-bottom {
+        max-width: 360px;
+        line-height: 1.9 !important;
+    }
+}
+</style>
+
+
+<style id="zxcaer-policy-modal-style">
+.zxcaer-policy-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.48);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100000;
+    padding:20px;
+    backdrop-filter:blur(4px);
+}
+.zxcaer-policy-overlay.is-open{display:flex;}
+.zxcaer-policy-modal{
+    position:relative;
+    width:min(760px,100%);
+    max-height:min(720px,calc(100vh - 40px));
+    overflow:auto;
+    background:#fff;
+    color:#111;
+    border:1px solid #ddd;
+    box-shadow:0 24px 80px rgba(0,0,0,.2);
+    padding:34px 38px 38px;
+}
+.zxcaer-policy-close{
+    position:absolute;
+    top:12px;
+    right:14px;
+    width:34px;
+    height:34px;
+    border:0;
+    background:transparent;
+    color:#111;
+    font-size:25px;
+    line-height:1;
+    cursor:pointer;
+}
+.zxcaer-policy-kicker{
+    margin:0 0 8px;
+    color:#888;
+    font-size:9px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+}
+.zxcaer-policy-title{
+    margin:0 0 24px;
+    font-size:24px;
+    font-weight:500;
+    letter-spacing:-.02em;
+}
+.zxcaer-policy-content{
+    color:#555;
+    font-size:13px;
+    line-height:1.75;
+}
+.zxcaer-policy-content h3{
+    margin:22px 0 7px;
+    color:#111;
+    font-size:13px;
+    font-weight:600;
+}
+.zxcaer-policy-content p{margin:0 0 10px;}
+.zxcaer-policy-content ul{margin:7px 0 14px;padding-left:20px;}
+.zxcaer-policy-content li{margin:4px 0;}
+body.zxcaer-policy-lock{overflow:hidden;}
+@media(max-width:600px){
+    .zxcaer-policy-overlay{padding:10px;}
+    .zxcaer-policy-modal{
+        max-height:calc(100vh - 20px);
+        padding:28px 20px 24px;
+    }
+    .zxcaer-policy-title{font-size:20px;padding-right:28px;}
+    .zxcaer-policy-content{font-size:12px;line-height:1.65;}
+}
+</style>
+
 </head>
 
 <body>
@@ -583,22 +815,6 @@
         </button>
 
         <button
-            class="icon theme-toggle"
-            id="themeToggle"
-            aria-label="Switch theme"
-            type="button"
-            title="Тема"
-        >
-            <svg class="theme-sun" viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="12" cy="12" r="4"></circle>
-                <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
-            </svg>
-            <svg class="theme-moon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5 8.5 8.5 0 1 0 20.5 15.5Z"></path>
-            </svg>
-        </button>
-
-        <button
             class="icon cart"
             id="cartButton"
             aria-label="Shopping cart"
@@ -676,6 +892,7 @@
 
             <article
                 class="product reveal"
+                data-id="1"
                 data-name="🩸 ZXCAER - ZIP"
                 data-price="2300"
                 data-image="images/hoodie-01-front.jpg"
@@ -685,6 +902,10 @@
                     class="product-image"
                     data-product="true"
                 >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
 
                     <img
                         class="front"
@@ -698,9 +919,6 @@
                         alt="🩸 ZXCAER - ZIP Back"
                     >
 
-                    <button class="add-to-cart">
-                        ADD TO CART
-                    </button>
 
                 </div>
 
@@ -723,6 +941,7 @@
 
             <article
                 class="product reveal"
+                data-id="2"
                 data-name="🩸 ZXCAER - ZIP"
                 data-price="2300"
                 data-image="images/hoodie-02-front.jpg"
@@ -732,6 +951,10 @@
                     class="product-image"
                     data-product="true"
                 >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
 
                     <img
                         class="front"
@@ -745,9 +968,6 @@
                         alt="🩸 ZXCAER - ZIP Back"
                     >
 
-                    <button class="add-to-cart">
-                        ADD TO CART
-                    </button>
 
                 </div>
 
@@ -770,6 +990,7 @@
 
             <article
                 class="product reveal"
+                data-id="3"
                 data-name="🩸 ZXCAER - HUDI"
                 data-price="2150"
                 data-image="images/hoodie-03-front.jpg"
@@ -779,6 +1000,10 @@
                     class="product-image"
                     data-product="true"
                 >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
 
                     <img
                         class="front"
@@ -792,9 +1017,6 @@
                         alt="🩸 ZXCAER - HUDI Back"
                     >
 
-                    <button class="add-to-cart">
-                        ADD TO CART
-                    </button>
 
                 </div>
 
@@ -817,6 +1039,7 @@
 
             <article
                 class="product reveal"
+                data-id="4"
                 data-name="🩸 ZXCAER - HUDI"
                 data-price="2150"
                 data-image="images/hoodie-04-front.jpg"
@@ -826,6 +1049,10 @@
                     class="product-image"
                     data-product="true"
                 >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
 
                     <img
                         class="front"
@@ -839,9 +1066,6 @@
                         alt="🩸 ZXCAER - HUDI Back"
                     >
 
-                    <button class="add-to-cart">
-                        ADD TO CART
-                    </button>
 
                 </div>
 
@@ -864,6 +1088,7 @@
 
             <article
                 class="product reveal"
+                data-id="5"
                 data-name="🩸 ZXCAER - Tishka"
                 data-price="1100"
                 data-image="images/hoodie-05-front.jpg"
@@ -873,6 +1098,10 @@
                     class="product-image"
                     data-product="true"
                 >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
 
                     <img
                         class="front"
@@ -886,9 +1115,6 @@
                         alt="🩸 ZXCAER - Tishka Back"
                     >
 
-                    <button class="add-to-cart">
-                        ADD TO CART
-                    </button>
 
                 </div>
 
@@ -911,6 +1137,7 @@
 
             <article
                 class="product reveal"
+                data-id="6"
                 data-name="ZXCAER - Tishka 06"
                 data-price="1100"
                 data-image="images/hoodie-06-front.jpg"
@@ -920,6 +1147,10 @@
                     class="product-image"
                     data-product="true"
                 >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
 
                     <img
                         class="front"
@@ -933,9 +1164,6 @@
                         alt="ZXCAER - Tishka 06 Back"
                     >
 
-                    <button class="add-to-cart">
-                        ADD TO CART
-                    </button>
 
                 </div>
 
@@ -987,25 +1215,53 @@
 </main>
 
 
-<footer>
-
-    <a
-        class="telegram-link"
-        href="https://t.me/zxcaerua"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="ZXCAER в Telegram"
-    >
-        <svg
-            class="telegram-icon"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
+<footer class="zxcaer-footer">
+    <div class="zxcaer-footer-socials">
+        <!-- Instagram -->
+        <a
+            class="zxcaer-footer-social"
+            href="https://www.instagram.com/zxcaer.ua?stkn=enQ3MDU5NDIzczBt&utm_source=qr"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
         >
-            <path d="M21.4 4.6 18.2 20c-.24 1.09-.89 1.36-1.8.85l-5-3.69-2.41 2.32c-.27.27-.5.5-1.02.5l.36-5.1 9.28-8.38c.4-.36-.09-.56-.62-.2L5.52 13.56.57 12.01c-1.08-.34-1.1-1.08.23-1.57L20.14 2.9c.9-.34 1.69.2 1.26 1.7Z"/>
-        </svg>
-        <span>TELEGRAM</span>
-    </a>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"
+                      fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="12" cy="12" r="4.1"
+                        fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="17.35" cy="6.65" r="1.2" fill="currentColor"/>
+            </svg>
+        </a>
 
+        <!-- Telegram -->
+        <a
+            class="zxcaer-footer-social"
+            href="https://t.me/zxcaerua"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Telegram"
+        >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21.4 4.6 18.2 20c-.24 1.09-.89 1.36-1.8.85l-5-3.69-2.41 2.32c-.27.27-.5.5-1.02.5l.36-5.1 9.28-8.38c.4-.36-.09-.56-.62-.2L5.52 13.56.57 12.01c-1.08-.34-1.1-1.08.23-1.57L20.14 2.9c.9-.34 1.69.2 1.26 1.7Z"
+                      fill="currentColor"/>
+            </svg>
+        </a>
+    </div>
+
+    <div class="zxcaer-footer-bottom">
+        <span>© 2026, ZXCAER</span>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Политика конфиденциальности</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Политика возврата средств</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Условия предоставления услуги</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Контактная информация</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Политика доставки</a>
+    </div>
 </footer>
 
 
@@ -1164,31 +1420,43 @@ async function loadZXCAERProducts() {
         data.forEach((product) => {
             const frontImage = getZXCAERImageUrl(product.front_image);
             const backImage = getZXCAERImageUrl(product.back_image);
+            const status = product.status || "available";
+
+            const statusLabels = {
+                available: "В НАЯВНОСТІ",
+                sold_out: "РОЗПРОДАНО",
+                sale: "РОЗПРОДАЖ",
+                coming_soon: "СКОРО"
+            };
 
             const article = document.createElement("article");
 
             article.className = "product reveal";
+            article.dataset.id = product.id || "";
             article.dataset.name = product.name || "";
             article.dataset.price = product.price || 0;
             article.dataset.image = frontImage;
+            article.dataset.status = status;
 
             article.innerHTML = `
                 <div class="product-image" data-product="true">
+                    <span class="product-status-badge status-${escapeZXCAER(status)}">
+                        ${escapeZXCAER(statusLabels[status] || statusLabels.available)}
+                    </span>
+
                     <img
                         class="front"
                         src="${escapeZXCAER(frontImage)}"
                         alt="${escapeZXCAER(product.name)}"
                     >
 
-                    <img
-                        class="back"
-                        src="${escapeZXCAER(backImage)}"
-                        alt="${escapeZXCAER(product.name)} Back"
-                    >
-
-                    <button class="add-to-cart">
-                        ADD TO CART
-                    </button>
+                    ${backImage ? `
+                        <img
+                            class="back"
+                            src="${escapeZXCAER(backImage)}"
+                            alt="${escapeZXCAER(product.name)} Back"
+                        >
+                    ` : ""}
                 </div>
 
                 <div class="product-info">
@@ -1293,12 +1561,107 @@ if (document.readyState === "loading") {
         <div class="account-message" id="accountMessage" role="status"></div>
 
         <div class="account-logged" id="accountLogged" hidden>
-            <div class="account-logged-label">ВЫ ВОШЛИ КАК</div>
+            <div class="account-logged-label">ВИ УВІЙШЛИ ЯК</div>
             <div class="account-user-email" id="accountUserEmail"></div>
-            <button class="account-logout" id="accountLogout" type="button">ВЫЙТИ</button>
+            <button class="account-logout" id="accountLogout" type="button">ВИЙТИ</button>
         </div>
     </div>
 </section>
+
+
+<!-- ZXCAER POLICY MODAL -->
+<div class="zxcaer-policy-overlay" id="zxcaerPolicyOverlay" aria-hidden="true">
+    <div class="zxcaer-policy-modal" role="dialog" aria-modal="true" aria-labelledby="zxcaerPolicyTitle">
+        <button class="zxcaer-policy-close" id="zxcaerPolicyClose" type="button" aria-label="Закрыть">×</button>
+        <div class="zxcaer-policy-kicker">ZXCAER</div>
+        <h2 class="zxcaer-policy-title" id="zxcaerPolicyTitle"></h2>
+        <div class="zxcaer-policy-content" id="zxcaerPolicyContent"></div>
+    </div>
+</div>
+
+<script>
+(function(){
+    const overlay = document.getElementById("zxcaerPolicyOverlay");
+    const closeBtn = document.getElementById("zxcaerPolicyClose");
+    const title = document.getElementById("zxcaerPolicyTitle");
+    const content = document.getElementById("zxcaerPolicyContent");
+
+    const policies = {
+        "Политика конфиденциальности": `
+            <p>ZXCAER уважает вашу конфиденциальность и обрабатывает персональные данные только в объёме, необходимом для оформления и выполнения заказа.</p>
+            <h3>Какие данные мы можем получать</h3>
+            <p>Имя и фамилия, номер телефона, Telegram username, город, данные доставки и информация, которую вы добровольно указываете при оформлении заказа.</p>
+            <h3>Для чего используются данные</h3>
+            <p>Для связи с покупателем, подтверждения заказа, его комплектации, доставки и решения вопросов, связанных с покупкой.</p>
+            <h3>Защита данных</h3>
+            <p>Мы не продаём и не передаём ваши персональные данные третьим лицам, кроме случаев, когда это необходимо для выполнения доставки или предусмотрено законодательством.</p>
+        `,
+        "Политика возврата средств": `
+            <p>Если у вас возникла проблема с полученным товаром, свяжитесь с ZXCAER как можно скорее после получения заказа.</p>
+            <h3>Возврат</h3>
+            <p>Возможность возврата или обмена зависит от состояния товара и конкретной ситуации. Товар должен сохранять первоначальный вид, комплектацию и бирки, если они были предусмотрены.</p>
+            <h3>Связь с нами</h3>
+            <p>Перед отправкой товара обратно обязательно свяжитесь с нами через Telegram или другой указанный в разделе контактов канал, чтобы согласовать порядок возврата.</p>
+            <h3>Возврат средств</h3>
+            <p>После согласования возврата и получения товара средства возвращаются согласованным способом в соответствии с условиями конкретного заказа.</p>
+        `,
+        "Условия предоставления услуги": `
+            <p>Оформляя заказ на сайте ZXCAER, покупатель подтверждает, что ознакомился с информацией о товаре и предоставляет достоверные контактные данные.</p>
+            <h3>Заказ</h3>
+            <p>После оформления заказа с покупателем может быть проведено дополнительное подтверждение. Наличие товара и возможность его отправки подтверждаются перед выполнением заказа.</p>
+            <h3>Цена</h3>
+            <p>Стоимость товара указывается на сайте. Условия доставки могут зависеть от выбранного способа доставки и региона.</p>
+            <h3>Ответственность покупателя</h3>
+            <p>Покупатель отвечает за правильность указанных имени, телефона и данных доставки.</p>
+        `,
+        "Контактная информация": `
+            <p>Если у вас есть вопросы по товарам, заказам, доставке или возврату, свяжитесь с ZXCAER.</p>
+            <h3>Telegram</h3>
+            <p><a href="https://t.me/zxcaerua" target="_blank" rel="noopener noreferrer">@zxcaerua</a></p>
+            <h3>Instagram</h3>
+            <p><a href="https://www.instagram.com/zxcaer.ua" target="_blank" rel="noopener noreferrer">@zxcaer.ua</a></p>
+        `,
+        "Политика доставки": `
+            <p>ZXCAER осуществляет отправку заказов выбранным покупателем способом доставки, если такой способ доступен для указанного города.</p>
+            <h3>Новая Почта</h3>
+            <p>При оформлении заказа указывается город и выбранный тип доставки: отделение или поштомат. Номер и адрес должны быть указаны корректно.</p>
+            <h3>Укрпочта</h3>
+            <p>Для доставки Укрпочтой необходимо указать город и почтовый индекс, а также другую необходимую информацию в форме заказа.</p>
+            <h3>Сроки</h3>
+            <p>Срок отправки зависит от наличия товара и обработки заказа. После передачи отправления перевозчику дальнейшие сроки зависят от выбранной службы доставки.</p>
+        `
+    };
+
+    function openPolicy(name){
+        title.textContent = name;
+        content.innerHTML = policies[name] || "<p>Информация пока недоступна.</p>";
+        overlay.classList.add("is-open");
+        overlay.setAttribute("aria-hidden","false");
+        document.body.classList.add("zxcaer-policy-lock");
+    }
+
+    function closePolicy(){
+        overlay.classList.remove("is-open");
+        overlay.setAttribute("aria-hidden","true");
+        document.body.classList.remove("zxcaer-policy-lock");
+    }
+
+    document.querySelectorAll(".zxcaer-footer-policy").forEach(link => {
+        link.addEventListener("click", function(e){
+            e.preventDefault();
+            openPolicy(this.textContent.trim());
+        });
+    });
+
+    closeBtn.addEventListener("click", closePolicy);
+    overlay.addEventListener("click", e => {
+        if(e.target === overlay) closePolicy();
+    });
+    document.addEventListener("keydown", e => {
+        if(e.key === "Escape" && overlay.classList.contains("is-open")) closePolicy();
+    });
+})();
+</script>
 
 </body>
 
