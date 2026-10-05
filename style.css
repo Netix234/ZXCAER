@@ -65,7 +65,7 @@ button {
 
 .header {
 
-    height: 92px;
+    height: 68px;
     width: 100%;
 
     display: grid;
@@ -84,14 +84,12 @@ button {
 
     z-index: 100;
 
-    background:
-        rgba(255, 255, 255, .94);
+    background: #000;
 
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
 
-    border-bottom:
-        1px solid rgba(0, 0, 0, .035);
+    border-bottom: 1px solid #000;
 }
 
 
@@ -110,7 +108,7 @@ button {
 
     font-size: 13px;
     font-weight: 500;
-    color: #555;
+    color: #fff;
 
     transition:
         color .3s ease,
@@ -119,7 +117,7 @@ button {
 
 .nav-left a:hover {
 
-    color: #000;
+    color: #fff;
 
     transform:
         translateY(-2px);
@@ -196,7 +194,7 @@ button {
 
     fill: none;
 
-    stroke: #111;
+    stroke: #fff;
 
     stroke-width: 1.5;
 
@@ -485,7 +483,7 @@ button {
     bottom: 20px;
 
     transform:
-        translate(-50%, 15px);
+        translate(-50%, 0);
 
     width: calc(100% - 40px);
 
@@ -507,7 +505,7 @@ button {
 
     cursor: pointer;
 
-    opacity: 0;
+    opacity: 1;
 
     transition:
         opacity .35s ease,
@@ -4481,4 +4479,830 @@ body.dark-theme .cart-close {
         padding-left: 11px;
         padding-right: 11px;
     }
+}
+/* =========================================================
+   ZXCAER PRODUCT CARDS / STATUS
+========================================================= */
+
+.header .account svg,
+.header .cart svg {
+    stroke: #fff !important;
+}
+
+.header .icon:hover {
+    background: rgba(255,255,255,.10);
+}
+
+.product-image {
+    cursor: pointer;
+}
+
+.add-to-cart,
+.product-image:hover .add-to-cart {
+    display: none !important;
+}
+
+.product-status-badge {
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    z-index: 8;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 28px;
+    padding: 0 13px;
+    border: 1px solid rgba(17,17,17,.13);
+    border-radius: 999px;
+    background: rgba(255,255,255,.92);
+    color: #222;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 500;
+    letter-spacing: .03em;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    pointer-events: none;
+}
+
+.product-status-badge.status-sold_out {
+    color: #777;
+}
+
+.product-status-badge.status-sale {
+    color: #111;
+}
+
+.product-status-badge.status-coming_soon {
+    color: #555;
+}
+
+/* =========================================================
+   ZXCAER PRODUCT DETAIL PAGE
+========================================================= */
+
+.product-page {
+    min-height: 100vh;
+    background: #f5f5f5;
+    color: #111;
+}
+
+.product-detail-page {
+    width: min(1320px, calc(100% - 64px));
+    margin: 0 auto;
+    padding: 28px 0 100px;
+}
+
+.product-back-link {
+    display: inline-block;
+    margin-bottom: 26px;
+    color: #111;
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: .08em;
+    font-weight: 600;
+}
+
+.product-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(390px, .75fr);
+    gap: 78px;
+    align-items: start;
+}
+
+.product-gallery {
+    min-width: 0;
+}
+
+.product-main-image-wrap {
+    position: relative;
+    width: 100%;
+    min-height: 620px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f5f5f5;
+    overflow: hidden;
+}
+
+.product-main-image {
+    display: block;
+    width: 100%;
+    height: 620px;
+    object-fit: contain;
+}
+
+.product-detail-status {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 5;
+    min-height: 28px;
+    padding: 0 13px;
+    border: 1px solid rgba(17,17,17,.13);
+    border-radius: 999px;
+    background: rgba(255,255,255,.92);
+    color: #777;
+    display: inline-flex;
+    align-items: center;
+    font-size: 10px;
+    letter-spacing: .05em;
+    font-weight: 500;
+}
+
+.product-detail-status:empty {
+    display: none;
+}
+
+.product-detail-status.sold-out {
+    color: #777;
+}
+
+.product-thumbnails {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    margin-top: 20px;
+    overflow-x: auto;
+    padding-bottom: 5px;
+}
+
+.product-thumbnail {
+    flex: 0 0 94px;
+    width: 94px;
+    height: 94px;
+    padding: 0;
+    border: 1px solid transparent;
+    background: #f0f0f0;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.product-thumbnail.active {
+    border-color: #111;
+}
+
+.product-thumbnail img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
+.product-detail-info {
+    padding-top: 28px;
+}
+
+.product-detail-eyebrow {
+    margin-bottom: 20px;
+    color: #777;
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: .08em;
+    font-weight: 500;
+}
+
+.product-detail-eyebrow:empty {
+    display: none;
+}
+
+.product-detail-info h1 {
+    margin: 0 0 24px;
+    color: #111;
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.04;
+    font-weight: 400;
+    letter-spacing: -.045em;
+}
+
+.product-detail-price-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 9px;
+}
+
+.product-detail-price {
+    font-size: 17px;
+    letter-spacing: .01em;
+}
+
+.product-detail-price-status {
+    min-height: 26px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 11px;
+    border: 1px solid rgba(17,17,17,.12);
+    border-radius: 999px;
+    color: #777;
+    font-size: 10px;
+}
+
+.product-detail-price-status:empty {
+    display: none;
+}
+
+.product-quantity-label {
+    margin-top: 4px;
+    margin-bottom: 8px;
+    color: #666;
+    font-size: 10px;
+    letter-spacing: .06em;
+}
+
+.product-quantity {
+    width: 126px;
+    height: 43px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border: 1px solid #999;
+    margin-bottom: 22px;
+}
+
+.product-quantity button,
+.product-quantity span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+    color: #222;
+    font-size: 13px;
+}
+
+.product-quantity button {
+    cursor: pointer;
+}
+
+.product-quantity button:disabled {
+    color: #aaa;
+    cursor: not-allowed;
+}
+
+.product-detail-actions {
+    display: grid;
+    gap: 8px;
+    width: 100%;
+    max-width: 390px;
+}
+
+.product-detail-add,
+.product-detail-buy {
+    width: 100%;
+    min-height: 44px;
+    border-radius: 0;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .02em;
+    cursor: pointer;
+}
+
+.product-detail-add {
+    border: 1px solid #999;
+    background: transparent;
+    color: #777;
+}
+
+.product-detail-buy {
+    border: 1px solid #111;
+    background: #111;
+    color: #fff;
+}
+
+.product-detail-add:hover:not(:disabled),
+.product-detail-buy:hover:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.product-detail-add:disabled,
+.product-detail-buy:disabled {
+    cursor: not-allowed;
+    opacity: .55;
+}
+
+.product-detail-description {
+    max-width: 540px;
+    margin-top: 58px;
+    color: #5d5d5d;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.product-detail-description ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.product-detail-description li {
+    margin: 0 0 3px;
+}
+
+.product-detail-description p {
+    margin: 0;
+    white-space: pre-line;
+}
+
+.product-detail-error {
+    display: none;
+    width: min(680px, calc(100% - 40px));
+    margin: 50px auto;
+    padding: 18px 20px;
+    border: 1px solid #ddd;
+    background: #fff;
+    color: #555;
+    font-size: 13px;
+}
+
+.product-detail-error.show {
+    display: block;
+}
+
+@media (max-width: 900px) {
+    .product-detail-page {
+        width: min(100% - 30px, 680px);
+        padding-top: 20px;
+    }
+
+    .product-detail-layout {
+        grid-template-columns: 1fr;
+        gap: 35px;
+    }
+
+    .product-main-image-wrap {
+        min-height: 0;
+        aspect-ratio: 1 / 1.05;
+    }
+
+    .product-main-image {
+        height: 100%;
+    }
+
+    .product-detail-info {
+        padding-top: 0;
+    }
+
+    .product-detail-info h1 {
+        font-size: 34px;
+    }
+
+    .product-detail-description {
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 600px) {
+    .product-detail-page {
+        width: calc(100% - 20px);
+        padding-bottom: 60px;
+    }
+
+    .product-back-link {
+        margin-bottom: 14px;
+        font-size: 9px;
+    }
+
+    .product-main-image-wrap {
+        aspect-ratio: 1 / 1.08;
+    }
+
+    .product-detail-status {
+        top: 16px;
+        left: 16px;
+        min-height: 25px;
+        padding: 0 10px;
+        font-size: 9px;
+    }
+
+    .product-thumbnail {
+        flex-basis: 72px;
+        width: 72px;
+        height: 72px;
+    }
+
+    .product-detail-info h1 {
+        font-size: 29px;
+        margin-bottom: 18px;
+    }
+
+    .product-detail-price {
+        font-size: 15px;
+    }
+
+    .product-detail-description {
+        font-size: 13px;
+    }
+
+    .product-status-badge {
+        top: 12px;
+        left: 12px;
+        min-height: 24px;
+        padding: 0 10px;
+        font-size: 8px;
+    }
+}
+
+
+/* ============================================================
+   PRODUCT SIZE SELECTOR
+============================================================ */
+.product-size-block {
+    margin: 24px 0 20px;
+}
+
+.product-size-block[hidden] {
+    display: none !important;
+}
+
+.product-size-label {
+    margin-bottom: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+}
+
+.product-sizes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.product-size-option {
+    min-width: 52px;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid #d8d8d8;
+    background: #fff;
+    color: #111;
+    font-size: 12px;
+    cursor: pointer;
+    transition: .18s ease;
+}
+
+.product-size-option:hover {
+    border-color: #111;
+}
+
+.product-size-option.active {
+    background: #fff;
+    color: #111;
+    border-color: #111;
+}
+
+.product-size-option:disabled {
+    opacity: .45;
+    cursor: not-allowed;
+}
+
+/* Product detail: hide small status above product name */
+.product-detail-page .product-detail-eyebrow {
+    display: none !important;
+}
+
+/* Product detail: status colors */
+.product-detail-page .product-detail-status.available {
+    background: #16803c;
+    color: #fff;
+    border-color: #16803c;
+}
+
+.product-detail-page .product-detail-status.sold-out {
+    background: #c62828;
+    color: #fff;
+    border-color: #c62828;
+}
+
+.product-detail-page .product-detail-status.sale {
+    background: #c66a00;
+    color: #fff;
+    border-color: #c66a00;
+}
+
+.product-detail-page .product-detail-status.coming-soon {
+    background: #2463c5;
+    color: #fff;
+    border-color: #2463c5;
+}
+
+.product-detail-page .product-size-option {
+    background: #fff;
+    color: #111;
+}
+
+.product-detail-page .product-size-option.active {
+    background: #fff;
+    color: #111;
+    border-color: #111;
+}
+/* =========================================================
+   ZXCAER PRODUCT PAGE — COMPACT
+========================================================= */
+
+.product-detail-page {
+    width: min(1180px, calc(100% - 80px));
+    padding-top: 24px;
+    padding-bottom: 70px;
+}
+
+
+.product-detail-layout {
+    grid-template-columns:
+        minmax(0, 650px)
+        minmax(350px, 460px);
+
+    gap: 58px;
+}
+
+
+.product-main-image-wrap {
+    min-height: 540px;
+    background: transparent;
+}
+
+
+.product-main-image {
+    height: 540px;
+    width: 100%;
+    object-fit: contain;
+}
+
+
+/* ЛОГО — такое же как на главной */
+
+.header .brand-logo {
+    display: block;
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+
+/* СТАТУСЫ */
+
+.product-detail-status {
+    min-height: 28px;
+    padding: 0 12px;
+    border-radius: 999px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: .04em;
+}
+
+
+/* ЗЕЛЕНЫЙ */
+
+.product-detail-status.available {
+    background: #16803c !important;
+    color: #fff !important;
+    border-color: #16803c !important;
+}
+
+
+/* КРАСНЫЙ */
+
+.product-detail-status.sold-out {
+    background: #c62828 !important;
+    color: #fff !important;
+    border-color: #c62828 !important;
+}
+
+
+/* ОРАНЖЕВЫЙ */
+
+.product-detail-status.sale {
+    background: #c66a00 !important;
+    color: #fff !important;
+    border-color: #c66a00 !important;
+}
+
+
+/* СИНИЙ */
+
+.product-detail-status.coming-soon {
+    background: #2463c5 !important;
+    color: #fff !important;
+    border-color: #2463c5 !important;
+}
+
+
+/* ИНФОРМАЦИЯ */
+
+.product-detail-info {
+    padding-top: 18px;
+}
+
+
+.product-detail-info h1 {
+    font-size: clamp(28px, 3.2vw, 40px);
+    margin-bottom: 18px;
+}
+
+
+.product-detail-price {
+    font-size: 16px;
+}
+
+
+.product-detail-description {
+    margin-top: 42px;
+    font-size: 13px;
+}
+
+
+/* КОЛИЧЕСТВО */
+
+.product-quantity {
+    width: 120px;
+    height: 40px;
+    margin-bottom: 18px;
+}
+
+
+/* КНОПКИ */
+
+.product-detail-actions {
+    max-width: 380px;
+    gap: 7px;
+}
+
+
+.product-detail-add,
+.product-detail-buy {
+    min-height: 42px;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   КОШИК — УКРАЇНСЬКА
+========================================================= */
+
+.cart-title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: .06em;
+}
+
+
+.empty-cart {
+    font-size: 11px;
+    color: #777;
+}
+
+
+.cart-item-name {
+    font-size: 11px;
+}
+
+
+.cart-item-price {
+    font-size: 10px;
+}
+
+
+.cart-item-size {
+    font-size: 9px;
+    color: #777;
+}
+
+
+.buy-button {
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   CHECKOUT — УКРАЇНСЬКА
+========================================================= */
+
+.order-modal-title span {
+    font-size: 9px;
+}
+
+
+.order-modal-title h2 {
+    font-size: 24px;
+}
+
+
+.order-section-title {
+    font-size: 10px;
+}
+
+
+.order-form-section label span {
+    font-size: 9px;
+}
+
+
+.submit-order-button {
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 900px) {
+
+    .product-detail-page {
+        width: calc(100% - 30px);
+    }
+
+    .product-detail-layout {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .product-main-image-wrap {
+        min-height: 0;
+        aspect-ratio: 1 / 1;
+    }
+
+    .product-main-image {
+        height: 100%;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .product-detail-page {
+        width: calc(100% - 20px);
+        padding-top: 15px;
+        padding-bottom: 50px;
+    }
+
+
+    /* ЛОГО НЕ ЗМІНЮЄМО ВІД ГОЛОВНОЇ */
+
+    .header .brand-logo {
+        width: 42px;
+        height: 42px;
+    }
+
+
+    .product-detail-layout {
+        gap: 22px;
+    }
+
+
+    .product-main-image-wrap {
+        aspect-ratio: 1 / .95;
+        background: transparent;
+    }
+
+
+    .product-main-image {
+        width: 92%;
+        height: 92%;
+    }
+
+
+    .product-detail-info {
+        padding-top: 0;
+    }
+
+
+    .product-detail-info h1 {
+        font-size: 28px;
+        margin-bottom: 14px;
+    }
+
+
+    .product-detail-price {
+        font-size: 15px;
+    }
+
+
+    .product-quantity {
+        width: 118px;
+        height: 40px;
+    }
+
+
+    .product-detail-actions {
+        max-width: 100%;
+    }
+
+
+    .product-detail-add,
+    .product-detail-buy {
+        min-height: 46px;
+    }
+
+
+    .product-thumbnails {
+        gap: 8px;
+        margin-top: 12px;
+    }
+
+
+    .product-thumbnail {
+        flex-basis: 68px;
+        width: 68px;
+        height: 68px;
+    }
+
 }
