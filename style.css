@@ -4206,10 +4206,10 @@ body.dark-theme .cart-close {
         display: grid;
         grid-template-columns: 1fr auto 1fr;
         align-items: center;
-        background: rgba(255,255,255,.94);
-        border-bottom: 1px solid rgba(0,0,0,.07);
+        background: #000;
+        border-bottom: 1px solid #000;
         border-top: 0;
-        box-shadow: 0 4px 20px rgba(0,0,0,.05);
+        box-shadow: 0 4px 20px rgba(0,0,0,.12);
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
     }
