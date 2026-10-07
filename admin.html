@@ -1683,6 +1683,28 @@
 
             <div class="field">
 
+                <label for="productDiscountPercent">СКИДКА (%)</label>
+
+                <input id="productDiscountPercent" type="number" min="0" max="100" step="1" value="0" placeholder="Например, 10">
+
+                <div class="product-sizes-note">0 — скидка отключена.</div>
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="productDiscountEndAt">СКИДКА ДЕЙСТВУЕТ ДО</label>
+
+                <input id="productDiscountEndAt" type="datetime-local">
+
+                <div class="product-sizes-note">После указанного времени скидка автоматически закончится.</div>
+
+            </div>
+
+
+            <div class="field">
+
                 <label>
                     Статус товара
                 </label>
@@ -2028,6 +2050,12 @@ const productName =
 
 const productPrice =
     document.getElementById("productPrice");
+
+const productDiscountPercent =
+    document.getElementById("productDiscountPercent");
+
+const productDiscountEndAt =
+    document.getElementById("productDiscountEndAt");
 
 const productDescription =
     document.getElementById("productDescription");
@@ -2592,6 +2620,22 @@ window.editProduct = function(id) {
     productPrice.value =
         product.price || "";
 
+    productDiscountPercent.value =
+        Number(product.discount_percent || 0);
+
+    productDiscountEndAt.value = "";
+
+    if (product.discount_end_at) {
+        const discountEndDate = new Date(product.discount_end_at);
+        if (!Number.isNaN(discountEndDate.getTime())) {
+            const localDiscountEndDate = new Date(
+                discountEndDate.getTime() -
+                discountEndDate.getTimezoneOffset() * 60000
+            );
+            productDiscountEndAt.value = localDiscountEndDate.toISOString().slice(0, 16);
+        }
+    }
+
     productDescription.value =
         product.description || "";
 
@@ -2629,6 +2673,8 @@ function closeProductModal() {
     editingProductId = null;
 
     productForm.reset();
+    productDiscountPercent.value = 0;
+    productDiscountEndAt.value = "";
     productStatus.value = "available";
     setProductSizes([]);
     editingGalleryImages = [];
@@ -2801,6 +2847,10 @@ productForm.addEventListener(
         const price =
             Number(productPrice.value);
 
+        const discountPercent = Math.min(100, Math.max(0, Math.round(Number(productDiscountPercent.value || 0))));
+        const discountEndValue = productDiscountEndAt.value;
+        const discountEndAt = discountEndValue ? new Date(discountEndValue).toISOString() : null;
+
         const description =
             productDescription.value.trim();
 
@@ -2873,6 +2923,10 @@ productForm.addEventListener(
                     name,
 
                     price,
+
+                    discount_percent: discountPercent,
+
+                    discount_end_at: discountEndAt,
 
                     description,
 
@@ -2966,6 +3020,10 @@ productForm.addEventListener(
                     name,
 
                     price,
+
+                    discount_percent: discountPercent,
+
+                    discount_end_at: discountEndAt,
 
                     description,
 
