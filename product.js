@@ -52,6 +52,12 @@ const productName =
 const productPrice =
     document.getElementById("productPrice");
 
+const productOldPrice = document.getElementById("productOldPrice");
+const productDiscountBadge = document.getElementById("productDiscountBadge");
+const productDiscountCountdown = document.getElementById("productDiscountCountdown");
+const productDiscountTimer = document.getElementById("productDiscountTimer");
+let discountCountdownInterval = null;
+
 const imageStatus =
     document.getElementById("imageStatus");
 
@@ -387,9 +393,52 @@ function renderProduct(product) {
         `${product.name || "Товар"} — ZXCAER`;
 
 
-    productPrice.textContent =
-        formatPrice(product.price);
+    if (discountCountdownInterval) clearInterval(discountCountdownInterval);
 
+    const originalPrice = Number(product.price || 0);
+    const discountPercent = Math.min(100, Math.max(0, Number(product.discount_percent || 0)));
+    const discountEndTimestamp = product.discount_end_at ? new Date(product.discount_end_at).getTime() : 0;
+    const discountActive = discountPercent > 0 && discountEndTimestamp > Date.now();
+    const discountedPrice = discountActive ? Math.round(originalPrice * (1 - discountPercent / 100) * 100) / 100 : originalPrice;
+
+    productPrice.textContent = formatPrice(discountedPrice);
+    productPrice.classList.toggle("discount-active", discountActive);
+
+    if (productOldPrice) {
+        productOldPrice.textContent = formatPrice(originalPrice);
+        productOldPrice.style.display = discountActive ? "inline-block" : "none";
+    }
+
+    if (productDiscountBadge) {
+        productDiscountBadge.textContent = `−${discountPercent}%`;
+        productDiscountBadge.style.display = discountActive ? "inline-flex" : "none";
+    }
+
+    if (productDiscountCountdown && productDiscountTimer) {
+        productDiscountCountdown.style.display = discountActive ? "flex" : "none";
+        if (discountActive) {
+            const updateDiscountCountdown = () => {
+                const remaining = discountEndTimestamp - Date.now();
+                if (remaining <= 0) {
+                    clearInterval(discountCountdownInterval);
+                    productDiscountCountdown.style.display = "none";
+                    productDiscountBadge.style.display = "none";
+                    productOldPrice.style.display = "none";
+                    productPrice.classList.remove("discount-active");
+                    productPrice.textContent = formatPrice(originalPrice);
+                    return;
+                }
+                const totalSeconds = Math.floor(remaining / 1000);
+                const days = Math.floor(totalSeconds / 86400);
+                const hours = Math.floor((totalSeconds % 86400) / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
+                productDiscountTimer.textContent = `${days}д ${String(hours).padStart(2,"0")}:${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+            };
+            updateDiscountCountdown();
+            discountCountdownInterval = setInterval(updateDiscountCountdown, 1000);
+        }
+    }
 
     applyStatus(
         imageStatus,
@@ -1296,6 +1345,17 @@ function saveCart() {
 }
 
 
+function getCurrentProductPrice(product) {
+    const originalPrice = Number(product?.price || 0);
+    const discountPercent = Math.min(100, Math.max(0, Number(product?.discount_percent || 0)));
+    const discountEndTimestamp = product?.discount_end_at ? new Date(product.discount_end_at).getTime() : 0;
+    if (discountPercent > 0 && discountEndTimestamp > Date.now()) {
+        return Math.round(originalPrice * (1 - discountPercent / 100) * 100) / 100;
+    }
+    return originalPrice;
+}
+
+
 /* ============================================================
    CART — ADD
 ============================================================ */
@@ -1975,8 +2035,7 @@ if (addButton) {
                 name:
                     currentProduct.name,
 
-                price:
-                    currentProduct.price,
+                price: getCurrentProductPrice(currentProduct),
 
                 image:
                     currentProduct.front_image,
@@ -2020,7 +2079,7 @@ if (buyButton) {
         addToCart({
             productId: currentProduct.id,
             name: currentProduct.name,
-            price: currentProduct.price,
+            price: getCurrentProductPrice(currentProduct),
             image: currentProduct.front_image,
             size: selectedSize
         }, quantity);
