@@ -249,6 +249,79 @@ body.zxcaer-policy-lock{overflow:hidden;}
 }
 </style>
 
+
+<style id="zxcaer-discount-position-fix">
+/* DISCOUNT BADGE — RIGHT TOP, STATUS STAYS LEFT */
+.product-image {
+    position: relative !important;
+}
+.product-image .product-status-badge {
+    left: 18px !important;
+    right: auto !important;
+    top: 18px !important;
+    z-index: 100 !important;
+}
+.product-image .product-discount-badge {
+    position: absolute !important;
+    top: 18px !important;
+    right: 18px !important;
+    left: auto !important;
+    bottom: auto !important;
+    z-index: 99999 !important;
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 28px !important;
+    padding: 0 12px !important;
+    border-radius: 999px !important;
+    background: #e52b2b !important;
+    color: #fff !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+}
+@media (max-width: 600px) {
+    .product-image .product-discount-badge {
+        top: 12px !important;
+        right: 12px !important;
+    }
+    .product-image .product-status-badge {
+        top: 12px !important;
+        left: 12px !important;
+    }
+}
+</style>
+<script>
+(function(){
+    function fixDiscountBadges(){
+        document.querySelectorAll('.product-image').forEach(function(box){
+            var badge = box.querySelector('.product-discount-badge');
+            if(!badge) return;
+            badge.style.setProperty('position','absolute','important');
+            badge.style.setProperty('top', window.innerWidth <= 600 ? '12px' : '18px','important');
+            badge.style.setProperty('right', window.innerWidth <= 600 ? '12px' : '18px','important');
+            badge.style.setProperty('left','auto','important');
+            badge.style.setProperty('z-index','99999','important');
+            badge.style.setProperty('display','inline-flex','important');
+            badge.style.setProperty('visibility','visible','important');
+            badge.style.setProperty('opacity','1','important');
+        });
+    }
+    document.addEventListener('DOMContentLoaded', fixDiscountBadges);
+    window.addEventListener('load', fixDiscountBadges);
+    setTimeout(fixDiscountBadges, 500);
+    setTimeout(fixDiscountBadges, 1500);
+    setTimeout(fixDiscountBadges, 3000);
+    new MutationObserver(fixDiscountBadges).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
 </head>
 
 <body>
@@ -1422,6 +1495,14 @@ async function loadZXCAERProducts() {
             const backImage = getZXCAERImageUrl(product.back_image);
             const status = product.status || "available";
 
+            const originalPrice = Number(product.price || 0);
+            const discountPercent = Math.min(100, Math.max(0, Number(product.discount_percent || 0)));
+            const discountEndTimestamp = product.discount_end_at ? new Date(product.discount_end_at).getTime() : 0;
+            const discountActive = discountPercent > 0 && discountEndTimestamp > Date.now();
+            const currentPrice = discountActive
+                ? Math.round(originalPrice * (1 - discountPercent / 100) * 100) / 100
+                : originalPrice;
+
             const statusLabels = {
                 available: "В НАЯВНОСТІ",
                 sold_out: "РОЗПРОДАНО",
@@ -1434,12 +1515,17 @@ async function loadZXCAERProducts() {
             article.className = "product reveal";
             article.dataset.id = product.id || "";
             article.dataset.name = product.name || "";
-            article.dataset.price = product.price || 0;
+            article.dataset.price = currentPrice;
+            article.dataset.originalPrice = originalPrice;
+            article.dataset.discountPercent = discountActive ? discountPercent : 0;
+            article.dataset.discountEndAt = discountActive ? product.discount_end_at : "";
             article.dataset.image = frontImage;
             article.dataset.status = status;
 
             article.innerHTML = `
                 <div class="product-image" data-product="true">
+                    ${discountActive ? `<span class="product-discount-badge" style="position:absolute !important; top:18px !important; right:18px !important; left:auto !important; bottom:auto !important; z-index:20 !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; padding:7px 10px !important; border-radius:999px !important; background:#e52b2b !important; color:#fff !important; font-size:10px !important; font-weight:700 !important; line-height:1 !important; white-space:nowrap !important; pointer-events:none !important;">СКИДКА −${discountPercent}%</span>` : ""}
+
                     <span class="product-status-badge status-${escapeZXCAER(status)}">
                         ${escapeZXCAER(statusLabels[status] || statusLabels.available)}
                     </span>
@@ -1464,12 +1550,10 @@ async function loadZXCAERProducts() {
                         ${escapeZXCAER(product.name)}
                     </span>
 
-                    <strong>
-                        ₴${Number(product.price || 0).toLocaleString("uk-UA", {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2
-                        })}
+                    <strong class="${discountActive ? "discount-current-price" : ""}">
+                        ₴${currentPrice.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </strong>
+                    ${discountActive ? `<del class="discount-old-price">₴${originalPrice.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</del>` : ""}
                 </div>
             `;
 
