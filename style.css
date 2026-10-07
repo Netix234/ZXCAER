@@ -5306,3 +5306,10 @@ body.dark-theme .cart-close {
     }
 
 }
+
+/* PRODUCT DISCOUNTS */
+.product-image{position:relative}
+.product-discount-badge{position:absolute;top:12px;left:12px;z-index:8;display:inline-flex;align-items:center;justify-content:center;padding:7px 10px;background:#e52b2b;color:#fff;font-size:12px;font-weight:800;line-height:1;letter-spacing:.04em}
+.product-info .discount-current-price{color:#e52b2b;font-size:15px;font-weight:800}
+.product-info .discount-old-price{margin-left:7px;color:#858585;font-size:11px;font-weight:400;white-space:nowrap;text-decoration:line-through}
+@media(max-width:600px){.product-discount-badge{top:8px;left:8px;padding:6px 8px;font-size:11px}}
