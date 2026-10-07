@@ -2179,6 +2179,8 @@ body.zxcaer-policy-lock { overflow: hidden !important; }
         }
     }
 }
+
+.product-old-price{color:#858585;font-size:14px;text-decoration:line-through}.product-price.discount-active{color:#e52b2b;font-size:21px;font-weight:800}.product-page-discount-badge{padding:6px 9px;background:#e52b2b;color:#fff;font-size:11px;font-weight:800}.product-discount-countdown{display:flex;flex-direction:column;align-items:flex-start;gap:6px;margin-top:14px;margin-bottom:18px;padding:12px 14px;border:1px solid rgba(229,43,43,.25);background:rgba(229,43,43,.045)}.discount-countdown-label{color:#858585;font-size:10px;letter-spacing:.1em}#productDiscountTimer{color:#e52b2b;font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
 </style>
 
 </head>
@@ -2402,13 +2404,17 @@ body.zxcaer-policy-lock { overflow: hidden !important; }
 
             <div class="price-row">
 
-                <div
-                    id="productPrice"
-                    class="product-price"
-                >
-                    ₴0.00
-                </div>
+                <div id="productPrice" class="product-price">₴0.00</div>
 
+                <del id="productOldPrice" class="product-old-price" style="display:none;"></del>
+
+                <span id="productDiscountBadge" class="product-page-discount-badge" style="display:none;"></span>
+
+            </div>
+
+            <div id="productDiscountCountdown" class="product-discount-countdown" style="display:none;">
+                <span class="discount-countdown-label">СКИДКА ЗАКАНЧИВАЕТСЯ ЧЕРЕЗ</span>
+                <strong id="productDiscountTimer">00д 00:00:00</strong>
             </div>
 
 
