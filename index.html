@@ -332,6 +332,33 @@ body.zxcaer-policy-lock{overflow:hidden;}
     </div>
 </div>
 
+<script>
+(function () {
+    window.addEventListener("pageshow", function () {
+        let showReturnLoader = false;
+        try {
+            showReturnLoader = sessionStorage.getItem("zxcaerShowReturnLoader") === "1";
+            if (showReturnLoader) sessionStorage.removeItem("zxcaerShowReturnLoader");
+        } catch (error) {}
+        if (!showReturnLoader) return;
+
+        let intro = document.getElementById("siteIntro");
+        if (!intro) {
+            intro = document.createElement("div");
+            intro.id = "siteIntro";
+            intro.innerHTML = '<div id="siteIntroContent"><div id="siteIntroLogo"><img src="images/loading-logo.png" alt="ZXCAER"></div><div id="siteIntroLoading">ЗАГРУЗКА</div></div>';
+            document.body.appendChild(intro);
+        }
+        intro.classList.remove("hide");
+        window.setTimeout(function () {
+            intro.classList.add("hide");
+            window.setTimeout(function () {
+                if (intro.parentNode) intro.remove();
+            }, 900);
+        }, 1500);
+    });
+})();
+</script>
 
 <div class="page-loader"></div>
 
@@ -1546,14 +1573,16 @@ async function loadZXCAERProducts() {
                 </div>
 
                 <div class="product-info">
-                    <span>
+                    <span class="product-card-name">
                         ${escapeZXCAER(product.name)}
                     </span>
 
-                    <strong class="${discountActive ? "discount-current-price" : ""}">
-                        ₴${currentPrice.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </strong>
-                    ${discountActive ? `<del class="discount-old-price">₴${originalPrice.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</del>` : ""}
+                    <div class="product-pricing">
+                        <strong class="${discountActive ? "discount-current-price" : ""}">
+                            ₴${currentPrice.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </strong>
+                        ${discountActive ? `<del class="discount-old-price">₴${originalPrice.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</del>` : ""}
+                    </div>
                 </div>
             `;
 
