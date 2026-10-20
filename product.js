@@ -43,6 +43,40 @@ const productContent =
 const mainProductImage =
     document.getElementById("mainProductImage");
 
+/* ============================================================
+   PRODUCT IMAGE ZOOM — open image on click
+============================================================ */
+const productImageZoom = document.createElement("div");
+productImageZoom.className = "zxcaer-image-zoom";
+productImageZoom.setAttribute("aria-hidden", "true");
+productImageZoom.innerHTML = `
+    <button type="button" class="zxcaer-image-zoom-close" aria-label="Закрити фото">×</button>
+    <img class="zxcaer-image-zoom-photo" alt="">
+`;
+document.body.appendChild(productImageZoom);
+const productImageZoomPhoto = productImageZoom.querySelector(".zxcaer-image-zoom-photo");
+function openProductImageZoom() {
+    if (!mainProductImage || !mainProductImage.src) return;
+    productImageZoomPhoto.src = mainProductImage.src;
+    productImageZoomPhoto.alt = mainProductImage.alt || "ZXCAER";
+    productImageZoom.classList.add("is-open");
+    productImageZoom.setAttribute("aria-hidden", "false");
+    document.body.classList.add("zxcaer-image-zoom-open");
+}
+function closeProductImageZoom() {
+    productImageZoom.classList.remove("is-open");
+    productImageZoom.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("zxcaer-image-zoom-open");
+}
+mainProductImage.style.cursor = "zoom-in";
+mainProductImage.addEventListener("click", openProductImageZoom);
+productImageZoom.addEventListener("click", event => {
+    if (event.target === productImageZoom || event.target.closest(".zxcaer-image-zoom-close")) closeProductImageZoom();
+});
+document.addEventListener("keydown", event => {
+    if (event.key === "Escape") closeProductImageZoom();
+});
+
 const thumbnails =
     document.getElementById("thumbnails");
 
@@ -175,6 +209,77 @@ const ukrPoshtaIndex = document.getElementById("ukrPoshtaIndex");
 
 let currentProduct = null;
 
+// Shared likes: same table and visitor identity as the homepage.
+const ZXCAER_LIKE_USER_KEY = "zxcaerLikeVisitorId";
+let zxcaerLikeVisitorId = localStorage.getItem(ZXCAER_LIKE_USER_KEY);
+if (!zxcaerLikeVisitorId) {
+    zxcaerLikeVisitorId = (crypto.randomUUID ? crypto.randomUUID() : "v-" + Date.now() + "-" + Math.random().toString(36).slice(2));
+    localStorage.setItem(ZXCAER_LIKE_USER_KEY, zxcaerLikeVisitorId);
+}
+function productLikeSvg() {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8Z"/></svg>';
+}
+async function refreshProductLike(button) {
+    const id = String(button.dataset.likeId || "");
+    if (!id) return;
+    const [countResult, ownResult] = await Promise.all([
+        supabaseClient.from("product_likes").select("*", { count: "exact", head: true }).eq("product_id", id),
+        supabaseClient.from("product_likes").select("id").eq("product_id", id).eq("visitor_id", zxcaerLikeVisitorId).maybeSingle()
+    ]);
+    if (countResult.error || ownResult.error) { console.warn("Likes require product_likes table and RLS policies.", countResult.error || ownResult.error); return; }
+    button.classList.toggle("liked", !!ownResult.data);
+    button.setAttribute("aria-pressed", String(!!ownResult.data));
+    button.querySelector(".zxcaer-like-count").textContent = countResult.count || 0;
+}
+function makeProductLike(productId) {
+    const row = document.createElement("div");
+    row.className = "zxcaer-product-like";
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "zxcaer-like-button";
+    button.dataset.likeId = String(productId || "");
+    button.setAttribute("aria-label", "Поставить лайк");
+    button.innerHTML = productLikeSvg() + '<span class="zxcaer-like-count">0</span>';
+    const label = document.createElement("span");
+    label.className = "zxcaer-product-like-label";
+    label.textContent = "Подобається цей товар?";
+    button.addEventListener("click", async () => {
+        if (button.disabled || !button.dataset.likeId) return;
+        button.disabled = true;
+        try {
+            const own = await supabaseClient.from("product_likes").select("id").eq("product_id", button.dataset.likeId).eq("visitor_id", zxcaerLikeVisitorId).maybeSingle();
+            if (own.error) throw own.error;
+            if (own.data) {
+                const result = await supabaseClient.from("product_likes").delete().eq("product_id", button.dataset.likeId).eq("visitor_id", zxcaerLikeVisitorId);
+                if (result.error) throw result.error;
+            } else {
+                const result = await supabaseClient.from("product_likes").insert({ product_id: button.dataset.likeId, visitor_id: zxcaerLikeVisitorId });
+                if (result.error) throw result.error;
+                for (let i = 0; i < 8; i++) {
+                    const heart = document.createElement("span");
+                    heart.className = "zxcaer-heart-burst";
+                    heart.textContent = "♥";
+                    heart.style.left = (button.offsetWidth / 2 + Math.random() * 40 - 20) + "px";
+                    heart.style.top = (button.offsetHeight / 2) + "px";
+                    heart.style.setProperty("--dx", (Math.random() * 80 - 40) + "px");
+                    heart.style.setProperty("--dy", (-20 - Math.random() * 50) + "px");
+                    row.appendChild(heart);
+                    setTimeout(() => heart.remove(), 900);
+                }
+            }
+            await refreshProductLike(button);
+        } catch (error) {
+            console.error("Like error:", error);
+            alert("Не удалось поставить лайк. Проверь таблицу product_likes в Supabase.");
+        } finally { button.disabled = false; }
+    });
+    row.append(button, label);
+    refreshProductLike(button);
+    setInterval(() => refreshProductLike(button), 12000);
+    return row;
+}
+
+
 let quantity = 1;
 
 let selectedSize = null;
@@ -305,6 +410,26 @@ function getProductId() {
 
 
 /* ============================================================
+   PRODUCT VIEW SESSION ID (analytics only)
+============================================================ */
+function getZXCAERViewSessionId() {
+    const key = "zxcaerAnalyticsSessionId";
+    try {
+        let value = sessionStorage.getItem(key);
+        if (!value) {
+            value = (window.crypto && crypto.randomUUID)
+                ? crypto.randomUUID()
+                : "v-" + Date.now().toString(36) + Math.random().toString(36).slice(2);
+            sessionStorage.setItem(key, value);
+        }
+        return value;
+    } catch (_) {
+        return "v-" + Date.now().toString(36) + Math.random().toString(36).slice(2);
+    }
+}
+
+
+/* ============================================================
    LOAD PRODUCT
 ============================================================ */
 
@@ -353,6 +478,22 @@ async function loadProduct() {
 
         renderProduct(data);
 
+        // ZXCAER analytics: record one product detail page view per page load.
+        // Failures are non-blocking and do not affect shopping.
+        try {
+            const viewProductId = String(data.id ?? productId);
+            if (viewProductId) {
+                supabaseClient.from("product_views").insert({
+                    product_id: viewProductId,
+                    session_id: getZXCAERViewSessionId()
+                }).then(({ error }) => {
+                    if (error) console.warn("ZXCAER view analytics unavailable:", error.message);
+                });
+            }
+        } catch (viewError) {
+            console.warn("ZXCAER view analytics unavailable:", viewError);
+        }
+
     }
 
     catch (error) {
@@ -387,6 +528,16 @@ function renderProduct(product) {
 
     productName.textContent =
         product.name || "Товар";
+
+    if (typeof window.zxcaerSetSizeChart === "function") {
+        window.zxcaerSetSizeChart(product.size_chart_image || "");
+    }
+
+    const productInfo = productName.closest(".product-info");
+    if (productInfo && !productInfo.querySelector(".zxcaer-product-like")) {
+        const likeRow = makeProductLike(product.id);
+        productName.insertAdjacentElement("afterend", likeRow);
+    }
 
 
     document.title =
@@ -2312,6 +2463,39 @@ if (orderForm) {
         if (submitButton) { submitButton.disabled = true; submitButton.textContent = "ОТПРАВКА..."; }
 
         try {
+            // Save the order to Supabase so it appears in the separate business dashboard.
+            // This is performed before the existing Telegram notification.
+            const orderItems = cart.map(item => ({
+                product_id: String(item.productId ?? item.id ?? ""),
+                name: String(item.name || "Товар"),
+                size: String(item.size || ""),
+                quantity: Number(item.quantity || 1),
+                unit_price: Number(item.price || 0),
+                image: String(item.image || "")
+            }));
+            const { error: saveOrderError } = await supabaseClient
+                .from("orders")
+                .insert({
+                    customer_name: name,
+                    customer_surname: surname,
+                    phone,
+                    telegram,
+                    city,
+                    delivery_method: deliveryMethod.value,
+                    destination_type: destinationType,
+                    destination_number: destinationNumber,
+                    destination_address: destinationAddress,
+                    ukr_poshta_index: deliveryMethod.value === "Укрпочта" ? (ukrPoshtaIndex?.value.trim() || "") : "",
+                    comment,
+                    items: orderItems,
+                    total: Number(getCartTotal() || 0),
+                    status: "new"
+                });
+            if (saveOrderError) {
+                console.error("Supabase order save failed:", saveOrderError);
+                throw new Error("Не вдалося зберегти замовлення в системі. Спробуйте ще раз пізніше.");
+            }
+
             const TELEGRAM_BOT_TOKEN = "8627514379:AAGgX7-Kgyzw1dbaBI0U2AEjVjMZkAWtK8I";
             const TELEGRAM_CHAT_ID = "7999613061";
             const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
@@ -2333,7 +2517,7 @@ if (orderForm) {
             updateDeliveryMethod();
         } catch (error) {
             console.error("Telegram request failed:", error);
-            alert("Не удалось отправить заказ. Проверьте подключение и настройки Telegram.");
+            alert(error?.message || "Не вдалося надіслати сповіщення про замовлення. Якщо замовлення вже збережене, воно є в панелі керування.");
         } finally {
             if (submitButton) { submitButton.disabled = false; submitButton.textContent = "ОФОРМИТИ ЗАМОВЛЕННЯ"; }
         }
