@@ -43,40 +43,6 @@ const productContent =
 const mainProductImage =
     document.getElementById("mainProductImage");
 
-/* ============================================================
-   PRODUCT IMAGE ZOOM — open image on click
-============================================================ */
-const productImageZoom = document.createElement("div");
-productImageZoom.className = "zxcaer-image-zoom";
-productImageZoom.setAttribute("aria-hidden", "true");
-productImageZoom.innerHTML = `
-    <button type="button" class="zxcaer-image-zoom-close" aria-label="Закрити фото">×</button>
-    <img class="zxcaer-image-zoom-photo" alt="">
-`;
-document.body.appendChild(productImageZoom);
-const productImageZoomPhoto = productImageZoom.querySelector(".zxcaer-image-zoom-photo");
-function openProductImageZoom() {
-    if (!mainProductImage || !mainProductImage.src) return;
-    productImageZoomPhoto.src = mainProductImage.src;
-    productImageZoomPhoto.alt = mainProductImage.alt || "ZXCAER";
-    productImageZoom.classList.add("is-open");
-    productImageZoom.setAttribute("aria-hidden", "false");
-    document.body.classList.add("zxcaer-image-zoom-open");
-}
-function closeProductImageZoom() {
-    productImageZoom.classList.remove("is-open");
-    productImageZoom.setAttribute("aria-hidden", "true");
-    document.body.classList.remove("zxcaer-image-zoom-open");
-}
-mainProductImage.style.cursor = "zoom-in";
-mainProductImage.addEventListener("click", openProductImageZoom);
-productImageZoom.addEventListener("click", event => {
-    if (event.target === productImageZoom || event.target.closest(".zxcaer-image-zoom-close")) closeProductImageZoom();
-});
-document.addEventListener("keydown", event => {
-    if (event.key === "Escape") closeProductImageZoom();
-});
-
 const thumbnails =
     document.getElementById("thumbnails");
 
@@ -916,26 +882,34 @@ function setMainImage(
         index;
 
 
-    mainProductImage.style.opacity =
-        "0";
+    const nextImageUrl = getImageUrl(image);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-
-    setTimeout(
-        () => {
-
-            mainProductImage.src =
-                getImageUrl(image);
-
-            mainProductImage.alt =
-                currentProduct?.name ||
-                "ZXCAER";
-
-            mainProductImage.style.opacity =
-                "1";
-
-        },
-        100
-    );
+    if (reduceMotion || typeof mainProductImage.animate !== "function") {
+        mainProductImage.src = nextImageUrl;
+        mainProductImage.alt = currentProduct?.name || "ZXCAER";
+    } else {
+        mainProductImage.animate(
+            [
+                { opacity: 1, transform: "translateX(0) scale(1)" },
+                { opacity: 0, transform: "translateX(-14px) scale(.99)" }
+            ],
+            { duration: 130, easing: "ease-in", fill: "forwards" }
+        ).finished.then(() => {
+            mainProductImage.src = nextImageUrl;
+            mainProductImage.alt = currentProduct?.name || "ZXCAER";
+            mainProductImage.animate(
+                [
+                    { opacity: 0, transform: "translateX(14px) scale(.99)" },
+                    { opacity: 1, transform: "translateX(0) scale(1)" }
+                ],
+                { duration: 230, easing: "cubic-bezier(.22,.61,.36,1)", fill: "both" }
+            );
+        }).catch(() => {
+            mainProductImage.src = nextImageUrl;
+            mainProductImage.alt = currentProduct?.name || "ZXCAER";
+        });
+    }
 
 
     thumbnails
