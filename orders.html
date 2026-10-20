@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ZXCAER — Бізнес-панель</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{color-scheme:light;--bg:#f4f4f4;--card:#fff;--text:#111;--muted:#737373;--line:#e5e5e5;--black:#090909;--red:#d91f26;--green:#167548;--shadow:0 8px 28px #0000000b}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer}.top{height:68px;background:#050505;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:5}.brand{font-weight:900;letter-spacing:.16em;font-size:16px}.top small{color:#bcbcbc}.wrap{max-width:1500px;margin:auto;padding:28px}.login{max-width:420px;margin:8vh auto;background:var(--card);padding:28px;border-radius:16px;box-shadow:var(--shadow)}h1{font-size:28px;margin:0 0 8px}h2{font-size:18px;margin:0 0 18px}.muted{color:var(--muted);font-size:13px}.field{display:grid;gap:7px;margin:14px 0}.field label{font-size:12px;color:#555;font-weight:700}.field input,.field select,.field textarea,input.inline,select.inline{width:100%;border:1px solid #d7d7d7;border-radius:9px;padding:11px;background:#fff;color:#111;min-width:0}.btn{border:0;background:#090909;color:#fff;padding:11px 15px;border-radius:9px;font-weight:700}.btn.light{background:#fff;color:#111;border:1px solid var(--line)}.btn.red{background:var(--red)}.btn:disabled{opacity:.5;cursor:wait}.nav{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}.nav button{background:#fff;color:#222;border:1px solid var(--line);padding:10px 15px;border-radius:10px}.nav button.active{background:#080808;color:white;border-color:#080808}.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:22px}.stat,.panel{background:var(--card);border:1px solid #ededed;border-radius:14px;padding:18px;box-shadow:var(--shadow)}.stat .label{font-size:12px;color:var(--muted)}.stat strong{display:block;font-size:25px;margin-top:10px}.stat small{display:block;color:var(--muted);margin-top:5px}.panel{margin-bottom:18px}.toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:16px}.toolbar input{max-width:340px}.table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;min-width:950px}th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top;font-size:13px}th{color:#666;font-size:11px;text-transform:uppercase;letter-spacing:.04em}td strong{font-size:14px}.status{display:inline-block;padding:5px 8px;border-radius:20px;background:#eee;font-size:11px;font-weight:700;white-space:nowrap}.status.received{background:#e1f5e9;color:#126b40}.status.cancelled{background:#ffe6e6;color:#b11920}.status.shipped{background:#e5edff;color:#224ca1}.order-detail{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.detailbox{border:1px solid var(--line);border-radius:10px;padding:12px;min-width:0}.detailbox h3{font-size:12px;margin:0 0 8px;color:#777;text-transform:uppercase}.detailbox p{margin:5px 0;font-size:13px;overflow-wrap:anywhere}.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.actions select{max-width:180px}.hidden{display:none!important}.cost-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.cost-item{border:1px solid var(--line);border-radius:12px;padding:14px}.cost-item h3{font-size:14px;margin:0 0 10px}.empty{padding:34px;text-align:center;color:#777}.positive{color:var(--green)}.negative{color:var(--red)}.notice{padding:12px;border-radius:9px;background:#fff5d9;color:#6c5010;margin:14px 0;font-size:13px}.error{color:#b00020;font-size:13px;white-space:pre-wrap}.modal-back{position:fixed;inset:0;background:#0009;display:flex;align-items:center;justify-content:center;padding:18px;z-index:10}.modal{background:#fff;border-radius:16px;width:min(900px,100%);max-height:90vh;overflow:auto;padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.modal-head h2{margin:0}.finance-note{font-size:12px;color:#777;margin-top:12px;line-height:1.5}.period-tools{display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin:0 0 18px}.period-tools .field{margin:0;min-width:160px}.period-tools .field label{display:block}@media(max-width:900px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.cost-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:18px}}@media(max-width:560px){.top{padding:0 16px}.wrap{padding:12px}.stats{gap:8px}.stat{padding:12px}.stat strong{font-size:20px}.order-detail{grid-template-columns:1fr}.cost-grid{grid-template-columns:1fr}.login{margin:5vh 12px;padding:22px}}
+
+/* Mobile-first refinements for the business panel */
+@media (max-width: 640px) {
+  html { -webkit-text-size-adjust: 100%; }
+  body { font-size: 14px; padding-bottom: env(safe-area-inset-bottom); }
+  .top { height: auto; min-height: 58px; padding: 10px 12px; gap: 8px; align-items: center; }
+  .brand { font-size: 13px; letter-spacing: .11em; white-space: nowrap; }
+  .top small { font-size: 10px; }
+  #logoutBtn { margin-left: 4px !important; padding: 8px !important; font-size: 11px; }
+  .wrap { padding: 10px; }
+  h1 { font-size: 23px; line-height: 1.2; }
+  h2 { font-size: 17px; line-height: 1.3; margin-bottom: 12px; }
+  .toolbar { align-items: stretch; gap: 12px; }
+  .toolbar > div:first-child { min-width: 0; }
+  .toolbar > .btn { width: 100%; }
+  .toolbar input { max-width: none; width: 100%; }
+  .toolbar .actions { width: 100%; }
+  .toolbar .actions > * { min-width: 0; }
+  .toolbar .actions #orderSearch { flex: 1 1 100%; }
+  .stats { grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-bottom: 12px; }
+  .stat { padding: 12px; border-radius: 12px; }
+  .stat .label { font-size: 10px; line-height: 1.35; }
+  .stat strong { font-size: clamp(16px,4.8vw,21px); margin-top: 8px; overflow-wrap: anywhere; }
+  .stat small { font-size: 10px; line-height: 1.35; }
+  .panel { padding: 12px; border-radius: 12px; margin-bottom: 12px; }
+  .nav { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 6px; margin: 12px 0; }
+  .nav button { min-width: 0; padding: 10px 5px; font-size: 11px; line-height: 1.25; border-radius: 9px; overflow-wrap: anywhere; }
+  .period-tools { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .period-tools .field { min-width: 0; width: 100%; }
+  .period-tools .field:first-child { grid-column: 1 / -1; }
+  .period-tools #applyPeriodBtn { grid-column: 1 / -1; width: 100%; }
+  .field { margin: 10px 0; gap: 6px; }
+  .field label { font-size: 11px; line-height: 1.3; }
+  .field input,.field select,.field textarea,input.inline,select.inline { min-height: 44px; padding: 11px 10px; font-size: 16px; border-radius: 10px; }
+  .btn { min-height: 44px; padding: 11px 13px; border-radius: 10px; }
+  .table-wrap { overflow: visible; }
+  .table-wrap table { min-width: 0; width: 100%; border-collapse: separate; border-spacing: 0; }
+  .table-wrap table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+  .table-wrap table, .table-wrap tbody { display: block; }
+  .table-wrap tbody { display: grid; gap: 10px; }
+  .table-wrap tr { display: block; border: 1px solid var(--line); border-radius: 12px; padding: 6px 12px; background: #fff; box-shadow: 0 3px 12px #00000005; }
+  .table-wrap td { display: grid; grid-template-columns: minmax(90px, .75fr) minmax(0,1.25fr); gap: 10px; padding: 9px 0; border-bottom: 1px solid #f0f0f0; font-size: 12px; overflow-wrap: anywhere; }
+  .table-wrap td:last-child { border-bottom: 0; padding-top: 10px; }
+  .table-wrap td::before { content: attr(data-label); color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .03em; }
+  .table-wrap td:last-child::before { content: ''; }
+  .table-wrap td .btn { width: 100%; }
+  .status { white-space: normal; text-align: center; line-height: 1.3; }
+  .cost-grid { grid-template-columns: 1fr; gap: 10px; }
+  .cost-item { padding: 13px; }
+  .cost-item .btn { width: 100%; }
+  .order-detail { grid-template-columns: 1fr; gap: 9px; }
+  .detailbox { padding: 12px; }
+  .detailbox p { font-size: 14px; line-height: 1.45; }
+  .actions { gap: 8px; }
+  .actions > .btn { flex: 1 1 100%; }
+  .modal-back { padding: 0; align-items: flex-end; }
+  .modal { width: 100%; max-height: 94dvh; max-height: 94vh; border-radius: 16px 16px 0 0; padding: 16px 12px calc(18px + env(safe-area-inset-bottom)); overflow-y: auto; overscroll-behavior: contain; }
+  .modal-head { position: sticky; top: -16px; z-index: 2; background: #fff; padding: 12px 0; margin: -4px 0 12px; border-bottom: 1px solid var(--line); }
+  .modal-head h2 { margin: 0; font-size: 17px; }
+  .modal-head .btn { min-height: 40px; padding: 8px 10px; flex-shrink: 0; }
+  #newOrderForm .order-detail { grid-template-columns: 1fr; }
+  #newOrderForm .actions { position: sticky; bottom: calc(-18px - env(safe-area-inset-bottom)); background: #fff; padding: 10px 0 calc(8px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); }
+  #newOrderForm .actions .btn { width: 100%; }
+  #shippingInfoText { min-height: 180px; font-size: 14px !important; }
+  .notice,.finance-note { font-size: 12px; line-height: 1.5; }
+  .empty { padding: 24px 12px; }
+}
+@media (max-width: 360px) {
+  .brand { font-size: 11px; }
+  .top small { display: none; }
+  .nav button { font-size: 10px; }
+  .table-wrap td { grid-template-columns: 82px minmax(0,1fr); gap: 7px; }
+  .stat { padding: 10px; }
+}
+
+
+/* Theme selector: white, black, graphite */
+html[data-theme="dark"]{color-scheme:dark;--bg:#101010;--card:#191919;--text:#f5f5f5;--muted:#aaa;--line:#353535;--black:#f5f5f5;--green:#71d6a0;--shadow:0 8px 28px #0006}
+html[data-theme="graphite"]{color-scheme:dark;--bg:#292b2e;--card:#36393d;--text:#f4f4f4;--muted:#b8bbc0;--line:#505359;--black:#f4f4f4;--green:#79d5a3;--shadow:0 8px 28px #0003}
+html[data-theme="dark"] .field label,html[data-theme="graphite"] .field label{color:var(--muted)}
+html[data-theme="dark"] .field input,html[data-theme="dark"] .field select,html[data-theme="dark"] .field textarea,html[data-theme="dark"] input.inline,html[data-theme="dark"] select.inline,html[data-theme="graphite"] .field input,html[data-theme="graphite"] .field select,html[data-theme="graphite"] .field textarea,html[data-theme="graphite"] input.inline,html[data-theme="graphite"] select.inline{background:#222;color:var(--text);border-color:var(--line)}
+html[data-theme="graphite"] .field input,html[data-theme="graphite"] .field select,html[data-theme="graphite"] .field textarea,html[data-theme="graphite"] input.inline,html[data-theme="graphite"] select.inline{background:#414449}
+html[data-theme="dark"] .stat,html[data-theme="dark"] .panel,html[data-theme="dark"] .login,html[data-theme="graphite"] .stat,html[data-theme="graphite"] .panel,html[data-theme="graphite"] .login{border-color:var(--line)}
+html[data-theme="dark"] .nav button,html[data-theme="graphite"] .nav button{background:var(--card);color:var(--text);border-color:var(--line)}
+html[data-theme="dark"] .nav button.active,html[data-theme="graphite"] .nav button.active{background:#f4f4f4;color:#111;border-color:#f4f4f4}
+html[data-theme="dark"] .btn.light,html[data-theme="graphite"] .btn.light{background:var(--card);color:var(--text);border-color:var(--line)}
+html[data-theme="dark"] .table-wrap tr,html[data-theme="graphite"] .table-wrap tr{background:var(--card);border-color:var(--line)}
+html[data-theme="dark"] .table-wrap td,html[data-theme="graphite"] .table-wrap td{border-color:var(--line)}
+html[data-theme="dark"] .modal,html[data-theme="graphite"] .modal{background:var(--card);color:var(--text)}
+html[data-theme="dark"] .modal-head,html[data-theme="graphite"] .modal-head{background:var(--card);border-color:var(--line)}
+html[data-theme="dark"] .detailbox,html[data-theme="graphite"] .detailbox,html[data-theme="dark"] .cost-item,html[data-theme="graphite"] .cost-item{border-color:var(--line)}
+html[data-theme="dark"] th,html[data-theme="graphite"] th,html[data-theme="dark"] .detailbox h3,html[data-theme="graphite"] .detailbox h3{color:var(--muted)}
+.theme-switch{display:flex;gap:5px;align-items:center;margin-left:12px}
+.theme-switch button{border:1px solid #555;background:transparent;color:#eee;border-radius:8px;padding:7px 9px;font-size:11px;font-weight:700;white-space:nowrap}
+.theme-switch button[aria-pressed="true"]{background:#fff;color:#111;border-color:#fff}
+@media(max-width:640px){.top{flex-wrap:wrap}.top-right{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}.theme-switch{margin:0;gap:4px}.theme-switch button{padding:7px 8px;font-size:10px}#logoutBtn{margin-left:0!important}}
+
+</style></head>
+<body>
+<header class="top"><div class="brand">ZXCAER <span style="color:#888;font-weight:400;letter-spacing:0">/ BUSINESS</span></div><div class="top-right"><div class="theme-switch" role="group" aria-label="Тема оформлення"><button type="button" data-theme-choice="light" aria-pressed="true">БІЛА</button><button type="button" data-theme-choice="dark" aria-pressed="false">ЧОРНА</button><button type="button" data-theme-choice="graphite" aria-pressed="false">ГРАФІТ</button></div><small id="userLabel">Панель замовлень</small> <button id="logoutBtn" class="btn light hidden" style="margin-left:10px;padding:8px 10px">Вийти</button></div></header>
+<section id="loginPanel" class="login"><h1>Бізнес-панель</h1><p class="muted">Увійди в існуючий акаунт Supabase, який використовує адмін-панель ZXCAER.</p><form id="loginForm"><div class="field"><label for="email">EMAIL</label><input id="email" type="email" required autocomplete="username"></div><div class="field"><label for="password">ПАРОЛЬ</label><input id="password" type="password" required autocomplete="current-password"></div><button class="btn" style="width:100%">Увійти</button><p id="loginError" class="error"></p></form></section>
+<main id="app" class="wrap hidden"><div class="toolbar"><div><h1>Огляд бізнесу</h1><div class="muted">Замовлення, витрати, прибуток, лайки та перегляди товарів</div></div><button id="refreshBtn" class="btn light">Оновити дані</button></div>
+<section class="panel"><h2>Період для фінансової статистики</h2><div class="period-tools"><div class="field"><label for="periodMode">ПЕРІОД</label><select id="periodMode"><option value="month">Окремий місяць</option><option value="range">Від дати до дати</option></select></div><div class="field" id="monthField"><label for="periodMonth">МІСЯЦЬ</label><input id="periodMonth" type="month"></div><div class="field hidden" id="fromField"><label for="periodFrom">ВІД ДАТИ</label><input id="periodFrom" type="date"></div><div class="field hidden" id="toField"><label for="periodTo">ДО ДАТИ</label><input id="periodTo" type="date"></div><button id="applyPeriodBtn" class="btn">Показати період</button></div><div id="periodLabel" class="muted"></div></section>
+<div class="stats"><div class="stat"><div class="label">УСЬОГО ЗАМОВЛЕНЬ</div><strong id="statOrders">—</strong><small>Усі статуси</small></div><div class="stat"><div class="label">ВИРУЧКА З ОТРИМАНИХ</div><strong id="statRevenue">—</strong><small>Лише статус «Отримано»</small></div><div class="stat"><div class="label">ЧИСТИЙ ПРИБУТОК</div><strong id="statProfit">—</strong><small>Виручка мінус собівартість та витрати</small></div><div class="stat"><div class="label">ПЕРЕГЛЯДИ ТОВАРІВ</div><strong id="statViews">—</strong><small id="statLikes">Лайки: —</small></div></div>
+<nav class="nav"><button class="active" data-tab="orders">Замовлення</button><button data-tab="analytics">Аналітика товарів</button><button data-tab="costs">Собівартість і витрати</button></nav>
+<section id="tab-orders" class="panel"><div class="toolbar"><div><h2>Замовлення</h2><div class="muted">Змінюй статуси, додавай накладну та витрати.</div></div><div class="actions"><button id="addOrderBtn" class="btn">+ Додати замовлення</button><input id="orderSearch" class="inline" placeholder="Пошук: ім’я, телефон, номер..." aria-label="Пошук замовлень"></div></div><div id="ordersTable" class="table-wrap"><div class="empty">Завантаження…</div></div></section>
+<section id="tab-analytics" class="panel hidden"><div class="toolbar"><div><h2>Аналітика товарів</h2><div class="muted">Перегляди рахуються при відкритті сторінки товару. Лайки — з таблиці product_likes.</div></div></div><div id="analyticsTable" class="table-wrap"><div class="empty">Завантаження…</div></div></section>
+<section id="tab-costs" class="panel hidden"><h2>Собівартість товарів і витрати</h2><p class="muted">Вкажи собівартість однієї одиниці для кожного товару. Витрати на доставку, пакування та інше вводяться в картці кожного замовлення. Прибуток рахується лише для отриманих замовлень.</p><div id="costsTable"><div class="empty">Завантаження…</div></div><p class="finance-note">Розрахунок: чистий прибуток = сума отриманих замовлень − собівартість проданих одиниць − доставка − пакування − інші витрати. «Прибуток до витрат» показує виручку мінус собівартість товару, без витрат на відправлення та пакування. Податки й комісії платіжних сервісів не враховуються, якщо ти не додаси їх до «Інших витрат».</p></section>
+<p id="appError" class="error"></p></main>
+<div id="newOrderModal" class="modal-back hidden"><section class="modal"><div class="modal-head"><h2>Додати замовлення вручну</h2><button id="closeNewOrder" class="btn light" type="button">Закрити ×</button></div><p class="muted">Для замовлень із Telegram, Instagram або інших каналів. Заповни відомі дані та збережи.</p><form id="newOrderForm"><div class="order-detail"><div class="field"><label>ІМ’Я</label><input name="customer_name" required></div><div class="field"><label>ПРІЗВИЩЕ</label><input name="customer_surname"></div><div class="field"><label>ТЕЛЕФОН</label><input name="phone" required></div><div class="field"><label>TELEGRAM / ІНШИЙ КОНТАКТ</label><input name="telegram" placeholder="@username або Instagram"></div><div class="field"><label>МІСТО</label><input name="city"></div><div class="field"><label>КАНАЛ / СПОСІБ ДОСТАВКИ</label><input name="delivery_method" placeholder="Telegram · Нова пошта"></div><div class="field"><label>ВІДДІЛЕННЯ / АДРЕСА</label><input name="destination_number"></div><div class="field"><label>АДРЕСА ДОДАТКОВО</label><input name="destination_address"></div><div class="field"><label>ТОВАР ІЗ КАТАЛОГУ (НЕОБОВ’ЯЗКОВО)</label><select name="product_id"><option value="">Інший товар / введу назву нижче</option></select></div><div class="field"><label>НАЗВА ТОВАРУ</label><input name="item_name" required></div><div class="field"><label>РОЗМІР</label><input name="item_size"></div><div class="field"><label>КІЛЬКІСТЬ</label><input name="quantity" type="number" min="1" step="1" value="1" required></div><div class="field"><label>ЦІНА ЗА ОДИНИЦЮ (₴)</label><input name="unit_price" type="number" min="0" step="0.01" required></div><div class="field"><label>ДАТА ЗАМОВЛЕННЯ</label><input name="created_at" type="date"></div><div class="field"><label>СТАТУС</label><select name="status"><option value="new">Нове</option><option value="packing">Пакування</option><option value="shipping">Передача на пошту</option><option value="shipped">Відправлено</option><option value="received">Отримано</option><option value="cancelled">Скасовано</option></select></div><div class="field"><label>НОМЕР ТТН / НАКЛАДНОЇ</label><input name="tracking_number"></div><div class="field"><label>ВИТРАТИ НА ДОСТАВКУ (₴)</label><input name="shipping_cost" type="number" min="0" step="0.01" value="0"></div><div class="field"><label>ВИТРАТИ НА ПАКУВАННЯ (₴)</label><input name="packaging_cost" type="number" min="0" step="0.01" value="0"></div><div class="field"><label>ІНШІ ВИТРАТИ (₴)</label><input name="other_cost" type="number" min="0" step="0.01" value="0"></div></div><div class="field"><label>КОМЕНТАР</label><textarea name="comment" rows="3"></textarea></div><div class="actions"><button class="btn" type="submit">Зберегти замовлення</button><span id="newOrderResult" class="muted"></span></div></form></section></div>
+<div id="orderModal" class="modal-back hidden"><section class="modal"><div class="modal-head"><h2 id="modalTitle">Замовлення</h2><button id="closeModal" class="btn light">Закрити ×</button></div><div id="orderDetail"></div></section></div>
+<script>
+(function(){
+  const allowed = ["light", "dark", "graphite"];
+  const buttons = document.querySelectorAll("[data-theme-choice]");
+  function applyTheme(theme){
+    if(!allowed.includes(theme)) theme = "light";
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme === "light" ? "light" : "dark";
+    buttons.forEach(button => button.setAttribute("aria-pressed", String(button.dataset.themeChoice === theme)));
+    try { localStorage.setItem("zxcaerBusinessTheme", theme); } catch(e) {}
+  }
+  let saved = "light";
+  try { saved = localStorage.getItem("zxcaerBusinessTheme") || "light"; } catch(e) {}
+  applyTheme(saved);
+  buttons.forEach(button => button.addEventListener("click", () => applyTheme(button.dataset.themeChoice)));
+})();
+</script>
+<script src="orders.js"></script>
+</body></html>
