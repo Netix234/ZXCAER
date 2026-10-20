@@ -1743,6 +1743,16 @@
 
 
             <div class="field">
+                <label>РОЗМІРНА СІТКА (ЗОБРАЖЕННЯ)</label>
+                <input id="sizeChartFile" type="file" accept="image/jpeg,image/png,image/webp,image/jpg" class="gallery-files">
+                <div class="gallery-note">Зображення розмірної сітки для цього товару. Воно відкриватиметься кнопкою «РОЗМІРНА СІТКА» на сторінці товару.</div>
+                <div id="sizeChartPreviewWrap" style="display:none;margin-top:10px;max-width:220px;">
+                    <img id="sizeChartPreview" alt="Попередній перегляд розмірної сітки" style="width:100%;height:auto;border:1px solid var(--border);display:block;">
+                    <button id="sizeChartRemove" type="button" class="secondary-button" style="margin-top:6px;">Прибрати розмірну сітку</button>
+                </div>
+            </div>
+
+            <div class="field">
 
                 <label>
                     Описание
@@ -2074,6 +2084,13 @@ const galleryFiles =
 
 const galleryPreview =
     document.getElementById("galleryPreview");
+
+const sizeChartFile = document.getElementById("sizeChartFile");
+const sizeChartPreviewWrap = document.getElementById("sizeChartPreviewWrap");
+const sizeChartPreview = document.getElementById("sizeChartPreview");
+const sizeChartRemove = document.getElementById("sizeChartRemove");
+let editingSizeChartImage = "";
+let removeSizeChartImage = false;
 
 const frontFile =
     document.getElementById("frontFile");
@@ -2580,6 +2597,11 @@ addProductButton.addEventListener(
         editingGalleryImages = [];
         newGalleryFiles = [];
         galleryPreview.innerHTML = "";
+        editingSizeChartImage = "";
+        removeSizeChartImage = false;
+        sizeChartFile.value = "";
+        sizeChartPreview.removeAttribute("src");
+        sizeChartPreviewWrap.style.display = "none";
 
         frontPreview.src = "";
 
@@ -2645,6 +2667,11 @@ window.editProduct = function(id) {
     newGalleryFiles = [];
     galleryFiles.value = "";
     renderGalleryPreview();
+    editingSizeChartImage = product.size_chart_image || "";
+    removeSizeChartImage = false;
+    sizeChartFile.value = "";
+    sizeChartPreviewWrap.style.display = editingSizeChartImage ? "block" : "none";
+    sizeChartPreview.src = editingSizeChartImage || "";
 
     frontFile.value = "";
 
@@ -2774,6 +2801,21 @@ galleryFiles.addEventListener("change",function(){
     galleryFiles.value="";
 });
 
+
+sizeChartFile.addEventListener("change", () => {
+    const file = sizeChartFile.files && sizeChartFile.files[0];
+    if (!file) return;
+    sizeChartPreview.src = URL.createObjectURL(file);
+    sizeChartPreviewWrap.style.display = "block";
+    removeSizeChartImage = false;
+});
+sizeChartRemove.addEventListener("click", () => {
+    editingSizeChartImage = "";
+    removeSizeChartImage = true;
+    sizeChartFile.value = "";
+    sizeChartPreview.removeAttribute("src");
+    sizeChartPreviewWrap.style.display = "none";
+});
 
 /* ============================================================
    UPLOAD IMAGE
@@ -2913,6 +2955,13 @@ productForm.addEventListener(
                 if (uploaded) uploadedGalleryImages.push(uploaded);
             }
 
+            let sizeChartImage = editingSizeChartImage;
+            if (sizeChartFile.files && sizeChartFile.files[0]) {
+                sizeChartImage = await uploadImage(sizeChartFile.files[0]);
+            } else if (removeSizeChartImage) {
+                sizeChartImage = "";
+            }
+
 
             /* EDIT */
 
@@ -2933,6 +2982,7 @@ productForm.addEventListener(
                     status,
 
                     sizes,
+                    size_chart_image: sizeChartImage || null,
 
                     gallery_images: [
                         ...editingGalleryImages,
@@ -3039,6 +3089,7 @@ productForm.addEventListener(
                     status,
 
                     sizes,
+                    size_chart_image: sizeChartImage || null,
 
                     sort_order:
                         maxOrder + 1,
