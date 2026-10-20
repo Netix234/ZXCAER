@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080808"><title>Відстеження замовлення — ZXCAER</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--red:#e31e24;--ink:#f5f5f7;--muted:#9b9da5;--line:#292a2f;--bg:#0a0a0b;--card:#151518;--card2:#1d1d21}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:var(--ink)}
+header{height:68px;background:#000;border-bottom:1px solid #242428;display:flex;align-items:center;justify-content:space-between;padding:0 max(20px,calc((100vw - 1080px)/2))}
+.logo{display:flex;align-items:center;text-decoration:none}.logo img{display:block;width:148px;max-height:36px;object-fit:contain;object-position:left center}.back{font-size:13px;color:#c6c6ca;text-decoration:none}
+main{max-width:1000px;margin:38px auto;padding:0 20px 60px}.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--red);font-weight:800;text-transform:uppercase}
+h1{font-size:clamp(27px,4vw,38px);letter-spacing:-.04em;margin:9px 0}.intro{color:var(--muted);font-size:15px;line-height:1.6;margin:0 0 26px}
+.search,.result{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 12px 32px #0005}
+form{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}.field label{display:block;font-size:12px;font-weight:700;margin:0 0 8px}.field input{width:100%;padding:14px;border:1px solid #3b3c42;background:#0e0e10;color:#fff;border-radius:10px;font-size:15px;outline:none}.field input:focus{border-color:var(--red);box-shadow:0 0 0 3px #e31e2422}button{border:0;background:var(--red);color:#fff;border-radius:10px;padding:15px 22px;font-weight:750;font-size:14px;min-height:48px}button:disabled{opacity:.6}.refresh-btn{margin-top:10px;background:transparent;border:1px solid var(--line);color:var(--text);width:100%;cursor:pointer}.hint{color:var(--muted);font-size:12px;margin-top:13px}.message{margin-top:15px;font-size:13px;color:#ff777d;line-height:1.5}.hidden{display:none!important}
+.result{margin-top:20px}.result-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:20px}.order-no{font-size:12px;color:var(--muted)}.product-title{font-size:22px;font-weight:800;margin:5px 0}.status-pill{display:inline-flex;padding:8px 12px;border-radius:99px;background:#40341b;color:#ffd27a;font-size:12px;font-weight:800;white-space:nowrap}.status-pill.done{background:#153d2b;color:#7be5a8}.status-pill.cancel{background:#481e22;color:#ff858a}
+.progress{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;margin:30px 0 28px}.step{position:relative;text-align:center;padding:0 5px;color:#85868d;font-size:11px;font-weight:650}.step:not(:last-child):after{content:"";position:absolute;height:3px;background:#38393f;left:calc(50% + 17px);right:calc(-50% + 17px);top:15px}.dot{position:relative;z-index:1;width:32px;height:32px;border-radius:50%;margin:0 auto 10px;background:#33343a;color:#b9bac0;display:grid;place-items:center;font-size:13px;font-weight:800}.step.done{color:#f0f0f2}.step.done .dot{background:var(--red);color:#fff}.step.done:not(:last-child):after{background:var(--red)}
+.info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.info{padding:15px;background:var(--card2);border:1px solid #292a2f;border-radius:12px;min-width:0}.info span{display:block;font-size:11px;color:var(--muted);margin-bottom:7px}.info strong{font-size:14px;overflow-wrap:anywhere}.info.pay-due{border-color:#733034;background:#281517}.info.pay-due strong{color:#ff858a;font-size:18px}.tracking-link{color:#ff656b;text-decoration:none}.updated{font-size:12px;color:var(--muted);margin-top:18px}.note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:20px}.order-result{margin-top:20px}.order-result:first-child{margin-top:0}
+@media(max-width:680px){main{margin:26px auto;padding:0 13px 40px}header{padding:0 16px}.logo img{width:125px;max-height:32px}.search,.result{padding:18px;border-radius:15px}form{grid-template-columns:1fr}.result-head{flex-direction:column}.progress{margin:25px -8px;}.step{font-size:9px;padding:0 2px}.dot{width:27px;height:27px}.step:not(:last-child):after{top:12px;left:calc(50% + 14px);right:calc(-50% + 14px)}.info-grid{grid-template-columns:1fr 1fr}.info{padding:12px}.info strong{font-size:12px}}
+</style>
+</head>
+<body>
+<header><a class="logo" href="index.html"><img src="images/logo.png" alt="ZXCAER"></a><a class="back" href="index.html">← До магазину</a></header>
+<main>
+<div class="eyebrow">ZXCAER · DELIVERY</div><h1>Де моє замовлення?</h1>
+<p class="intro">Введіть номер телефону, вказаний під час покупки, щоб переглянути ваші замовлення, статус доставки та суму до оплати.</p>
+<section class="search">
+<form id="trackForm">
+<div class="field"><label for="phone">Номер телефону</label><input id="phone" type="tel" autocomplete="tel" placeholder="+380 XX XXX XX XX" required></div>
+<button id="submitBtn" type="submit">Знайти замовлення →</button>
+</form><button id="refreshBtn" type="button" class="refresh-btn">↻ Обновить данные</button><div class="hint">Використайте той самий номер телефону, який вказували під час оформлення замовлення.</div><div id="message" class="message" role="status"></div>
+</section>
+<section id="result" class="result hidden" aria-live="polite"></section>
+<p class="note">Ця сторінка показує статус, який встановив магазин. Якщо замовлення вже передано Новій пошті, номер ТТН можна використати для окремого відстеження на сайті перевізника.</p>
+</main>
+<script src="tracking.js"></script>
+</body></html>
