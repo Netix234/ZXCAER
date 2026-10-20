@@ -5350,3 +5350,62 @@ body.dark-theme .cart-close {
     .products .product-info { gap: 4px; }
     .products .product-info .product-pricing strong { font-size: 12px; }
 }
+
+
+/* ============================================================
+   ZXCAER — MOBILE PRODUCT CARD FIX
+   Keep product status and discount separate without changing
+   the existing storefront design.
+============================================================ */
+.products .product-image {
+    background: #fff !important;
+}
+
+.products .product-image img {
+    background: transparent !important;
+}
+
+/* Status stays on the upper-left, discount on the upper-right. */
+.products .product-status-badge {
+    top: 12px !important;
+    left: 12px !important;
+    right: auto !important;
+    max-width: calc(50% - 18px);
+    min-height: 28px;
+    padding: 0 11px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.products .product-discount-badge {
+    top: 12px !important;
+    right: 12px !important;
+    left: auto !important;
+    z-index: 9 !important;
+    max-width: calc(50% - 18px);
+    padding: 7px 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 600px) {
+    .products .product-status-badge {
+        top: 10px !important;
+        left: 10px !important;
+        max-width: calc(56% - 14px);
+        min-height: 25px;
+        padding: 0 8px;
+        font-size: 9px;
+    }
+
+    .products .product-discount-badge {
+        top: 10px !important;
+        right: 10px !important;
+        left: auto !important;
+        max-width: calc(44% - 14px);
+        padding: 6px 8px;
+        font-size: 10px;
+    }
+}
