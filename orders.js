@@ -3,6 +3,35 @@ const URL = "https://gxkmnkphocqvlhnerkix.supabase.co";
 const KEY = "sb_publishable_B3hq0yrXvptyr4KT7dCczg_5VVVeup_";
 const db = window.supabase.createClient(URL, KEY);
 const $ = id => document.getElementById(id);
+
+/* Плавні анімації бізнес-панелі без зміни її дизайну */
+(function addSmoothDashboardMotion(){
+ if(document.getElementById('zxcaer-smooth-motion')) return;
+ const style=document.createElement('style');
+ style.id='zxcaer-smooth-motion';
+ style.textContent=`
+  :root{--zx-motion-fast:180ms;--zx-motion:260ms;--zx-motion-slow:360ms;--zx-ease:cubic-bezier(.22,.61,.36,1)}
+  button,.btn,a,[role="button"],input,select,textarea,.panel,.detailbox,.cost-item,.status,.tab,[data-tab]{
+   transition:background-color var(--zx-motion) var(--zx-ease),color var(--zx-motion) var(--zx-ease),border-color var(--zx-motion) var(--zx-ease),box-shadow var(--zx-motion) var(--zx-ease),transform var(--zx-motion) var(--zx-ease),opacity var(--zx-motion) var(--zx-ease),outline-color var(--zx-motion) var(--zx-ease);
+  }
+  button:not(:disabled),.btn:not(:disabled),[role="button"]{ -webkit-tap-highlight-color:transparent }
+  button:not(:disabled):hover,.btn:not(:disabled):hover,[role="button"]:hover{transform:translateY(-1px)}
+  button:not(:disabled):active,.btn:not(:disabled):active,[role="button"]:active{transform:translateY(0) scale(.98)}
+  button:disabled,.btn:disabled{opacity:.58;cursor:wait}
+  input:focus,select:focus,textarea:focus{outline-offset:2px}
+  .panel,.detailbox,.cost-item{animation:zxcaerFadeUp var(--zx-motion-slow) var(--zx-ease) both}
+  #ordersTable tbody tr,#analyticsTable tbody tr{animation:zxcaerFadeUp 300ms var(--zx-ease) both}
+  #ordersTable tbody tr:nth-child(2),#analyticsTable tbody tr:nth-child(2){animation-delay:25ms}
+  #ordersTable tbody tr:nth-child(3),#analyticsTable tbody tr:nth-child(3){animation-delay:45ms}
+  #ordersTable tbody tr:nth-child(4),#analyticsTable tbody tr:nth-child(4){animation-delay:65ms}
+  #ordersTable tbody tr:hover,#analyticsTable tbody tr:hover{background-color:rgba(127,127,127,.055)}
+  .status{transition:background-color var(--zx-motion),color var(--zx-motion),transform var(--zx-motion)}
+  .hidden{transition:opacity var(--zx-motion) var(--zx-ease)}
+  @keyframes zxcaerFadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+ `;
+ document.head.appendChild(style);
+})();
 const money = n => new Intl.NumberFormat('uk-UA',{style:'currency',currency:'UAH',maximumFractionDigits:2}).format(Number(n||0));
 const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const statusLabels={new:'Нове',packing:'Пакування',shipping:'Передача на пошту',shipped:'Відправлено',received:'Отримано',cancelled:'Скасовано'};
@@ -53,8 +82,9 @@ function renderCosts(){const cm=costMap();$('costsTable').innerHTML=products.len
 
 async function createManualOrder(e){e.preventDefault();const form=e.currentTarget,fd=new FormData(form),qty=Math.max(1,Math.floor(Number(fd.get('quantity')||1))),unitPrice=Math.max(0,Number(fd.get('unit_price')||0));const selectedProductId=String(fd.get('product_id')||'').trim();const selectedProduct=products.find(p=>String(p.id)===selectedProductId);const productName=String(fd.get('item_name')||'').trim()||selectedProduct?.name||'';const createdDate=String(fd.get('created_at')||todayISO());const payload={customer_name:String(fd.get('customer_name')||'').trim(),customer_surname:String(fd.get('customer_surname')||'').trim(),phone:String(fd.get('phone')||'').trim(),telegram:String(fd.get('telegram')||'').trim(),city:String(fd.get('city')||'').trim(),delivery_method:String(fd.get('delivery_method')||'').trim(),destination_number:String(fd.get('destination_number')||'').trim(),destination_address:String(fd.get('destination_address')||'').trim(),comment:String(fd.get('comment')||'').trim(),items:[{product_id:selectedProductId||null,name:productName,size:String(fd.get('item_size')||'').trim(),quantity:qty,unit_price:unitPrice}],total:Math.round(unitPrice*qty*100)/100,status:String(fd.get('status')||'new'),tracking_number:String(fd.get('tracking_number')||'').trim(),shipping_cost:Math.max(0,Number(fd.get('shipping_cost')||0)),packaging_cost:Math.max(0,Number(fd.get('packaging_cost')||0)),other_cost:Math.max(0,Number(fd.get('other_cost')||0)),created_at:new Date(createdDate+'T12:00:00').toISOString(),updated_at:new Date().toISOString()};const result=$('newOrderResult');result.textContent='Збереження…';const {data,error}=await db.from('orders').insert(payload).select('*').single();if(error){result.textContent='Помилка: '+error.message;return;}orders.unshift(data);result.textContent='Замовлення збережено!';renderAll();setTimeout(()=>$('newOrderModal').classList.add('hidden'),650);}
 
-function openOrder(id){const o=orders.find(x=>Number(x.id)===id);if(!o)return;activeOrder=o;const items=Array.isArray(o.items)?o.items:[];const itemCost=getItemCost(items);$('modalTitle').textContent='Замовлення #'+o.id;$('orderDetail').innerHTML=`<div class="order-detail"><div class="detailbox"><h3>Клієнт</h3><p><b>${esc(o.customer_name)} ${esc(o.customer_surname)}</b></p><p>Телефон: ${esc(o.phone)}</p><p>Telegram: ${esc(o.telegram)}</p><p>Місто: ${esc(o.city)}</p><p>Коментар: ${esc(o.comment||'—')}</p></div><div class="detailbox"><h3>Доставка</h3><p>${esc(o.delivery_method)}</p><p>${esc(o.destination_type||'')}</p><p>Номер/індекс: ${esc(o.destination_number||o.ukr_poshta_index||'—')}</p><p>Адреса: ${esc(o.destination_address||'—')}</p></div><div class="detailbox"><h3>Товари</h3>${items.map(i=>`<p>${esc(i.name)} ${i.size?'· '+esc(i.size):''} ×${Number(i.quantity||1)} — ${money(Number(i.unit_price||0)*Number(i.quantity||1))}</p>`).join('')}<p><b>Сума замовлення: ${money(o.total)}</b></p></div><div class="detailbox"><h3>Фінанси</h3><p>Собівартість товарів: ${money(itemCost)}</p><p>Доставка: ${money(o.shipping_cost)}</p><p>Пакування: ${money(o.packaging_cost)}</p><p>Інше: ${money(o.other_cost)}</p><p>Прибуток до витрат: ${money(Number(o.total||0)-itemCost)}</p><p><b>Чистий прибуток: ${money(Number(o.total||0)-itemCost-expenses(o))}</b></p></div></div><div class="panel" style="box-shadow:none;margin-top:14px"><h2>Оновити замовлення</h2><form id="editOrderForm"><div class="order-detail"><div class="field"><label>СТАТУС</label><select name="status">${Object.entries(statusLabels).map(([v,l])=>`<option value="${v}" ${o.status===v?'selected':''}>${l}</option>`).join('')}</select></div><div class="field"><label>НОМЕР ТТН / НАКЛАДНОЇ</label><input name="tracking_number" value="${esc(o.tracking_number||'')}" placeholder="Введи номер накладної"></div><div class="field"><label>ВИТРАТИ НА ДОСТАВКУ (₴)</label><input name="shipping_cost" type="number" min="0" step="0.01" value="${Number(o.shipping_cost||0)}"></div><div class="field"><label>ВИТРАТИ НА ПАКУВАННЯ (₴)</label><input name="packaging_cost" type="number" min="0" step="0.01" value="${Number(o.packaging_cost||0)}"></div><div class="field"><label>ІНШІ ВИТРАТИ (₴)</label><input name="other_cost" type="number" min="0" step="0.01" value="${Number(o.other_cost||0)}"></div></div><div class="actions"><button class="btn" type="submit">Зберегти зміни</button><span class="muted" id="editOrderResult"></span></div></form></div>`;
+function openOrder(id){const o=orders.find(x=>Number(x.id)===id);if(!o)return;activeOrder=o;const items=Array.isArray(o.items)?o.items:[];const itemCost=getItemCost(items);$('modalTitle').textContent='Замовлення #'+o.id;$('orderDetail').innerHTML=`<div class="order-detail"><div class="detailbox"><h3>Клієнт</h3><p><b>${esc(o.customer_name)} ${esc(o.customer_surname)}</b></p><p>Телефон: ${esc(o.phone)}</p><p>Telegram: ${esc(o.telegram)}</p><p>Місто: ${esc(o.city)}</p><p>Коментар: ${esc(o.comment||'—')}</p></div><div class="detailbox"><h3>Доставка</h3><p>${esc(o.delivery_method)}</p><p>${esc(o.destination_type||'')}</p><p>Номер/індекс: ${esc(o.destination_number||o.ukr_poshta_index||'—')}</p><p>Адреса: ${esc(o.destination_address||'—')}</p></div><div class="detailbox"><h3>Товари</h3>${items.map(i=>`<p>${esc(i.name)} ${i.size?'· '+esc(i.size):''} ×${Number(i.quantity||1)} — ${money(Number(i.unit_price||0)*Number(i.quantity||1))}</p>`).join('')}<p><b>Сума замовлення: ${money(o.total)}</b></p></div><div class="detailbox"><h3>Фінанси</h3><p>Собівартість товарів: ${money(itemCost)}</p><p>Доставка: ${money(o.shipping_cost)}</p><p>Пакування: ${money(o.packaging_cost)}</p><p>Інше: ${money(o.other_cost)}</p><p>Прибуток до витрат: ${money(Number(o.total||0)-itemCost)}</p><p><b>Чистий прибуток: ${money(Number(o.total||0)-itemCost-expenses(o))}</b></p></div></div><div class="panel" style="box-shadow:none;margin-top:14px"><h2>Оновити замовлення</h2><form id="editOrderForm"><div class="order-detail"><div class="field"><label>СТАТУС</label><select name="status">${Object.entries(statusLabels).map(([v,l])=>`<option value="${v}" ${o.status===v?'selected':''}>${l}</option>`).join('')}</select></div><div class="field"><label>НОМЕР ТТН / НАКЛАДНОЇ</label><input name="tracking_number" value="${esc(o.tracking_number||'')}" placeholder="Введи номер накладної"></div><div class="field"><label>ВИТРАТИ НА ДОСТАВКУ (₴)</label><input name="shipping_cost" type="number" min="0" step="0.01" value="${Number(o.shipping_cost||0)}"></div><div class="field"><label>ВИТРАТИ НА ПАКУВАННЯ (₴)</label><input name="packaging_cost" type="number" min="0" step="0.01" value="${Number(o.packaging_cost||0)}"></div><div class="field"><label>ІНШІ ВИТРАТИ (₴)</label><input name="other_cost" type="number" min="0" step="0.01" value="${Number(o.other_cost||0)}"></div></div><div class="actions"><button class="btn" type="submit">Зберегти зміни</button><span class="muted" id="editOrderResult"></span></div></form></div>${o.status==='cancelled'?'<div class="actions" style="margin-top:14px"><button type="button" class="btn red" id="deleteCancelledOrder">Видалити скасоване замовлення</button></div>':''}`;
  $('orderModal').classList.remove('hidden');$('editOrderForm').addEventListener('submit',saveOrderChanges);
+ const deleteCancelledButton=$('deleteCancelledOrder');if(deleteCancelledButton)deleteCancelledButton.addEventListener('click',deleteCancelledOrder);
  const shippingText=[
   'ІНФОРМАЦІЯ ДЛЯ ВІДПРАВКИ',
   'Отримувач: '+[o.customer_name,o.customer_surname].filter(Boolean).join(' '),
@@ -73,6 +103,31 @@ function openOrder(id){const o=orders.find(x=>Number(x.id)===id);if(!o)return;ac
  $('toggleShippingInfo').addEventListener('click',()=>{const content=$('shippingInfoContent');const opening=content.classList.contains('hidden');content.classList.toggle('hidden',!opening);$('toggleShippingInfo').textContent=opening?'Сховати інформацію для відправки':'Показати інформацію для відправки';if(opening)$('shippingInfoText').value=shippingText;});
  $('copyShippingInfo').addEventListener('click',async()=>{try{await navigator.clipboard.writeText($('shippingInfoText').value);$('shippingCopyResult').textContent='Скопійовано!';}catch(err){$('shippingInfoText').focus();$('shippingInfoText').select();$('shippingCopyResult').textContent='Виділено — скопіюй вручну.';}});
 }
+async function deleteCancelledOrder(){
+ if(!activeOrder||activeOrder.status!=='cancelled')return;
+ const orderId=activeOrder.id;
+ if(!confirm('Видалити скасоване замовлення #'+orderId+'? Цю дію неможливо скасувати.'))return;
+ const button=$('deleteCancelledOrder');
+ if(button){button.disabled=true;button.textContent='Видалення…';}
+ try{
+  // Request the deleted IDs back so a blocked/zero-row delete is not mistaken for success.
+  const {data,error}=await db.from('orders').delete().eq('id',orderId).eq('status','cancelled').select('id');
+  if(error)throw error;
+  if(!data||data.length===0){
+   if(button){button.disabled=false;button.textContent='Видалити скасоване замовлення';}
+   alert('Замовлення не видалено з бази. Перевір права DELETE у політиках RLS таблиці orders в Supabase та переконайся, що статус замовлення — «Скасовано».');
+   return;
+  }
+  orders=orders.filter(o=>String(o.id)!==String(orderId));
+  activeOrder=null;
+  $('orderModal').classList.add('hidden');
+  renderAll();
+ }catch(error){
+  if(button){button.disabled=false;button.textContent='Видалити скасоване замовлення';}
+  alert('Не вдалося видалити замовлення з бази Supabase: '+(error?.message||error));
+ }
+}
+
 async function saveOrderChanges(e){e.preventDefault();if(!activeOrder)return;const form=e.currentTarget,fd=new FormData(form),payload={status:String(fd.get('status')),tracking_number:String(fd.get('tracking_number')||'').trim(),shipping_cost:Number(fd.get('shipping_cost')||0),packaging_cost:Number(fd.get('packaging_cost')||0),other_cost:Number(fd.get('other_cost')||0),updated_at:new Date().toISOString()};const res=$('editOrderResult');res.textContent='Збереження…';const {data,error}=await db.from('orders').update(payload).eq('id',activeOrder.id).select('*').single();if(error){res.textContent='Помилка: '+error.message;return;}const i=orders.findIndex(o=>o.id===data.id);if(i>=0)orders[i]=data;activeOrder=data;res.textContent='Збережено';renderAll();setTimeout(()=>openOrder(data.id),150);}
 const {data:{session}}=await db.auth.getSession();setLoggedIn(session);
 })();
