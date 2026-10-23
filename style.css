@@ -5409,3 +5409,44 @@ body.dark-theme .cart-close {
         font-size: 10px;
     }
 }
+
+/* ZXCAER hero banner sizing + Shop now button (requested change only) */
+.hero {
+    height: calc(100svh - 68px);
+    min-height: 470px;
+    max-height: none;
+}
+.hero-text {
+    bottom: 34px;
+}
+.hero-shop-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 88px;
+    min-height: 46px;
+    margin-top: 18px;
+    padding: 0 20px;
+    border: 1px solid rgba(255,255,255,.8);
+    border-radius: 11px;
+    background: rgba(0,0,0,.18);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    text-shadow: none;
+    transition: background .2s ease, color .2s ease;
+}
+.hero-shop-button:hover {
+    background: #fff;
+    color: #111;
+}
+@media (max-width: 600px) {
+    .hero {
+        height: calc(100svh - 60px);
+        min-height: 280px;
+        max-height: none;
+    }
+    .hero-text { bottom: 22px; }
+    .hero-shop-button { margin-top: 14px; min-height: 42px; }
+}
