@@ -5443,9 +5443,9 @@ body.dark-theme .cart-close {
 }
 @media (max-width: 600px) {
     .hero {
-        height: calc(100svh - 60px);
-        min-height: 280px;
-        max-height: none;
+        height: 24svh;
+        min-height: 160px;
+        max-height: 220px;
     }
     .hero-text { bottom: 22px; }
     .hero-shop-button { margin-top: 14px; min-height: 42px; }
