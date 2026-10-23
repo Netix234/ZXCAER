@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ZXCAER</title>
+
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
+
+
+<style id="zxcaer-footer-social-style">
+/* Footer — компактные соцсети как на референсе */
+footer.zxcaer-footer {
+    width: 100% !important;
+    min-height: 180px !important;
+    height: 180px !important;
+    margin: 0 !important;
+    padding: 0 24px 28px !important;
+    background: #fff !important;
+    color: #111 !important;
+    border-top: 1px solid #dedede !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+}
+
+.zxcaer-footer-socials {
+    width: 100%;
+    padding-top: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+}
+
+.zxcaer-footer-social {
+    width: 22px !important;
+    height: 22px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #111 !important;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-decoration: none !important;
+    transition: transform .2s ease, opacity .2s ease !important;
+}
+
+.zxcaer-footer-social svg {
+    width: 18px !important;
+    height: 18px !important;
+    display: block !important;
+    fill: currentColor !important;
+    stroke: currentColor !important;
+}
+
+.zxcaer-footer-social:hover {
+    transform: translateY(-2px) !important;
+    opacity: .65 !important;
+}
+
+.zxcaer-footer-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 9px;
+    color: #777;
+    font-size: 10px;
+    line-height: 1.5;
+    letter-spacing: .02em;
+    text-align: center;
+}
+
+.zxcaer-footer-bottom span {
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    footer.zxcaer-footer {
+        min-height: 150px !important;
+        height: 150px !important;
+        padding-bottom: 20px !important;
+    }
+
+    .zxcaer-footer-socials {
+        gap: 18px;
+        padding-top: 14px;
+    }
+
+    .zxcaer-footer-bottom {
+        font-size: 9px;
+        gap: 6px;
+    }
+}
+</style>
+
+
+<style id="zxcaer-footer-v2-style">
+footer.zxcaer-footer {
+    min-height: 205px !important;
+    height: 205px !important;
+    padding: 0 24px 36px !important;
+    justify-content: space-between !important;
+}
+
+.zxcaer-footer-socials {
+    padding-top: 20px !important;
+    gap: 24px !important;
+}
+
+.zxcaer-footer-social {
+    width: 24px !important;
+    height: 24px !important;
+    color: #111 !important;
+}
+
+.zxcaer-footer-social svg {
+    width: 20px !important;
+    height: 20px !important;
+}
+
+.zxcaer-footer-bottom {
+    width: 100%;
+    max-width: 1100px;
+    gap: 8px !important;
+    color: #777 !important;
+    font-size: 10px !important;
+}
+
+.zxcaer-footer-policy {
+    color: #777 !important;
+    text-decoration: none !important;
+    transition: color .2s ease !important;
+}
+
+.zxcaer-footer-policy:hover {
+    color: #111 !important;
+}
+
+@media (max-width: 700px) {
+    footer.zxcaer-footer {
+        height: auto !important;
+        min-height: 185px !important;
+        padding: 0 16px 25px !important;
+    }
+
+    .zxcaer-footer-socials {
+        padding-top: 18px !important;
+        gap: 20px !important;
+    }
+
+    .zxcaer-footer-bottom {
+        max-width: 360px;
+        line-height: 1.9 !important;
+    }
+}
+</style>
+
+
+<style id="zxcaer-policy-modal-style">
+.zxcaer-policy-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.48);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:100000;
+    padding:20px;
+    backdrop-filter:blur(4px);
+}
+.zxcaer-policy-overlay.is-open{display:flex;}
+.zxcaer-policy-modal{
+    position:relative;
+    width:min(760px,100%);
+    max-height:min(720px,calc(100vh - 40px));
+    overflow:auto;
+    background:#fff;
+    color:#111;
+    border:1px solid #ddd;
+    box-shadow:0 24px 80px rgba(0,0,0,.2);
+    padding:34px 38px 38px;
+}
+.zxcaer-policy-close{
+    position:absolute;
+    top:12px;
+    right:14px;
+    width:34px;
+    height:34px;
+    border:0;
+    background:transparent;
+    color:#111;
+    font-size:25px;
+    line-height:1;
+    cursor:pointer;
+}
+.zxcaer-policy-kicker{
+    margin:0 0 8px;
+    color:#888;
+    font-size:9px;
+    letter-spacing:.18em;
+    text-transform:uppercase;
+}
+.zxcaer-policy-title{
+    margin:0 0 24px;
+    font-size:24px;
+    font-weight:500;
+    letter-spacing:-.02em;
+}
+.zxcaer-policy-content{
+    color:#555;
+    font-size:13px;
+    line-height:1.75;
+}
+.zxcaer-policy-content h3{
+    margin:22px 0 7px;
+    color:#111;
+    font-size:13px;
+    font-weight:600;
+}
+.zxcaer-policy-content p{margin:0 0 10px;}
+.zxcaer-policy-content ul{margin:7px 0 14px;padding-left:20px;}
+.zxcaer-policy-content li{margin:4px 0;}
+body.zxcaer-policy-lock{overflow:hidden;}
+@media(max-width:600px){
+    .zxcaer-policy-overlay{padding:10px;}
+    .zxcaer-policy-modal{
+        max-height:calc(100vh - 20px);
+        padding:28px 20px 24px;
+    }
+    .zxcaer-policy-title{font-size:20px;padding-right:28px;}
+    .zxcaer-policy-content{font-size:12px;line-height:1.65;}
+}
+</style>
+
+
+<style id="zxcaer-discount-position-fix">
+/* DISCOUNT BADGE — RIGHT TOP, STATUS STAYS LEFT */
+.product-image {
+    position: relative !important;
+}
+.product-image .product-status-badge {
+    left: 18px !important;
+    right: auto !important;
+    top: 18px !important;
+    z-index: 100 !important;
+}
+.product-image .product-discount-badge {
+    position: absolute !important;
+    top: 18px !important;
+    right: 18px !important;
+    left: auto !important;
+    bottom: auto !important;
+    z-index: 99999 !important;
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: none !important;
+    pointer-events: none !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 28px !important;
+    padding: 0 12px !important;
+    border-radius: 999px !important;
+    background: #e52b2b !important;
+    color: #fff !important;
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
+    box-sizing: border-box !important;
+}
+@media (max-width: 600px) {
+    .product-image .product-discount-badge {
+        top: 12px !important;
+        right: 12px !important;
+    }
+    .product-image .product-status-badge {
+        top: 12px !important;
+        left: 12px !important;
+    }
+}
+</style>
+<script>
+(function(){
+    function fixDiscountBadges(){
+        document.querySelectorAll('.product-image').forEach(function(box){
+            var badge = box.querySelector('.product-discount-badge');
+            if(!badge) return;
+            badge.style.setProperty('position','absolute','important');
+            badge.style.setProperty('top', window.innerWidth <= 600 ? '12px' : '18px','important');
+            badge.style.setProperty('right', window.innerWidth <= 600 ? '12px' : '18px','important');
+            badge.style.setProperty('left','auto','important');
+            badge.style.setProperty('z-index','99999','important');
+            badge.style.setProperty('display','inline-flex','important');
+            badge.style.setProperty('visibility','visible','important');
+            badge.style.setProperty('opacity','1','important');
+        });
+    }
+    document.addEventListener('DOMContentLoaded', fixDiscountBadges);
+    window.addEventListener('load', fixDiscountBadges);
+    setTimeout(fixDiscountBadges, 500);
+    setTimeout(fixDiscountBadges, 1500);
+    setTimeout(fixDiscountBadges, 3000);
+    new MutationObserver(fixDiscountBadges).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+
+</head>
+
+<body>
+    <div id="siteIntro">
+    <div id="siteIntroContent">
+        <div id="siteIntroLogo"><img src="images/loading-logo.png" alt="ZXCAER"></div>
+        <div id="siteIntroLoading">ЗАГРУЗКА</div>
+    </div>
+</div>
+
+<script>
+(function () {
+    window.addEventListener("pageshow", function () {
+        let showReturnLoader = false;
+        try {
+            showReturnLoader = sessionStorage.getItem("zxcaerShowReturnLoader") === "1";
+            if (showReturnLoader) sessionStorage.removeItem("zxcaerShowReturnLoader");
+        } catch (error) {}
+        if (!showReturnLoader) return;
+
+        let intro = document.getElementById("siteIntro");
+        if (!intro) {
+            intro = document.createElement("div");
+            intro.id = "siteIntro";
+            intro.innerHTML = '<div id="siteIntroContent"><div id="siteIntroLogo"><img src="images/loading-logo.png" alt="ZXCAER"></div><div id="siteIntroLoading">ЗАГРУЗКА</div></div>';
+            document.body.appendChild(intro);
+        }
+        intro.classList.remove("hide");
+        window.setTimeout(function () {
+            intro.classList.add("hide");
+            window.setTimeout(function () {
+                if (intro.parentNode) intro.remove();
+            }, 900);
+        }, 1500);
+    });
+})();
+</script>
+
+<div class="page-loader"></div>
+
+
+<!-- =========================================
+     CART OVERLAY
+========================================= -->
+
+<div
+    class="cart-overlay"
+    id="cartOverlay"
+></div>
+
+
+<!-- =========================================
+     PRODUCT MODAL OVERLAY
+========================================= -->
+
+<div
+    class="product-modal-overlay"
+    id="productModalOverlay"
+></div>
+
+
+<!-- =========================================
+     ORDER MODAL OVERLAY
+========================================= -->
+
+<div
+    class="order-modal-overlay"
+    id="orderModalOverlay"
+></div>
+
+
+<!-- =========================================
+     PRODUCT MODAL
+========================================= -->
+
+<div
+    class="product-modal"
+    id="productModal"
+>
+
+    <button
+        class="product-modal-close"
+        id="productModalClose"
+    >
+        ×
+    </button>
+
+
+    <div class="product-modal-content">
+
+
+        <div class="product-modal-image">
+
+            <img
+                id="modalProductImage"
+                src=""
+                alt=""
+            >
+
+        </div>
+
+
+        <div class="product-modal-info">
+
+
+            <div>
+
+                <div
+                    class="modal-product-name"
+                    id="modalProductName"
+                >
+                    ZXCAER - ZIP
+                </div>
+
+                <div
+                    class="modal-product-price"
+                    id="modalProductPrice"
+                >
+                    ₴2,300.00
+                </div>
+
+            </div>
+
+
+            <div class="modal-section">
+
+                <h3>
+                    Best quality / найкраща якість
+                </h3>
+
+                <ul>
+
+                    <li>
+                        преміум тканина 100% хлопок
+                    </li>
+
+                    <li>
+                        вишивка
+                    </li>
+
+                    <li>
+                        фірмова упаковка
+                    </li>
+
+                    <li>
+                        бірки
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <div class="modal-section">
+
+                <h3>
+                    ПРАННЯ 30°C
+                </h3>
+
+                <ul>
+
+                    <li>
+                        ПРАТИ НАВИВОРІТ
+                    </li>
+
+                    <li>
+                        НЕ ВІДБІЛЮВАТИ
+                    </li>
+
+                    <li>
+                        ТЕМНІ КОЛЬОРИ ОКРЕМО
+                    </li>
+
+                </ul>
+
+            </div>
+
+
+            <button
+                class="modal-add-button"
+                id="modalAddButton"
+            >
+                ADD TO CART
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     ORDER MODAL
+========================================= -->
+
+<div
+    class="order-modal"
+    id="orderModal"
+>
+
+    <button
+        class="order-modal-close"
+        id="orderModalClose"
+    >
+        ×
+    </button>
+
+
+    <div class="order-modal-inner">
+
+
+        <div class="order-modal-title">
+
+            <span>
+                CHECKOUT
+            </span>
+
+            <h2>
+                ОФОРМЛЕНИЕ ЗАКАЗА
+            </h2>
+
+        </div>
+
+
+        <form
+            id="orderForm"
+            autocomplete="on"
+        >
+
+
+            <!-- PERSONAL DATA -->
+
+            <div class="order-form-section">
+
+                <div class="order-section-title">
+                    КОНТАКТНЫЕ ДАННЫЕ
+                </div>
+
+
+                <label>
+
+                    <span>ІМ’Я *</span>
+                    <input type="text" id="customerName" name="firstName"
+                           placeholder="Ваше ім’я" autocomplete="given-name" required>
+
+                </label>
+
+                <label>
+
+                    <span>ПРІЗВИЩЕ *</span>
+                    <input type="text" id="customerSurname" name="surname"
+                           placeholder="Ваше прізвище" autocomplete="family-name" required>
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        ТЕЛЕФОН *
+                    </span>
+
+                    <input
+                        type="tel"
+                        id="customerPhone"
+                        name="phone"
+                        placeholder="+380 XX XXX XX XX"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        TELEGRAM USERNAME *
+                    </span>
+
+                    <input
+                        type="text"
+                        id="customerTelegram"
+                        name="telegram"
+                        placeholder="@username"
+                        required
+                    >
+
+                    <small>
+                        Обязательно укажите ваш Telegram username
+                    </small>
+
+                </label>
+
+            </div>
+
+
+            <!-- DELIVERY -->
+
+            <div class="order-form-section">
+
+                <div class="order-section-title">
+                    ДОСТАВКА
+                </div>
+
+
+                <label>
+
+                    <span>
+                        ГОРОД *
+                    </span>
+
+                    <input
+                        type="text"
+                        id="customerCity"
+                        name="city"
+                        placeholder="Ваш город"
+                        required
+                    >
+
+                </label>
+
+
+                <label>
+
+                    <span>
+                        СПОСОБ ДОСТАВКИ *
+                    </span>
+
+                    <select
+                        id="deliveryMethod"
+                        name="delivery"
+                        required
+                    >
+
+                        <option
+                            value=""
+                            selected
+                            disabled
+                        >
+                            Выберите доставку
+                        </option>
+
+                        <option value="Новая Почта">
+                            Новая Почта
+                        </option>
+
+                        <option value="Укрпочта">
+                            Укрпочта
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <!-- NOVA POSHTA -->
+
+                <div id="novaPoshtaField" class="conditional-field">
+                    <label>
+                        <span>ТИП ДОСТАВКИ *</span>
+                        <select id="novaPoshtaType" name="novaPoshtaType">
+                            <option value="" selected disabled>Оберіть поштомат або відділення</option>
+                            <option value="Поштомат">Поштомат</option>
+                            <option value="Відділення">Відділення</option>
+                        </select>
+                    </label>
+
+                    <div id="novaPoshtaLockerField" class="conditional-field">
+                        <label>
+                            <span>НОМЕР ПОШТОМАТА *</span>
+                            <input type="text" id="novaPoshtaLockerNumber" name="novaPoshtaLockerNumber"
+                                   placeholder="Наприклад: 12345">
+                        </label>
+                        <label>
+                            <span>АДРЕСА ПОШТОМАТА *</span>
+                            <input type="text" id="novaPoshtaLockerAddress" name="novaPoshtaLockerAddress"
+                                   placeholder="Адреса поштомата">
+                        </label>
+                    </div>
+
+                    <div id="novaPoshtaBranchField" class="conditional-field">
+                        <label>
+                            <span>НОМЕР ВІДДІЛЕННЯ *</span>
+                            <input type="text" id="novaPoshtaBranchNumber" name="novaPoshtaBranchNumber"
+                                   placeholder="Наприклад: 15">
+                        </label>
+                        <label>
+                            <span>АДРЕСА ВІДДІЛЕННЯ *</span>
+                            <input type="text" id="novaPoshtaBranchAddress" name="novaPoshtaBranchAddress"
+                                   placeholder="Адреса відділення">
+                        </label>
+                    </div>
+                </div>
+
+
+                <!-- UKRPOSHTA -->
+
+                <div
+                    id="ukrPoshtaField"
+                    class="conditional-field"
+                >
+
+                    <label>
+
+                        <span>
+                            ПОЧТОВЫЙ ИНДЕКС *
+                        </span>
+
+                        <input
+                            type="text"
+                            id="ukrPoshtaIndex"
+                            name="ukrPoshtaIndex"
+                            placeholder="Например: 61001"
+                        >
+
+                    </label>
+
+                </div>
+
+
+                <label>
+
+                    <span>
+                        КОММЕНТАРИЙ
+                    </span>
+
+                    <textarea
+                        id="customerComment"
+                        name="comment"
+                        placeholder="Дополнительная информация к заказу"
+                        rows="3"
+                    ></textarea>
+
+                </label>
+
+            </div>
+
+
+            <!-- ORDER SUMMARY -->
+
+            <div class="order-summary">
+
+                <div class="order-summary-title">
+                    ВАШ ЗАКАЗ
+                </div>
+
+
+                <div
+                    class="order-summary-items"
+                    id="orderSummaryItems"
+                >
+                </div>
+
+
+                <div class="order-summary-total">
+
+                    <span>
+                        TOTAL
+                    </span>
+
+                    <strong id="orderSummaryTotal">
+                        ₴0.00
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="submit-order-button"
+            >
+                ОФОРМИТЬ ЗАКАЗ
+            </button>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================
+     CART
+========================================= -->
+
+<aside
+    class="cart-drawer"
+    id="cartDrawer"
+>
+
+    <div class="cart-header">
+
+        <div class="cart-title">
+            YOUR CART
+        </div>
+
+        <button
+            class="cart-close"
+            id="cartClose"
+        >
+            ×
+        </button>
+
+    </div>
+
+
+    <div
+        class="cart-items"
+        id="cartItems"
+    >
+
+        <div class="empty-cart">
+            YOUR CART IS EMPTY
+        </div>
+
+    </div>
+
+
+    <div class="cart-bottom">
+
+        <div class="cart-total-row">
+
+            <span>
+                TOTAL
+            </span>
+
+            <strong id="cartTotal">
+                ₴0.00
+            </strong>
+
+        </div>
+
+
+        <button
+            class="buy-button"
+            id="buyButton"
+        >
+            BUY NOW
+        </button>
+
+    </div>
+
+</aside>
+
+
+<!-- =========================================
+     HEADER
+========================================= -->
+
+<header class="header">
+
+
+    <nav class="nav-left">
+
+        <a href="index.html">
+            Home
+        </a>
+
+        <a href="catalog.html">
+            Catalog
+        </a>
+
+    </nav>
+
+
+    <a
+        href="index.html"
+        class="logo"
+    >
+        <img class="brand-logo" src="images/logo.png" alt="ZXCAER">
+    </a>
+
+
+    <div class="nav-right">
+
+        <a
+            class="icon tracking-truck"
+            href="tracking.html"
+            aria-label="Отследить заказ"
+            title="Отследить заказ"
+        >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M2.5 6.5A1.5 1.5 0 0 1 4 5h10a1.5 1.5 0 0 1 1.5 1.5V17H4a1.5 1.5 0 0 1-1.5-1.5z"></path>
+                <path d="M15.5 9h3l3 3.5V17h-6"></path>
+                <circle cx="7" cy="17.5" r="2"></circle>
+                <circle cx="18.5" cy="17.5" r="2"></circle>
+            </svg>
+        </a>
+
+        <button
+            class="icon account"
+            id="accountButton"
+            aria-label="Account"
+            type="button"
+        >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="12" cy="8" r="3.5"></circle>
+                <path d="M5 20c.8-4 3.1-6 7-6s6.2 2 7 6"></path>
+            </svg>
+        </button>
+
+        <button
+            class="icon cart"
+            id="cartButton"
+            aria-label="Shopping cart"
+        >
+
+            <svg
+                viewBox="0 0 24 24"
+            >
+
+                <path
+                    d="M4 8H20L18.8 20H5.2L4 8Z"
+                ></path>
+
+                <path
+                    d="M8 8C8 3 16 3 16 8"
+                ></path>
+
+            </svg>
+
+
+            <span
+                class="cart-count"
+                id="cartCount"
+            >
+                0
+            </span>
+
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================
+     MAIN
+========================================= -->
+
+<main id="home">
+
+    <!-- CATALOG -->
+
+    <section
+        class="catalog"
+        id="catalog"
+    >
+
+        <div class="products">
+
+
+            <!-- PRODUCT 01 -->
+
+            <article
+                class="product reveal"
+                data-id="1"
+                data-name="🩸 ZXCAER - ZIP"
+                data-price="2300"
+                data-image="images/hoodie-01-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
+
+                    <img
+                        class="front"
+                        src="images/hoodie-01-front.jpg"
+                        alt="🩸 ZXCAER - ZIP"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-01-back.jpg"
+                        alt="🩸 ZXCAER - ZIP Back"
+                    >
+
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - ZIP
+                    </span>
+
+                    <strong>
+                        ₴2,300.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 02 -->
+
+            <article
+                class="product reveal"
+                data-id="2"
+                data-name="🩸 ZXCAER - ZIP"
+                data-price="2300"
+                data-image="images/hoodie-02-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
+
+                    <img
+                        class="front"
+                        src="images/hoodie-02-front.jpg"
+                        alt="🩸 ZXCAER - ZIP"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-02-back.jpg"
+                        alt="🩸 ZXCAER - ZIP Back"
+                    >
+
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - ZIP
+                    </span>
+
+                    <strong>
+                        ₴2,300.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 03 -->
+
+            <article
+                class="product reveal"
+                data-id="3"
+                data-name="🩸 ZXCAER - HUDI"
+                data-price="2150"
+                data-image="images/hoodie-03-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
+
+                    <img
+                        class="front"
+                        src="images/hoodie-03-front.jpg"
+                        alt="🩸 ZXCAER - HUDI"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-03-back.jpg"
+                        alt="🩸 ZXCAER - HUDI Back"
+                    >
+
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - HUDI
+                    </span>
+
+                    <strong>
+                        ₴2,150.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 04 -->
+
+            <article
+                class="product reveal"
+                data-id="4"
+                data-name="🩸 ZXCAER - HUDI"
+                data-price="2150"
+                data-image="images/hoodie-04-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
+
+                    <img
+                        class="front"
+                        src="images/hoodie-04-front.jpg"
+                        alt="🩸 ZXCAER - HUDI"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-04-back.jpg"
+                        alt="🩸 ZXCAER - HUDI Back"
+                    >
+
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - HUDI
+                    </span>
+
+                    <strong>
+                        ₴2,150.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 05 -->
+
+            <article
+                class="product reveal"
+                data-id="5"
+                data-name="🩸 ZXCAER - Tishka"
+                data-price="1100"
+                data-image="images/hoodie-05-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
+
+                    <img
+                        class="front"
+                        src="images/hoodie-05-front.jpg"
+                        alt="🩸 ZXCAER - Tishka"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-05-back.jpg"
+                        alt="🩸 ZXCAER - Tishka Back"
+                    >
+
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        🩸 ZXCAER - Tishka
+                    </span>
+
+                    <strong>
+                        ₴1,100.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+            <!-- PRODUCT 06 -->
+
+            <article
+                class="product reveal"
+                data-id="6"
+                data-name="ZXCAER - Tishka 06"
+                data-price="1100"
+                data-image="images/hoodie-06-front.jpg"
+            >
+
+                <div
+                    class="product-image"
+                    data-product="true"
+                >
+
+                    <span class="product-status-badge" data-status="available">
+                        В НАЯВНОСТІ
+                    </span>
+
+                    <img
+                        class="front"
+                        src="images/hoodie-06-front.jpg"
+                        alt="ZXCAER - Tishka 06"
+                    >
+
+                    <img
+                        class="back"
+                        src="images/hoodie-06-back.jpg"
+                        alt="ZXCAER - Tishka 06 Back"
+                    >
+
+
+                </div>
+
+                <div class="product-info">
+
+                    <span>
+                        ZXCAER - Tishka 06
+                    </span>
+
+                    <strong>
+                        ₴1,100.00
+                    </strong>
+
+                </div>
+
+            </article>
+
+
+        </div>
+
+
+        <div class="view-all-container">
+
+            <a
+                href="#catalog"
+                class="view-all"
+            >
+
+                VIEW ALL
+
+                <span>
+                    &gt;&gt;&gt;
+                </span>
+
+            </a>
+
+        </div>
+
+
+    </section>
+
+
+    <section
+        class="white-fade"
+        aria-hidden="true"
+    ></section>
+
+
+</main>
+
+
+<footer class="zxcaer-footer">
+    <div class="zxcaer-footer-socials">
+        <!-- Instagram -->
+        <a
+            class="zxcaer-footer-social"
+            href="https://www.instagram.com/zxcaer.ua?stkn=enQ3MDU5NDIzczBt&utm_source=qr"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+        >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3.2" y="3.2" width="17.6" height="17.6" rx="5"
+                      fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="12" cy="12" r="4.1"
+                        fill="none" stroke="currentColor" stroke-width="1.8"/>
+                <circle cx="17.35" cy="6.65" r="1.2" fill="currentColor"/>
+            </svg>
+        </a>
+
+        <!-- Telegram -->
+        <a
+            class="zxcaer-footer-social"
+            href="https://t.me/zxcaerua"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Telegram"
+        >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21.4 4.6 18.2 20c-.24 1.09-.89 1.36-1.8.85l-5-3.69-2.41 2.32c-.27.27-.5.5-1.02.5l.36-5.1 9.28-8.38c.4-.36-.09-.56-.62-.2L5.52 13.56.57 12.01c-1.08-.34-1.1-1.08.23-1.57L20.14 2.9c.9-.34 1.69.2 1.26 1.7Z"
+                      fill="currentColor"/>
+            </svg>
+        </a>
+    </div>
+
+    <div class="zxcaer-footer-bottom">
+        <span>© 2026, ZXCAER</span>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Политика конфиденциальности</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Политика возврата средств</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Условия предоставления услуги</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Контактная информация</a>
+        <span>·</span>
+        <a href="#" class="zxcaer-footer-policy">Политика доставки</a>
+    </div>
+</footer>
+
+
+<!-- ZXCAER: Supabase + dynamic products + site script -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const ZXCAER_SUPABASE_URL = "https://gxkmnkphocqvlhnerkix.supabase.co";
+const ZXCAER_SUPABASE_KEY = "sb_publishable_B3hq0yrXvptyr4KT7dCczg_5VVVeup_";
+
+const zxcaerSupabase = window.supabase.createClient(
+    ZXCAER_SUPABASE_URL,
+    ZXCAER_SUPABASE_KEY
+);
+
+let zxcaerScriptStarted = false;
+let zxcaerProductsLoaded = false;
+
+function escapeZXCAER(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+}
+
+function getZXCAERImageUrl(path) {
+    if (!path) return "";
+
+    if (path.startsWith("https://") || path.startsWith("http://")) {
+        return path;
+    }
+
+    if (path.startsWith("images/")) {
+        return path;
+    }
+
+    return zxcaerSupabase.storage
+        .from("product-images")
+        .getPublicUrl(path).data.publicUrl;
+}
+
+/*
+ * script.js внутри ждёт DOMContentLoaded.
+ * Мы загружаем его после товаров и запускаем
+ * его обработчик вручную, не вызывая повторно
+ * наш Supabase-загрузчик.
+ */
+function loadOldZXCAERScript() {
+    if (zxcaerScriptStarted) return;
+
+    zxcaerScriptStarted = true;
+
+    const script = document.createElement("script");
+    script.src = "script.js";
+
+    script.onload = function () {
+        const intro = document.getElementById("siteIntro");
+
+        /*
+         * script.js добавляет обработчик DOMContentLoaded.
+         * На этот момент настоящий DOMContentLoaded уже прошёл,
+         * поэтому временно запускаем только обработчики,
+         * которые уже были зарегистрированы script.js.
+         */
+        const ownLoader = window.__zxcaerOwnDOMContentLoadedHandler;
+
+        if (ownLoader) {
+            document.removeEventListener("DOMContentLoaded", ownLoader);
+        }
+
+        document.dispatchEvent(new Event("DOMContentLoaded"));
+
+        if (ownLoader) {
+            document.addEventListener("DOMContentLoaded", ownLoader);
+        }
+
+        /*
+         * В script.js intro привязан к window.load.
+         * Настоящий load тоже уже мог произойти.
+         */
+        window.dispatchEvent(new Event("load"));
+
+        if (intro) {
+            setTimeout(() => {
+                document.body.classList.add("site-loaded");
+                intro.classList.add("hide");
+
+                setTimeout(() => {
+                    if (intro.parentNode) {
+                        intro.remove();
+                    }
+                }, 900);
+            }, 1500);
+        }
+    };
+
+    script.onerror = function () {
+        console.error("ZXCAER: не удалось загрузить script.js");
+
+        document.body.classList.add("site-loaded");
+
+        const intro = document.getElementById("siteIntro");
+        if (intro) {
+            intro.classList.add("hide");
+            setTimeout(() => {
+                if (intro.parentNode) intro.remove();
+            }, 900);
+        }
+    };
+
+    document.body.appendChild(script);
+}
+
+async function loadZXCAERProducts() {
+    if (zxcaerProductsLoaded) return;
+
+    try {
+        const { data, error } = await zxcaerSupabase
+            .from("products")
+            .select("*")
+            .eq("is_visible", true)
+            .order("sort_order", { ascending: true });
+
+        if (error) {
+            console.error("ZXCAER products error:", error);
+            loadOldZXCAERScript();
+            return;
+        }
+
+        /*
+         * Если таблица пока пустая, оставляем
+         * встроенные товары как резерв.
+         */
+        if (!Array.isArray(data) || data.length === 0) {
+            loadOldZXCAERScript();
+            return;
+        }
+
+        /* Если уже включился резервный режим,
+           не заменяем карточки после запуска script.js. */
+        if (zxcaerScriptStarted) {
+            return;
+        }
+
+        const productsContainer = document.querySelector(".products");
+
+        if (!productsContainer) {
+            loadOldZXCAERScript();
+            return;
+        }
+
+        productsContainer.innerHTML = "";
+
+        data.forEach((product) => {
+            const frontImage = getZXCAERImageUrl(product.front_image);
+            const backImage = getZXCAERImageUrl(product.back_image);
+            const status = product.status || "available";
+
+            const originalPrice = Number(product.price || 0);
+            const discountPercent = Math.min(100, Math.max(0, Number(product.discount_percent || 0)));
+            const discountEndTimestamp = product.discount_end_at ? new Date(product.discount_end_at).getTime() : 0;
+            const discountActive = discountPercent > 0 && discountEndTimestamp > Date.now();
+            const currentPrice = discountActive
+                ? Math.round(originalPrice * (1 - discountPercent / 100) * 100) / 100
+                : originalPrice;
+
+            const statusLabels = {
+                available: "В НАЯВНОСТІ",
+                sold_out: "РОЗПРОДАНО",
+                sale: "РОЗПРОДАЖ",
+                coming_soon: "СКОРО"
+            };
+
+            const article = document.createElement("article");
+
+            article.className = "product reveal";
+            article.dataset.id = product.id || "";
+            article.dataset.name = product.name || "";
+            article.dataset.price = currentPrice;
+            article.dataset.originalPrice = originalPrice;
+            article.dataset.discountPercent = discountActive ? discountPercent : 0;
+            article.dataset.discountEndAt = discountActive ? product.discount_end_at : "";
+            article.dataset.image = frontImage;
+            article.dataset.status = status;
+
+            article.innerHTML = `
+                <div class="product-image" data-product="true">
+                    ${discountActive ? `<span class="product-discount-badge" style="position:absolute !important; top:18px !important; right:18px !important; left:auto !important; bottom:auto !important; z-index:20 !important; display:inline-flex !important; align-items:center !important; justify-content:center !important; padding:7px 10px !important; border-radius:999px !important; background:#e52b2b !important; color:#fff !important; font-size:10px !important; font-weight:700 !important; line-height:1 !important; white-space:nowrap !important; pointer-events:none !important;">СКИДКА −${discountPercent}%</span>` : ""}
+
+                    <span class="product-status-badge status-${escapeZXCAER(status)}">
+                        ${escapeZXCAER(statusLabels[status] || statusLabels.available)}
+                    </span>
+
+                    <img
+                        class="front"
+                        src="${escapeZXCAER(frontImage)}"
+                        alt="${escapeZXCAER(product.name)}"
+                    >
+
+                    ${backImage ? `
+                        <img
+                            class="back"
+                            src="${escapeZXCAER(backImage)}"
+                            alt="${escapeZXCAER(product.name)} Back"
+                        >
+                    ` : ""}
+                </div>
+
+                <div class="product-info">
+                    <span class="product-card-name">
+                        ${escapeZXCAER(product.name)}
+                    </span>
+
+                    <div class="product-pricing">
+                        <strong class="${discountActive ? "discount-current-price" : ""}">
+                            ₴${currentPrice.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        </strong>
+                        ${discountActive ? `<del class="discount-old-price">₴${originalPrice.toLocaleString("uk-UA", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</del>` : ""}
+                    </div>
+                </div>
+            `;
+
+            productsContainer.appendChild(article);
+        });
+
+        zxcaerProductsLoaded = true;
+        loadOldZXCAERScript();
+
+    } catch (error) {
+        console.error("ZXCAER Supabase error:", error);
+        loadOldZXCAERScript();
+    }
+}
+
+/*
+ * Сохраняем ссылку на наш собственный обработчик,
+ * чтобы искусственный DOMContentLoaded не вызвал
+ * повторную загрузку Supabase.
+ */
+window.__zxcaerOwnDOMContentLoadedHandler = loadZXCAERProducts;
+
+/*
+ * Аварийный таймер:
+ * сайт не должен оставаться белым, даже если
+ * Supabase отвечает слишком долго.
+ */
+setTimeout(() => {
+    if (!zxcaerScriptStarted) {
+        loadOldZXCAERScript();
+    }
+
+    document.body.classList.add("site-loaded");
+
+    const intro = document.getElementById("siteIntro");
+
+    if (intro) {
+        intro.classList.add("hide");
+
+        setTimeout(() => {
+            if (intro.parentNode) intro.remove();
+        }, 900);
+    }
+}, 4000);
+
+/*
+ * Загружаем товары после того, как HTML готов.
+ */
+if (document.readyState === "loading") {
+    document.addEventListener(
+        "DOMContentLoaded",
+        loadZXCAERProducts,
+        { once: true }
+    );
+} else {
+    loadZXCAERProducts();
+}
+</script>
+
+
+<!-- =========================================
+     ACCOUNT MODAL
+========================================= -->
+<div class="account-overlay" id="accountOverlay"></div>
+
+<section class="account-modal" id="accountModal" aria-hidden="true">
+    <button class="account-modal-close" id="accountModalClose" type="button" aria-label="Close">×</button>
+
+    <div class="account-modal-inner">
+        <div class="account-title">ACCOUNT</div>
+
+        <div class="account-tabs" id="accountTabs">
+            <button type="button" class="account-tab active" data-account-tab="login">ВОЙТИ</button>
+            <button type="button" class="account-tab" data-account-tab="register">РЕГИСТРАЦИЯ</button>
+        </div>
+
+        <form class="account-form" id="accountForm" autocomplete="on">
+            <label>
+                <span>EMAIL</span>
+                <input id="accountEmail" type="email" autocomplete="email" placeholder="you@example.com" required>
+            </label>
+            <label>
+                <span>ПАРОЛЬ</span>
+                <input id="accountPassword" type="password" autocomplete="current-password" placeholder="••••••••" minlength="6" required>
+            </label>
+            <button class="account-submit" id="accountSubmit" type="submit">ВОЙТИ</button>
+        </form>
+
+        <div class="account-message" id="accountMessage" role="status"></div>
+
+        <div class="account-logged" id="accountLogged" hidden>
+            <div class="account-logged-label">ВИ УВІЙШЛИ ЯК</div>
+            <div class="account-user-email" id="accountUserEmail"></div>
+            <button class="account-logout" id="accountLogout" type="button">ВИЙТИ</button>
+        </div>
+    </div>
+</section>
+
+
+<!-- ZXCAER POLICY MODAL -->
+<div class="zxcaer-policy-overlay" id="zxcaerPolicyOverlay" aria-hidden="true">
+    <div class="zxcaer-policy-modal" role="dialog" aria-modal="true" aria-labelledby="zxcaerPolicyTitle">
+        <button class="zxcaer-policy-close" id="zxcaerPolicyClose" type="button" aria-label="Закрыть">×</button>
+        <div class="zxcaer-policy-kicker">ZXCAER</div>
+        <h2 class="zxcaer-policy-title" id="zxcaerPolicyTitle"></h2>
+        <div class="zxcaer-policy-content" id="zxcaerPolicyContent"></div>
+    </div>
+</div>
+
+<script>
+(function(){
+    const overlay = document.getElementById("zxcaerPolicyOverlay");
+    const closeBtn = document.getElementById("zxcaerPolicyClose");
+    const title = document.getElementById("zxcaerPolicyTitle");
+    const content = document.getElementById("zxcaerPolicyContent");
+
+    const policies = {
+        "Политика конфиденциальности": `
+            <p>ZXCAER уважает вашу конфиденциальность и обрабатывает персональные данные только в объёме, необходимом для оформления и выполнения заказа.</p>
+            <h3>Какие данные мы можем получать</h3>
+            <p>Имя и фамилия, номер телефона, Telegram username, город, данные доставки и информация, которую вы добровольно указываете при оформлении заказа.</p>
+            <h3>Для чего используются данные</h3>
+            <p>Для связи с покупателем, подтверждения заказа, его комплектации, доставки и решения вопросов, связанных с покупкой.</p>
+            <h3>Защита данных</h3>
+            <p>Мы не продаём и не передаём ваши персональные данные третьим лицам, кроме случаев, когда это необходимо для выполнения доставки или предусмотрено законодательством.</p>
+        `,
+        "Политика возврата средств": `
+            <p>Если у вас возникла проблема с полученным товаром, свяжитесь с ZXCAER как можно скорее после получения заказа.</p>
+            <h3>Возврат</h3>
+            <p>Возможность возврата или обмена зависит от состояния товара и конкретной ситуации. Товар должен сохранять первоначальный вид, комплектацию и бирки, если они были предусмотрены.</p>
+            <h3>Связь с нами</h3>
+            <p>Перед отправкой товара обратно обязательно свяжитесь с нами через Telegram или другой указанный в разделе контактов канал, чтобы согласовать порядок возврата.</p>
+            <h3>Возврат средств</h3>
+            <p>После согласования возврата и получения товара средства возвращаются согласованным способом в соответствии с условиями конкретного заказа.</p>
+        `,
+        "Условия предоставления услуги": `
+            <p>Оформляя заказ на сайте ZXCAER, покупатель подтверждает, что ознакомился с информацией о товаре и предоставляет достоверные контактные данные.</p>
+            <h3>Заказ</h3>
+            <p>После оформления заказа с покупателем может быть проведено дополнительное подтверждение. Наличие товара и возможность его отправки подтверждаются перед выполнением заказа.</p>
+            <h3>Цена</h3>
+            <p>Стоимость товара указывается на сайте. Условия доставки могут зависеть от выбранного способа доставки и региона.</p>
+            <h3>Ответственность покупателя</h3>
+            <p>Покупатель отвечает за правильность указанных имени, телефона и данных доставки.</p>
+        `,
+        "Контактная информация": `
+            <p>Если у вас есть вопросы по товарам, заказам, доставке или возврату, свяжитесь с ZXCAER.</p>
+            <h3>Telegram</h3>
+            <p><a href="https://t.me/zxcaerua" target="_blank" rel="noopener noreferrer">@zxcaerua</a></p>
+            <h3>Instagram</h3>
+            <p><a href="https://www.instagram.com/zxcaer.ua" target="_blank" rel="noopener noreferrer">@zxcaer.ua</a></p>
+        `,
+        "Политика доставки": `
+            <p>ZXCAER осуществляет отправку заказов выбранным покупателем способом доставки, если такой способ доступен для указанного города.</p>
+            <h3>Новая Почта</h3>
+            <p>При оформлении заказа указывается город и выбранный тип доставки: отделение или поштомат. Номер и адрес должны быть указаны корректно.</p>
+            <h3>Укрпочта</h3>
+            <p>Для доставки Укрпочтой необходимо указать город и почтовый индекс, а также другую необходимую информацию в форме заказа.</p>
+            <h3>Сроки</h3>
+            <p>Срок отправки зависит от наличия товара и обработки заказа. После передачи отправления перевозчику дальнейшие сроки зависят от выбранной службы доставки.</p>
+        `
+    };
+
+    function openPolicy(name){
+        title.textContent = name;
+        content.innerHTML = policies[name] || "<p>Информация пока недоступна.</p>";
+        overlay.classList.add("is-open");
+        overlay.setAttribute("aria-hidden","false");
+        document.body.classList.add("zxcaer-policy-lock");
+    }
+
+    function closePolicy(){
+        overlay.classList.remove("is-open");
+        overlay.setAttribute("aria-hidden","true");
+        document.body.classList.remove("zxcaer-policy-lock");
+    }
+
+    document.querySelectorAll(".zxcaer-footer-policy").forEach(link => {
+        link.addEventListener("click", function(e){
+            e.preventDefault();
+            openPolicy(this.textContent.trim());
+        });
+    });
+
+    closeBtn.addEventListener("click", closePolicy);
+    overlay.addEventListener("click", e => {
+        if(e.target === overlay) closePolicy();
+    });
+    document.addEventListener("keydown", e => {
+        if(e.key === "Escape" && overlay.classList.contains("is-open")) closePolicy();
+    });
+})();
+</script>
+
+</body>
+
+</html>
