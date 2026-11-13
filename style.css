@@ -5450,3 +5450,147 @@ body.dark-theme .cart-close {
     .hero-text { bottom: 22px; }
     .hero-shop-button { margin-top: 14px; min-height: 42px; }
 }
+
+
+/* =========================================================
+   ZXCAER — SHARED MOBILE HEADER
+   Match the product-page header across the storefront.
+   Mobile only: desktop layout remains untouched.
+========================================================= */
+@media (max-width: 600px) {
+    .header {
+        position: sticky !important;
+        top: 0 !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        z-index: 1000 !important;
+        display: grid !important;
+        grid-template-columns: 1fr auto 1fr !important;
+        align-items: center !important;
+        width: 100% !important;
+        height: 58px !important;
+        min-height: 58px !important;
+        padding: 0 10px !important;
+        background: #000 !important;
+        border: 0 !important;
+        border-bottom: 1px solid #111 !important;
+        box-shadow: none !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-sizing: border-box !important;
+    }
+
+    .header .nav-left {
+        display: flex !important;
+        align-items: center !important;
+        justify-self: start !important;
+        gap: 10px !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        position: static !important;
+        transform: none !important;
+    }
+
+    .header .nav-left a {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-width: 0 !important;
+        height: 38px !important;
+        padding: 0 !important;
+        color: #fff !important;
+        font-size: 9px !important;
+        line-height: 1 !important;
+        font-weight: 500 !important;
+        letter-spacing: .03em !important;
+        text-decoration: none !important;
+        white-space: nowrap !important;
+    }
+
+    .header .logo {
+        position: static !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        justify-self: center !important;
+        transform: none !important;
+        width: auto !important;
+        max-width: 115px !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #fff !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        white-space: nowrap !important;
+    }
+
+    .header .brand-logo {
+        display: block !important;
+        width: auto !important;
+        height: 30px !important;
+        max-width: 115px !important;
+        max-height: 30px !important;
+        object-fit: contain !important;
+    }
+
+    .header .nav-right {
+        position: static !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-self: end !important;
+        justify-content: flex-end !important;
+        gap: 2px !important;
+        width: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        transform: none !important;
+    }
+
+    .header .nav-right .icon {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 0 0 35px !important;
+        width: 35px !important;
+        min-width: 35px !important;
+        height: 35px !important;
+        min-height: 35px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #fff !important;
+        background: transparent !important;
+        border: 0 !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+
+    .header .nav-right .icon svg,
+    .header .account svg,
+    .header .cart svg,
+    .header .tracking-truck svg {
+        display: block !important;
+        width: 18px !important;
+        height: 18px !important;
+        stroke: #fff !important;
+        fill: none !important;
+        stroke-width: 1.6 !important;
+    }
+
+    .header .cart-count {
+        top: 0 !important;
+        right: -1px !important;
+    }
+}
+
+
+/* ZXCAER — hide mobile catalog heading and VIEW ALL link only */
+@media (max-width: 600px) {
+    .catalog::before,
+    .catalog .view-all-container {
+        display: none !important;
+    }
+}
