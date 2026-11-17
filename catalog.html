@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="theme-color" content="#000000">
 
     <meta
         name="viewport"
@@ -1526,6 +1525,7 @@ async function loadZXCAERProducts() {
                 available: "В НАЯВНОСТІ",
                 sold_out: "РОЗПРОДАНО",
                 sale: "РОЗПРОДАЖ",
+                preorder: "ПРЕДЗАКАЗ",
                 coming_soon: "СКОРО"
             };
 
@@ -1768,6 +1768,9 @@ if (document.readyState === "loading") {
 })();
 </script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="site-analytics.js"></script>
 </body>
 
 </html>

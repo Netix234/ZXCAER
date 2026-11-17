@@ -4,7 +4,6 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="theme-color" content="#000000">
 
     <meta
         name="viewport"
@@ -616,6 +615,12 @@ body.zxcaer-policy-lock{overflow:hidden;}
                         Обязательно укажите ваш Telegram username
                     </small>
 
+                </label>
+
+                <label>
+                    <span>ЭЛЕКТРОННАЯ ПОЧТА *</span>
+                    <input type="email" id="customerEmail" name="email" placeholder="name@example.com" autocomplete="email" required>
+                    <small>Укажіть пошту для зв’язку щодо вашого замовлення</small>
                 </label>
 
             </div>
@@ -1389,6 +1394,9 @@ const zxcaerSupabase = window.supabase.createClient(
     ZXCAER_SUPABASE_URL,
     ZXCAER_SUPABASE_KEY
 );
+</script>
+<script src="order-success.js"></script>
+<script>
 
 let zxcaerScriptStarted = false;
 let zxcaerProductsLoaded = false;
@@ -1547,6 +1555,7 @@ async function loadZXCAERProducts() {
                 available: "В НАЯВНОСТІ",
                 sold_out: "РОЗПРОДАНО",
                 sale: "РОЗПРОДАЖ",
+                preorder: "ПРЕДЗАКАЗ",
                 coming_soon: "СКОРО"
             };
 
@@ -1789,6 +1798,9 @@ if (document.readyState === "loading") {
 })();
 </script>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="site-analytics.js"></script>
 </body>
 
 </html>

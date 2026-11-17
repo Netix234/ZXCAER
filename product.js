@@ -278,6 +278,11 @@ const STATUS_CONFIG = {
         className: "sale"
     },
 
+    preorder: {
+        text: "ПРЕДЗАКАЗ",
+        className: "preorder"
+    },
+
     coming_soon: {
         text: "СКОРО",
         className: "coming-soon"
@@ -753,6 +758,7 @@ function applyStatus(
         "available",
         "sold-out",
         "sale",
+        "preorder",
         "coming-soon"
     );
 
@@ -1419,7 +1425,10 @@ function loadCart() {
                     item.size || null,
 
                 quantity:
-                    Number(item.quantity || 0)
+                    Number(item.quantity || 0),
+
+                status:
+                    item.status || ""
 
             }))
             .filter(
@@ -1557,6 +1566,7 @@ function addToCart(
         existing.quantity =
             Number(existing.quantity || 0) +
             Number(amount || 1);
+        existing.status = product.status || currentProduct?.status || existing.status || "";
 
     }
 
@@ -1580,7 +1590,10 @@ function addToCart(
                 productSize,
 
             quantity:
-                Number(amount || 1)
+                Number(amount || 1),
+
+            status:
+                product.status || currentProduct?.status || ""
 
         });
 
@@ -2363,6 +2376,7 @@ if (orderForm) {
         const surnameElement = document.getElementById("customerSurname");
         const phoneElement = document.getElementById("customerPhone");
         const telegramElement = document.getElementById("customerTelegram");
+        const emailElement = document.getElementById("customerEmail");
         const cityElement = document.getElementById("customerCity");
         const commentElement = document.getElementById("customerComment");
 
@@ -2370,12 +2384,14 @@ if (orderForm) {
         const surname = surnameElement?.value.trim() || "";
         const phone = phoneElement?.value.trim() || "";
         const telegram = telegramElement?.value.trim() || "";
+        const email = emailElement?.value.trim() || "";
         const city = cityElement?.value.trim() || "";
         const comment = commentElement?.value.trim() || "";
 
         if (!name) { alert("Введіть ім’я"); nameElement?.focus(); return; }
         if (!surname) { alert("Введіть прізвище"); surnameElement?.focus(); return; }
         if (!telegram.startsWith("@")) { alert("Вкажіть Telegram username, починаючи з @"); telegramElement?.focus(); return; }
+        if (!emailElement?.checkValidity()) { alert("Вкажіть коректну електронну пошту"); emailElement?.focus(); return; }
         if (!deliveryMethod?.value) { alert("Оберіть спосіб доставки"); deliveryMethod?.focus(); return; }
 
         let destinationType = "";
@@ -2425,7 +2441,8 @@ if (orderForm) {
             `👤 <b>Ім’я:</b> ${escapeTelegram(name)}\n` +
             `👤 <b>Прізвище:</b> ${escapeTelegram(surname)}\n` +
             `📱 <b>Телефон:</b> ${escapeTelegram(phone)}\n` +
-            `💬 <b>Telegram:</b> ${escapeTelegram(telegram)}\n\n` +
+            `💬 <b>Telegram:</b> ${escapeTelegram(telegram)}\n` +
+            `📧 <b>Email:</b> ${escapeTelegram(email)}\n\n` +
             `📍 <b>Город:</b> ${escapeTelegram(city)}\n` +
             `${deliveryText}\n\n` +
             `📦 <b>ТОВАРЫ:</b>${productsText}\n\n` +
@@ -2439,6 +2456,18 @@ if (orderForm) {
         try {
             // Save the order to Supabase so it appears in the separate business dashboard.
             // This is performed before the existing Telegram notification.
+            let hasPreorder = cart.some(item => item.status === "preorder");
+            const preorderProductIds = [...new Set(cart.map(item => item.productId).filter(Boolean))];
+            if (preorderProductIds.length) {
+                const { data: productStatuses, error: productStatusError } = await supabaseClient
+                    .from("products")
+                    .select("id,status")
+                    .in("id", preorderProductIds);
+                if (!productStatusError && Array.isArray(productStatuses)) {
+                    hasPreorder = hasPreorder || productStatuses.some(product => product.status === "preorder");
+                }
+            }
+
             const orderItems = cart.map(item => ({
                 product_id: String(item.productId ?? item.id ?? ""),
                 name: String(item.name || "Товар"),
@@ -2454,6 +2483,7 @@ if (orderForm) {
                     customer_surname: surname,
                     phone,
                     telegram,
+                    email,
                     city,
                     delivery_method: deliveryMethod.value,
                     destination_type: destinationType,
@@ -2480,7 +2510,19 @@ if (orderForm) {
             const data = await response.json();
             if (!response.ok || !data.ok) throw new Error(data.description || "Ошибка отправки заказа в Telegram.");
 
-            alert("ЗАКАЗ УСПЕШНО ОФОРМЛЕН! ❤️\n\nМы получили ваш заказ и скоро свяжемся с вами.");
+            const preorderSuccessMessage = hasPreorder
+                ? "Очікуваний час виготовлення та доставки — від 5 до 11 днів."
+                : "";
+            const preorderSuccessNote = hasPreorder
+                ? "Ми зв’яжемося з вами за вказаною електронною поштою."
+                : "";
+            if (window.showZXCAERSuccess) {
+                window.showZXCAERSuccess({ title: "Замовлення оформлено", message: preorderSuccessMessage, note: preorderSuccessNote });
+            } else {
+                alert(hasPreorder
+                    ? "Замовлення оформлено!\n\nОчікуваний час виготовлення та доставки — від 5 до 11 днів.\n\nМи зв’яжемося з вами за вказаною електронною поштою."
+                    : "Замовлення оформлено!");
+            }
             cart = [];
             saveCart();
             renderCart();

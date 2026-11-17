@@ -5,7 +5,6 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="theme-color" content="#000000">
 
     <meta
         name="viewport"
@@ -380,6 +379,15 @@
             color: #c66a00;
         }
 
+        .image-status.preorder {
+            color: #171717;
+        }
+
+        .image-status.preorder .status-dot {
+            background: #171717;
+            box-shadow: 0 0 8px rgba(23,23,23,.35);
+        }
+
         .image-status.sale .status-dot {
             background: #f59e0b;
             box-shadow:
@@ -494,6 +502,10 @@
 
         .price-status.sale {
             color: #c66a00;
+        }
+
+        .price-status.preorder {
+            color: #171717;
         }
 
         .price-status.coming-soon {
@@ -2855,6 +2867,12 @@ body.zxcaer-policy-lock { overflow: hidden !important; }
 
                 </label>
 
+                <label>
+                    <span>ЭЛЕКТРОННАЯ ПОЧТА *</span>
+                    <input type="email" id="customerEmail" name="email" placeholder="name@example.com" autocomplete="email" required>
+                    <small>Укажіть пошту для зв’язку щодо вашого замовлення</small>
+                </label>
+
             </div>
 
 
@@ -3204,7 +3222,7 @@ body.zxcaer-policy-lock { overflow: hidden !important; }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
+<script src="order-success.js"></script>
 <script src="product.js"></script>
 
 
@@ -3239,6 +3257,9 @@ body.size-chart-opened{overflow:hidden}
  window.zxcaerSetSizeChart=function(url){if(url){btn.dataset.image=url;btn.style.display='inline-flex';}else{btn.style.display='none';delete btn.dataset.image;}};
 })();
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="site-analytics.js"></script>
 </body>
 
 </html>

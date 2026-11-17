@@ -99,7 +99,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     item.size || null,
 
                 quantity:
-                    Number(item.quantity || 0)
+                    Number(item.quantity || 0),
+
+                status:
+                    item.status || ""
             })).filter(
                 item => item.quantity > 0
             );
@@ -247,6 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (existingProduct) {
             existingProduct.quantity += 1;
+            existingProduct.status = product.status || product.dataset?.status || product.querySelector?.("[data-status]")?.dataset.status || existingProduct.status || "";
         } else {
             cart.push({
                 productId:
@@ -267,7 +271,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     productSize,
 
                 quantity:
-                    1
+                    1,
+
+                status:
+                    product.status || product.dataset?.status || product.querySelector?.("[data-status]")?.dataset.status || ""
             });
         }
 
@@ -571,7 +578,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 name: currentProduct.dataset.name,
                 price: currentProduct.dataset.price,
                 image: currentProduct.dataset.image,
-                size: null
+                size: null,
+                status: currentProduct.querySelector?.("[data-status]")?.dataset.status || currentProduct.dataset.status || ""
             });
 
             closeProductModal();
@@ -802,6 +810,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const surnameElement = document.getElementById("customerSurname");
             const phoneElement = document.getElementById("customerPhone");
             const telegramElement = document.getElementById("customerTelegram");
+            const emailElement = document.getElementById("customerEmail");
             const cityElement = document.getElementById("customerCity");
             const commentElement = document.getElementById("customerComment");
 
@@ -809,6 +818,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const surname = surnameElement ? surnameElement.value.trim() : "";
             const phone = phoneElement ? phoneElement.value.trim() : "";
             const telegram = telegramElement ? telegramElement.value.trim() : "";
+            const email = emailElement ? emailElement.value.trim() : "";
             const city = cityElement ? cityElement.value.trim() : "";
             const comment = commentElement ? commentElement.value.trim() : "";
 
@@ -829,6 +839,12 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!telegram.startsWith("@")) {
                 alert("Введите Telegram username начиная с @");
                 telegramElement?.focus();
+                return;
+            }
+
+            if (!emailElement?.checkValidity()) {
+                alert("Введіть коректну електронну пошту");
+                emailElement?.focus();
                 return;
             }
 
@@ -922,7 +938,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 `👤 <b>Ім’я:</b> ${escapeHTML(name)}\n` +
                 `👤 <b>Прізвище:</b> ${escapeHTML(surname)}\n` +
                 `📱 <b>Телефон:</b> ${escapeHTML(phone)}\n` +
-                `💬 <b>Telegram:</b> ${escapeHTML(telegram)}\n\n` +
+                `💬 <b>Telegram:</b> ${escapeHTML(telegram)}\n` +
+                `📧 <b>Email:</b> ${escapeHTML(email)}\n\n` +
                 `📍 <b>Город:</b> ${escapeHTML(city)}\n` +
                 `${deliveryText}\n\n` +
                 `📦 <b>ТОВАРЫ:</b>` +
@@ -955,6 +972,35 @@ document.addEventListener("DOMContentLoaded", () => {
                     throw new Error("Не настроен токен Telegram-бота.");
                 }
 
+                let hasPreorder = cart.some(item => item.status === "preorder");
+                const preorderProductIds = [...new Set(cart.map(item => item.productId).filter(Boolean))];
+                if (preorderProductIds.length) {
+                    const { data: productStatuses, error: productStatusError } = await zxcaerSupabase
+                        .from("products")
+                        .select("id,status")
+                        .in("id", preorderProductIds);
+                    if (!productStatusError && Array.isArray(productStatuses)) {
+                        hasPreorder = hasPreorder || productStatuses.some(product => product.status === "preorder");
+                    }
+                }
+
+                const orderItems = cart.map(item => ({
+                    product_id: String(item.productId ?? item.id ?? ""),
+                    name: String(item.name || "Товар"),
+                    size: String(item.size || ""),
+                    quantity: Number(item.quantity || 1),
+                    unit_price: Number(item.price || 0),
+                    image: String(item.image || "")
+                }));
+                const { error: saveOrderError } = await zxcaerSupabase.from("orders").insert({
+                    customer_name: name, customer_surname: surname, phone, telegram, email, city,
+                    delivery_method: deliveryMethod.value, destination_type: destinationType,
+                    destination_number: destinationNumber, destination_address: destinationAddress,
+                    ukr_poshta_index: deliveryMethod.value === "Укрпочта" ? (ukrPoshtaIndex?.value.trim() || "") : "",
+                    comment, items: orderItems, total: Number(total || 0), status: "new"
+                });
+                if (saveOrderError) throw new Error("Не вдалося зберегти замовлення в бізнес-панелі: " + saveOrderError.message);
+
                 const response = await fetch(
                     `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
                     {
@@ -981,10 +1027,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 /* SUCCESS */
 
-                alert(
-                    "ЗАКАЗ УСПЕШНО ОФОРМЛЕН! ❤️\n\n" +
-                    "Мы получили ваш заказ и скоро свяжемся с вами."
-                );
+                const preorderSuccessMessage = hasPreorder
+                    ? "Очікуваний час виготовлення та доставки — від 5 до 11 днів."
+                    : "";
+                const preorderSuccessNote = hasPreorder
+                    ? "Ми зв’яжемося з вами за вказаною електронною поштою."
+                    : "";
+                if (window.showZXCAERSuccess) {
+                    window.showZXCAERSuccess({ title: "Замовлення оформлено", message: preorderSuccessMessage, note: preorderSuccessNote });
+                } else {
+                    alert(hasPreorder
+                        ? "Замовлення оформлено!\n\nОчікуваний час виготовлення та доставки — від 5 до 11 днів.\n\nМи зв’яжемося з вами за вказаною електронною поштою."
+                        : "Замовлення оформлено!");
+                }
 
                 /* CLEAR CART */
 
