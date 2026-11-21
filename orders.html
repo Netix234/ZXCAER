@@ -103,7 +103,14 @@ html[data-theme="dark"] th,html[data-theme="graphite"] th,html[data-theme="dark"
 .theme-switch button[aria-pressed="true"]{background:#fff;color:#111;border-color:#fff}
 @media(max-width:640px){.top{flex-wrap:wrap}.top-right{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:wrap}.theme-switch{margin:0;gap:4px}.theme-switch button{padding:7px 8px;font-size:10px}#logoutBtn{margin-left:0!important}}
 
-</style></head>
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="images/app-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Zxcaer">
+<meta name="theme-color" content="#080808">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.error));}</script>
+</head>
 <body>
 <header class="top"><div class="brand">ZXCAER <span style="color:#888;font-weight:400;letter-spacing:0">/ BUSINESS</span></div><div class="top-right"><div class="theme-switch" role="group" aria-label="Тема оформлення"><button type="button" data-theme-choice="light" aria-pressed="true">БІЛА</button><button type="button" data-theme-choice="dark" aria-pressed="false">ЧОРНА</button><button type="button" data-theme-choice="graphite" aria-pressed="false">ГРАФІТ</button></div><small id="userLabel">Панель замовлень</small> <button id="logoutBtn" class="btn light hidden" style="margin-left:10px;padding:8px 10px">Вийти</button></div></header>
 <section id="loginPanel" class="login"><h1>Бізнес-панель</h1><p class="muted">Увійди в існуючий акаунт Supabase, який використовує адмін-панель ZXCAER.</p><form id="loginForm"><div class="field"><label for="email">EMAIL</label><input id="email" type="email" required autocomplete="username"></div><div class="field"><label for="password">ПАРОЛЬ</label><input id="password" type="password" required autocomplete="current-password"></div><button class="btn" style="width:100%">Увійти</button><p id="loginError" class="error"></p></form></section>

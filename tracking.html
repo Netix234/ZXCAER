@@ -18,6 +18,13 @@ form{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}.field
 .info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.info{padding:15px;background:var(--card2);border:1px solid #292a2f;border-radius:12px;min-width:0}.info span{display:block;font-size:11px;color:var(--muted);margin-bottom:7px}.info strong{font-size:14px;overflow-wrap:anywhere}.info.pay-due{border-color:#733034;background:#281517}.info.pay-due strong{color:#ff858a;font-size:18px}.tracking-link{color:#ff656b;text-decoration:none}.updated{font-size:12px;color:var(--muted);margin-top:18px}.note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:20px}.order-result{margin-top:20px}.order-result:first-child{margin-top:0}
 @media(max-width:680px){main{margin:26px auto;padding:0 13px 40px}header{padding:0 16px}.logo img{width:125px;max-height:32px}.search,.result{padding:18px;border-radius:15px}form{grid-template-columns:1fr}.result-head{flex-direction:column}.progress{margin:25px -8px;}.step{font-size:9px;padding:0 2px}.dot{width:27px;height:27px}.step:not(:last-child):after{top:12px;left:calc(50% + 14px);right:calc(-50% + 14px)}.info-grid{grid-template-columns:1fr 1fr}.info{padding:12px}.info strong{font-size:12px}}
 </style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="images/app-icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Zxcaer">
+<meta name="theme-color" content="#080808">
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(console.error));}</script>
 </head>
 <body>
 <header><a class="logo" href="index.html"><img src="images/logo.png" alt="ZXCAER"></a><a class="back" href="index.html">← До магазину</a></header>
