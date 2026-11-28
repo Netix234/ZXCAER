@@ -2476,9 +2476,11 @@ if (orderForm) {
                 unit_price: Number(item.price || 0),
                 image: String(item.image || "")
             }));
+            const orderCode = (window.zxcaerNewOrderCode ? window.zxcaerNewOrderCode() : "ZX-" + Math.random().toString(36).slice(2, 10).toUpperCase());
             const { error: saveOrderError } = await supabaseClient
                 .from("orders")
                 .insert({
+                    public_code: orderCode,
                     customer_name: name,
                     customer_surname: surname,
                     phone,
@@ -2500,15 +2502,7 @@ if (orderForm) {
                 throw new Error("Не вдалося зберегти замовлення в системі. Спробуйте ще раз пізніше.");
             }
 
-            const TELEGRAM_BOT_TOKEN = "8627514379:AAGgX7-Kgyzw1dbaBI0U2AEjVjMZkAWtK8I";
-            const TELEGRAM_CHAT_ID = "7999613061";
-            const response = await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message, parse_mode: "HTML" })
-            });
-            const data = await response.json();
-            if (!response.ok || !data.ok) throw new Error(data.description || "Ошибка отправки заказа в Telegram.");
+            // Уведомление в Telegram отправляется сервером после сохранения заказа.
 
             const preorderSuccessMessage = hasPreorder
                 ? "Очікуваний час виготовлення та доставки — від 5 до 11 днів."
@@ -2517,7 +2511,7 @@ if (orderForm) {
                 ? "Ми зв’яжемося з вами за вказаною електронною поштою."
                 : "";
             if (window.showZXCAERSuccess) {
-                window.showZXCAERSuccess({ title: "Замовлення оформлено", message: preorderSuccessMessage, note: preorderSuccessNote });
+                window.showZXCAERSuccess({ title: "Замовлення оформлено", message: preorderSuccessMessage, note: preorderSuccessNote, orderCode });
             } else {
                 alert(hasPreorder
                     ? "Замовлення оформлено!\n\nОчікуваний час виготовлення та доставки — від 5 до 11 днів.\n\nМи зв’яжемося з вами за вказаною електронною поштою."

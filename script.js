@@ -6,8 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Вставь сюда новый токен Telegram-бота.
     // Для безопасности отправку заказов лучше перенести на сервер.
-    const TELEGRAM_BOT_TOKEN = "8627514379:AAGgX7-Kgyzw1dbaBI0U2AEjVjMZkAWtK8I";
-    const TELEGRAM_CHAT_ID = "7999613061";
+    // Telegram-токен удалён из клиента. Уведомления отправляет сервер (Supabase Edge Function).
 
 
     /* =========================
@@ -965,12 +964,7 @@ document.addEventListener("DOMContentLoaded", () => {
             /* SEND TELEGRAM */
 
             try {
-                if (
-                    !TELEGRAM_BOT_TOKEN ||
-                    TELEGRAM_BOT_TOKEN === "ВСТАВЬ_НОВЫЙ_ТОКЕН_БОТА"
-                ) {
-                    throw new Error("Не настроен токен Telegram-бота.");
-                }
+                
 
                 let hasPreorder = cart.some(item => item.status === "preorder");
                 const preorderProductIds = [...new Set(cart.map(item => item.productId).filter(Boolean))];
@@ -992,8 +986,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     unit_price: Number(item.price || 0),
                     image: String(item.image || "")
                 }));
+                const orderCode = (window.zxcaerNewOrderCode ? window.zxcaerNewOrderCode() : "ZX-" + Math.random().toString(36).slice(2, 10).toUpperCase());
                 const { error: saveOrderError } = await zxcaerSupabase.from("orders").insert({
-                    customer_name: name, customer_surname: surname, phone, telegram, email, city,
+                    public_code: orderCode, customer_name: name, customer_surname: surname, phone, telegram, email, city,
                     delivery_method: deliveryMethod.value, destination_type: destinationType,
                     destination_number: destinationNumber, destination_address: destinationAddress,
                     ukr_poshta_index: deliveryMethod.value === "Укрпочта" ? (ukrPoshtaIndex?.value.trim() || "") : "",
@@ -1001,29 +996,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 if (saveOrderError) throw new Error("Не вдалося зберегти замовлення в бізнес-панелі: " + saveOrderError.message);
 
-                const response = await fetch(
-                    `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            chat_id: TELEGRAM_CHAT_ID,
-                            text: message,
-                            parse_mode: "HTML"
-                        })
-                    }
-                );
-
-                const data = await response.json();
-
-                if (!response.ok || !data.ok) {
-                    console.error("Telegram error:", data);
-                    throw new Error(
-                        data.description || "Ошибка отправки заказа в Telegram."
-                    );
-                }
+                // Уведомление в Telegram отправляется сервером после сохранения заказа.
 
                 /* SUCCESS */
 
@@ -1034,7 +1007,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     ? "Ми зв’яжемося з вами за вказаною електронною поштою."
                     : "";
                 if (window.showZXCAERSuccess) {
-                    window.showZXCAERSuccess({ title: "Замовлення оформлено", message: preorderSuccessMessage, note: preorderSuccessNote });
+                    window.showZXCAERSuccess({ title: "Замовлення оформлено", message: preorderSuccessMessage, note: preorderSuccessNote, orderCode });
                 } else {
                     alert(hasPreorder
                         ? "Замовлення оформлено!\n\nОчікуваний час виготовлення та доставки — від 5 до 11 днів.\n\nМи зв’яжемося з вами за вказаною електронною поштою."

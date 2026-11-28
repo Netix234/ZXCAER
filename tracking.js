@@ -47,19 +47,19 @@
   }
   $("refreshBtn")?.addEventListener("click", () => {
     if ($("phone").value.trim()) { $("trackForm").requestSubmit(); }
-    else { $("phone").focus(); $("message").textContent="Спочатку введіть номер телефону."; }
+    else { $("phone").focus(); $("message").textContent="Спочатку введіть номер замовлення."; }
   });
   $("trackForm").addEventListener("submit", async e => {
     e.preventDefault(); $("message").textContent=""; $("result").classList.add("hidden"); $("result").innerHTML="";
     const btn=$("submitBtn"); btn.disabled=true; btn.textContent="Шукаємо…";
     try {
-      const {data,error}=await db.rpc("public_track_order_by_phone",{p_phone:$("phone").value.trim()});
+      const {data,error}=await db.rpc("public_track_order",{p_code:$("phone").value.trim().toUpperCase()});
       if(error) throw error;
-      if(!data || data.error || !Array.isArray(data.orders) || !data.orders.length) { $("message").textContent="За цим номером телефону замовлень не знайдено. Перевірте номер і спробуйте ще раз."; return; }
+      if(!data || data.error || !Array.isArray(data.orders) || !data.orders.length) { $("message").textContent="Замовлення з таким номером не знайдено. Перевірте номер і спробуйте ще раз."; return; }
       $("result").innerHTML=data.orders.map(render).join(""); $("result").classList.remove("hidden");
     } catch(err) {
       console.error(err);
-      $("message").textContent="Не вдалося виконати пошук. Переконайтеся, що SQL для відстеження встановлено в Supabase, і спробуйте ще раз.";
+      $("message").textContent="Не вдалося виконати пошук. Спробуйте ще раз трохи пізніше.";
     } finally {btn.disabled=false;btn.textContent="Знайти замовлення →";}
   });
 })();

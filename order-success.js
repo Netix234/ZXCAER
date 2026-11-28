@@ -32,6 +32,11 @@
             #zxcaerOrderSuccess path{fill:none;stroke:#1ca45b;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:55;stroke-dashoffset:55;animation:zxDrawCheck .55s .22s ease forwards}
             #zxcaerOrderSuccess h2{font:600 23px/1.2 Arial,sans-serif;letter-spacing:-.5px;margin:0 0 12px}
             #zxcaerOrderSuccess p{font:400 14px/1.6 Arial,sans-serif;color:#656b67;margin:0 auto 10px;max-width:310px}
+            #zxcaerOrderSuccess .zx-order-code{margin:18px auto 0;max-width:310px;padding:14px;border:1px dashed #c9cfcb;border-radius:14px;background:#f6f8f6}
+            #zxcaerOrderSuccess .zx-order-code span{display:block;font:400 12px Arial,sans-serif;color:#8a908c;margin-bottom:6px}
+            #zxcaerOrderSuccess .zx-order-code strong{display:block;font:700 22px/1.2 "Courier New",monospace;letter-spacing:1.5px;color:#171917;user-select:all}
+            #zxcaerOrderSuccess .zx-order-code button.zx-copy{margin-top:10px;width:auto;padding:8px 14px;border-radius:10px;background:#e8ece9;color:#171917;font-size:11px}
+            #zxcaerOrderSuccess .zx-track-link{display:inline-block;margin-top:12px;font:600 12px Arial,sans-serif;color:#171917}
             #zxcaerOrderSuccess .zx-success-note{font-size:12px;color:#8a908c;margin-top:14px}
             #zxcaerOrderSuccess button{margin-top:24px;width:100%;border:0;border-radius:14px;background:#171917;color:white;padding:15px 18px;font:600 12px Arial,sans-serif;letter-spacing:1.1px;cursor:pointer}
             @keyframes zxCheckPop{0%{transform:scale(.45);opacity:0}70%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
@@ -41,16 +46,31 @@
         document.head.appendChild(style);
     }
 
+    // Номер замовлення: ZX-XXXXXXXX (без схожих символів 0/O, 1/I), ~1e12 варіантів — вгадати неможливо.
+    window.zxcaerNewOrderCode = function () {
+        const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+        const bytes = new Uint8Array(8);
+        crypto.getRandomValues(bytes);
+        return "ZX-" + Array.from(bytes, b => alphabet[b % alphabet.length]).join("");
+    };
+
     window.showZXCAERSuccess = function (options = {}) {
         addStyles();
         let modal = document.getElementById("zxcaerOrderSuccess");
         if (!modal) {
             modal = document.createElement("div");
             modal.id = "zxcaerOrderSuccess";
-            modal.innerHTML = `<section class="zx-success-card" role="dialog" aria-modal="true" aria-labelledby="zxSuccessTitle"><div class="zx-check-wrap"><svg viewBox="0 0 52 52" aria-hidden="true"><path d="M10 27 L21 38 L43 14"></path></svg></div><h2 id="zxSuccessTitle"></h2><p class="zx-success-message"></p><p class="zx-success-note"></p><button type="button">ПРОДОВЖИТИ ПОКУПКИ</button></section>`;
+            modal.innerHTML = `<section class="zx-success-card" role="dialog" aria-modal="true" aria-labelledby="zxSuccessTitle"><div class="zx-check-wrap"><svg viewBox="0 0 52 52" aria-hidden="true"><path d="M10 27 L21 38 L43 14"></path></svg></div><h2 id="zxSuccessTitle"></h2><p class="zx-success-message"></p><p class="zx-success-note"></p><div class="zx-order-code" hidden><span>Ваш номер замовлення</span><strong></strong><button type="button" class="zx-copy">СКОПІЮВАТИ</button><br><a class="zx-track-link" href="tracking.html">Відстежити замовлення →</a></div><button type="button" class="zx-close">ПРОДОВЖИТИ ПОКУПКИ</button></section>`;
             document.body.appendChild(modal);
             modal.addEventListener("click", event => {
-                if (event.target === modal || event.target.closest("button")) {
+                const copyBtn = event.target.closest(".zx-copy");
+                if (copyBtn) {
+                    const code = modal.querySelector(".zx-order-code strong").textContent;
+                    try { navigator.clipboard.writeText(code); copyBtn.textContent = "СКОПІЙОВАНО ✓"; } catch (_) { copyBtn.textContent = "ВИДІЛІТЬ ТА СКОПІЮЙТЕ"; }
+                    return;
+                }
+                if (event.target.closest(".zx-track-link")) return;
+                if (event.target === modal || event.target.closest(".zx-close")) {
                     modal.classList.remove("is-visible");
                     document.body.style.overflow = "";
                 }
@@ -63,6 +83,10 @@
         noteElement.textContent = options.note || "";
         messageElement.hidden = !messageElement.textContent;
         noteElement.hidden = !noteElement.textContent;
+        const codeBox = modal.querySelector(".zx-order-code");
+        codeBox.hidden = !options.orderCode;
+        codeBox.querySelector("strong").textContent = options.orderCode || "";
+        codeBox.querySelector(".zx-copy").textContent = "СКОПІЮВАТИ";
         modal.classList.remove("is-visible");
         void modal.offsetWidth;
         modal.classList.add("is-visible");

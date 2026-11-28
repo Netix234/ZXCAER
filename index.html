@@ -2,6 +2,9 @@
 <html lang="ru">
 
 <head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self'; font-src 'self' data:; connect-src 'self' https://gxkmnkphocqvlhnerkix.supabase.co wss://gxkmnkphocqvlhnerkix.supabase.co https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 
     <meta charset="UTF-8">
 
@@ -1525,7 +1528,16 @@ async function loadZXCAERProducts() {
          * Если таблица пока пустая, оставляем
          * встроенные товары как резерв.
          */
-        if (!Array.isArray(data) || data.length === 0) {
+        if (!Array.isArray(data)) {
+            loadOldZXCAERScript();
+            return;
+        }
+
+        /* Таблица успешно загрузилась, но товаров нет (все удалены в админке):
+           убираем встроенные карточки-заглушки, чтобы они не висели без фото. */
+        if (data.length === 0) {
+            const emptyContainer = document.querySelector(".products");
+            if (emptyContainer) emptyContainer.innerHTML = "";
             loadOldZXCAERScript();
             return;
         }

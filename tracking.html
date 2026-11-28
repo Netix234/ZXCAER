@@ -1,6 +1,9 @@
 <!doctype html>
 <html lang="uk">
 <head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; media-src 'self'; font-src 'self' data:; connect-src 'self' https://gxkmnkphocqvlhnerkix.supabase.co wss://gxkmnkphocqvlhnerkix.supabase.co https://cdn.jsdelivr.net; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#080808"><title>Відстеження замовлення — ZXCAER</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -30,12 +33,12 @@ form{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:end}.field
 <header><a class="logo" href="index.html"><img src="images/logo.png" alt="ZXCAER"></a><a class="back" href="index.html">← До магазину</a></header>
 <main>
 <div class="eyebrow">ZXCAER · DELIVERY</div><h1>Де моє замовлення?</h1>
-<p class="intro">Введіть номер телефону, вказаний під час покупки, щоб переглянути ваші замовлення, статус доставки та суму до оплати.</p>
+<p class="intro">Введіть номер замовлення, який ви отримали після покупки, щоб переглянути статус доставки та суму до оплати.</p>
 <section class="search">
 <form id="trackForm">
-<div class="field"><label for="phone">Номер телефону</label><input id="phone" type="tel" autocomplete="tel" placeholder="+380 XX XXX XX XX" required></div>
+<div class="field"><label for="phone">Номер замовлення</label><input id="phone" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="14" placeholder="ZX-XXXXXXXX" required></div>
 <button id="submitBtn" type="submit">Знайти замовлення →</button>
-</form><button id="refreshBtn" type="button" class="refresh-btn">↻ Обновить данные</button><div class="hint">Використайте той самий номер телефону, який вказували під час оформлення замовлення.</div><div id="message" class="message" role="status"></div>
+</form><button id="refreshBtn" type="button" class="refresh-btn">↻ Обновить данные</button><div class="hint">Номер замовлення (ZX-XXXXXXXX) ви бачите після оформлення замовлення.</div><div id="message" class="message" role="status"></div>
 </section>
 <section id="result" class="result hidden" aria-live="polite"></section>
 <p class="note">Ця сторінка показує статус, який встановив магазин. Якщо замовлення вже передано Новій пошті, номер ТТН можна використати для окремого відстеження на сайті перевізника.</p>
